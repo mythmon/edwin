@@ -70,7 +70,7 @@ class ConstantSettings(Configuration):
     PIPELINE_JS = bundles.PIPELINE_JS
     PIPELINE_DISABLE_WRAPPER = True
     PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.uglifyjs.UglifyJSCompressor'
-    PIPELINE_UGLIFYJS_BINARY = path('node_modules/.bin/uglifyjs')
+    PIPELINE_UGLIFYJS_BINARY = path('node_modules/.bin/uglify')
     PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CSSMinCompressor'
     PIPELINE_CSSMIN_BINARY = path('node_modules/.bin/cssmin')
     PIPELINE_LESS_BINARY = path('node_modules/.bin/lessc')
