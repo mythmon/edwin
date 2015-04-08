@@ -1,0 +1,20 @@
+{
+  "name": "edwin",
+  "description": "A bug management tool.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mythmon/edwin.git"
+  },
+  "dependencies": {
+    "babelify": "^6.0.2",
+    "browserify": "^9.0.7",
+    "clean-css": "^3.1.9",
+    "cssmin": "^0.4.3",
+    "flux": "^2.0.1",
+    "immutable": "^3.7.1",
+    "less": "^2.5.0",
+    "lodash": "^3.6.0",
+    "react": "^0.13.1",
+    "uglify": "^0.1.3"
+  }
+}
