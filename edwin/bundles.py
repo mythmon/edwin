@@ -1,6 +1,7 @@
 PIPELINE_CSS = {
     'client': {
         'source_filenames': [
+          'css/client.less',
         ],
         'output_filename': 'css/client.css',
     },
