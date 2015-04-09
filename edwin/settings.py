@@ -82,6 +82,33 @@ class ConstantSettings(Configuration):
     PIPELINE_BROWSERIFY_BINARY = path('node_modules/.bin/browserify')
     PIPELINE_BROWSERIFY_ARGUMENTS = '-t babelify'
 
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': ('%(asctime)s [%(process)d] [%(levelname)s] ' +
+                           'pathname=%(pathname)s lineno=%(lineno)s ' +
+                           'funcname=%(funcName)s %(message)s'),
+                'datefmt': '%Y-%m-%d %H:%M:%S'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+            }
+        },
+        'loggers': {
+            # Catchall
+            '': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+            }
+        }
+    }
+
 
 class Base(ConstantSettings):
     """
