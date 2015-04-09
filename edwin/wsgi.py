@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 
 import os
 
-from django.core.wsgi import get_wsgi_application
+from configurations.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "edwin.settings")
 os.environ.setdefault("DJANGO_CONFIGURATION", "Base")
 
-application = get_wsgi_application()
+application = DjangoWhiteNoise(get_wsgi_application())
