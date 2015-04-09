@@ -101,10 +101,10 @@ class ConstantSettings(Configuration):
             }
         },
         'loggers': {
-            # Catchall
-            '': {
+            'django.request': {
                 'handlers': ['console'],
-                'level': 'WARNING',
+                'level': 'INFO',
+                'propagate': True,
             }
         }
     }
