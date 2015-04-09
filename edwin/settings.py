@@ -46,15 +46,20 @@ class ConstantSettings(Configuration):
         'django.middleware.security.SecurityMiddleware',
     ]
 
-    STATICFILES_DIRS = [
-        path('node_modules'),
-    ]
-
     STATICFILES_FINDERS = [
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
         'pipeline.finders.PipelineFinder',
+        'npm.finders.NpmFinder',
     ]
+
+    NPM_PREFIX_PATH = path()
+    NPM_FILE_PATTERNS = {
+        'flux': ['index.js', 'lib/*'],
+        'immutable': ['dist/immutable.js'],
+        'lodash': ['index.js'],
+        'react': ['dist/react.js'],
+    }
 
     ALLOWED_HOSTS = values.ListValue([])
 
@@ -70,7 +75,7 @@ class ConstantSettings(Configuration):
     PIPELINE_JS = bundles.PIPELINE_JS
     PIPELINE_DISABLE_WRAPPER = True
     PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.uglifyjs.UglifyJSCompressor'
-    PIPELINE_UGLIFYJS_BINARY = path('node_modules/.bin/uglify')
+    PIPELINE_UGLIFYJS_BINARY = path('node_modules/.bin/uglifyjs')
     PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CSSMinCompressor'
     PIPELINE_CSSMIN_BINARY = path('node_modules/.bin/cssmin')
     PIPELINE_LESS_BINARY = path('node_modules/.bin/lessc')
