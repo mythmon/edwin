@@ -9,5 +9,5 @@ router.register(r'teams', api.TeamViewSet)
 
 
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
+    url(r'', include(router.urls)),
 ]
