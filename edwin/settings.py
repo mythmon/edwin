@@ -56,6 +56,7 @@ class ConstantSettings(Configuration):
         'pipeline.finders.PipelineFinder',
     ]
 
+    ALLOWED_HOSTS = values.ListValue([])
 
     ROOT_URLCONF = 'edwin.urls'
     USE_TZ = True
