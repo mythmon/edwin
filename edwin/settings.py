@@ -61,8 +61,6 @@ class ConstantSettings(bundles.BundleConfiguration, Configuration):
         'react': ['dist/react.js'],
     }
 
-    ALLOWED_HOSTS = values.ListValue([])
-
     ROOT_URLCONF = 'edwin.urls'
     USE_TZ = True
     USE_L10N = False
@@ -112,10 +110,10 @@ class Base(ConstantSettings):
     """
     These settings will likely need to be customized to an environment.
     """
+    ALLOWED_HOSTS = values.ListValue([])
     DEBUG = values.BooleanValue(False)
     DATABASES = values.DatabaseURLValue('sqlite:///db.sqlite')
     SECRET_KEY = values.SecretValue()
-    SECRET_KEY = 'not a secret'
     TIME_ZONE = values.Value('UTC')
     LANGUAGE_CODE = values.Value('en-us')
     STATIC_URL = values.Value('/static/')
