@@ -1,5 +1,4 @@
-from django.conf.urls import url, include
-from rest_framework import routers, serializers, viewsets
+from rest_framework import serializers, viewsets
 
 from edwin.teams.models import Team
 
