@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 class Main extends React.Component {
   render() {
-    return <h1>Hello, world!</h1>;
+    return <h1>Hello, world! PREPARE TO BE RULED WITH MY PIPELINE!</h1>;
   }
 }
 
