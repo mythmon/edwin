@@ -11,7 +11,7 @@ def path(*components):
     return os.path.abspath(os.path.join(root, *components))
 
 
-class ConstantSettings(Configuration):
+class ConstantSettings(bundles.BundleConfiguration, Configuration):
     """
     These settings are unlikely to need changing in an environment.
 
@@ -71,8 +71,6 @@ class ConstantSettings(Configuration):
         'pipeline.compilers.less.LessCompiler',
         'edwin.lib.pipeline_compilers.BrowserifyCompiler',
     ]
-    PIPELINE_CSS = bundles.PIPELINE_CSS
-    PIPELINE_JS = bundles.PIPELINE_JS
     PIPELINE_DISABLE_WRAPPER = True
     PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.uglifyjs.UglifyJSCompressor'
     PIPELINE_UGLIFYJS_BINARY = path('node_modules/.bin/uglifyjs')
