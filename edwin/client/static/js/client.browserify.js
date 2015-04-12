@@ -1,11 +1,13 @@
-/* globals React:false */
+import React from 'react';
+import TimelineApp from './components/TimelineApp';
+import TimelineDispatcher from './dispatcher/TimelineDispatcher';
+import * as TimelineActions from './actions/TimelineActions';
+import * as BzAPI from './utils/BzAPI';
 
-import _ from 'lodash';
+TimelineDispatcher.register((action) => {
+  console.log('Dispatched action:', action);
+});
 
-class Main extends React.Component {
-  render() {
-    return <h1>Hello, world!</h1>;
-  }
-}
+React.render(<TimelineApp/>, document.body);
 
-React.render(<Main/>, document.body);
+TimelineActions.updateSearch({whiteboard: 's=2015.6'});

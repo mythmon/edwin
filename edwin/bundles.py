@@ -10,7 +10,6 @@ PIPELINE_CSS = {
 PIPELINE_JS = {
     'client': {
         'source_filenames': [
-            'react/dist/react.js',
             'js/client.browserify.js',
         ],
         'output_filename': 'js/client.js',
