@@ -6,6 +6,7 @@ Edwin is a bug management system.
 * **issues** https://github.com/mythmon/edwin/issues
 * **license** MPLv2
 * **author** League of Assassins
+* **status** [![Build Status](https://travis-ci.org/mythmon/edwin.svg?branch=master)](https://travis-ci.org/mythmon/edwin)
 
 
 # Install for hacking

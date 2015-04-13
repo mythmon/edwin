@@ -1,5 +1,8 @@
 language: python
 python: 3.4
-test:
-  - ./manage.py test
+install:
+  - pip install -r requirements.txt
+  - npm --python=$(which python2.7) install
+script:
+  - DJANGO_SETTINGS_MODULE=edwin.settings DJANGO_CONFIGURATION=Test ./manage.py test
   - npm test
