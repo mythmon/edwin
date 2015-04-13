@@ -124,3 +124,9 @@ class Base(ConstantSettings):
 class Dev(Base):
     DEBUG = True
     SECRET_KEY = 'not a secret'
+
+
+class Test(Base):
+    SECRET_KEY = 'not a secret'
+    # Use an in-memory database
+    DATABASES = values.DatabaseURLValue('sqlite://')
