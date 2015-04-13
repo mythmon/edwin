@@ -1,7 +1,7 @@
 language: python
 python: 3.4
 env:
-  globals:
+  global:
     - DJANGO_SETTINGS_MODULE="edwin.settings"
     - DJANGO_CONFIGURATION="Test"
 install:
