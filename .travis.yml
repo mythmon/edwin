@@ -1,16 +1,11 @@
 language: python
 python: 3.4
-matrix:
-  fast_finish: true
 env:
   globals:
-  - DJANGO_SETTINGS_MODULE="edwin.settings"
-  - DJANGO_CONFIGURATION="Base"
-  matrix:
-  - TEST_SUITE=python
-  - TEST_SUITE=js
+    - DJANGO_SETTINGS_MODULE="edwin.settings"
+    - DJANGO_CONFIGURATION="Base"
 install:
-  - "[[ TEST_SUITE = js ]] && npm install"
+  - npm install
 script:
-  - "[[ TEST_SUITE = python ]] && ./manage.py test"
-  - "[[ TEST_SUITE = js ]] && npm test"
+  - ./manage.py test
+  - npm test
