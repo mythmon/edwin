@@ -18,12 +18,12 @@ Edwin is a bug management system.
 > **Note**
 >
 > You'll be using the `Dev` configuration, so you'll want to set:
-
-```
-DJANGO_CONFIGURATION=Dev
-```
-
-in your environment.
+>
+> ```
+> DJANGO_CONFIGURATION=Dev
+> ```
+>
+> in your environment.
 
 
 # Run tests
