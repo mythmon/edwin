@@ -2,3 +2,31 @@ h1 {
   text-align: center;
   width: 100%;
 }
+
+.BugTable {
+  border-collapse: collapse;
+
+  &__head,
+  &__head--number {
+    border-bottom: 1px solid #888;
+    padding: 4px 5px;
+    text-align: left;
+    text-weight: normal;
+  }
+
+  &__head--number {
+    text-align: right;
+  }
+
+  &__data,
+  &__data--number {
+    height: 48px;
+    max-width: 400px;
+    padding: 4px 5px;
+    text-align: left;
+  }
+
+  &__data--number {
+    text-align: right;
+  }
+}

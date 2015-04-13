@@ -30,6 +30,7 @@ rules:
   no-var: true
   comma-dangle: false
   new-cap: false
+  camelcase: false
 
 env:
   es6: true

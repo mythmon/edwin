@@ -11,7 +11,7 @@ export function updateSearch(newVars) {
 
 export function setBugs(newBugs) {
   TimelineDispatcher.dispatch({
-    type: TimelineConstants.SET_BUGS,
+    type: TimelineConstants.SET_RAW_BUGS,
     newBugs: newBugs,
   });
 }
