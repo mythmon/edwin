@@ -1,0 +1,5 @@
+language: python
+python: 3.4
+test:
+  - ./manage.py test
+  - npm test
