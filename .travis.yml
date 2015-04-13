@@ -10,7 +10,7 @@ env:
   - TEST_SUITE=python
   - TEST_SUITE=js
 install:
-  - [[ TEST_SUITE = js ]] && npm install
+  - "[[ TEST_SUITE = js ]] && npm install"
 script:
-  - [[ TEST_SUITE = python ]] && ./manage.py test
-  - [[ TEST_SUITE = js ]] && npm test
+  - "[[ TEST_SUITE = python ]] && ./manage.py test"
+  - "[[ TEST_SUITE = js ]] && npm test"
