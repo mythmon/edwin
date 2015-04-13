@@ -15,10 +15,9 @@ Edwin is a bug management system.
 3. run `DJANGO_CONFIGURATION=Dev ./manage.py migrate`
 4. run `npm install`
 
-
-**Note**
-
-You'll be using the `Dev` configuration, so you'll want to set:
+> **Note**
+>
+> You'll be using the `Dev` configuration, so you'll want to set:
 
 ```
 DJANGO_CONFIGURATION=Dev
@@ -29,4 +28,10 @@ in your environment.
 
 # Run tests
 
-1. run `DJANGO_CONFIGURATION=Dev ./manage.py test` to run Python tests
+## Python tests
+
+1. run `DJANGO_CONFIGURATION=Dev ./manage.py test` to run tests for the backend.
+
+## JS tests
+
+1. run `npm test` to run Jest tests for frontend code.
