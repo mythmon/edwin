@@ -5,7 +5,7 @@ env:
     - DJANGO_SETTINGS_MODULE="edwin.settings"
     - DJANGO_CONFIGURATION="Base"
 install:
-  - npm install
+  - npm --python=$(which python2.7) install
 script:
   - ./manage.py test
   - npm test
