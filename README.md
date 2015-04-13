@@ -1,1 +1,32 @@
+# Summary
+
 Edwin is a bug management system.
+
+* **source** https://github.com/mythmon/edwin
+* **issues** https://github.com/mythmon/edwin/issues
+* **license** MPLv2
+* **author** League of Assassins
+
+
+# Install for hacking
+
+1. create a virtual environment
+2. run `pip install -r requirements.txt`
+3. run `DJANGO_CONFIGURATION=Dev ./manage.py migrate`
+4. run `npm install`
+
+
+**Note**
+
+You'll be using the `Dev` configuration, so you'll want to set:
+
+```
+DJANGO_CONFIGURATION=Dev
+```
+
+in your environment.
+
+
+# Run tests
+
+1. run `DJANGO_CONFIGURATION=Dev ./manage.py test` to run Python tests

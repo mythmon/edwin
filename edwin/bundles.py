@@ -3,7 +3,7 @@ class BundleConfiguration(object):
         return {
             'client': {
                 'source_filenames': [
-                  'css/client.less',
+                    'css/client.less',
                 ],
                 'output_filename': 'css/client.css',
             },
