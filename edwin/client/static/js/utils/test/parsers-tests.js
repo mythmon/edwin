@@ -1,32 +1,32 @@
-jest.autoMockOff();
+import {expect} from 'chai';
 
 describe('whiteboardData', () => {
   describe('parse', () => {
     let whiteboardData;
 
     beforeEach(() => {
-      whiteboardData = require.requireActual('../parsers').whiteboardData;
+      whiteboardData = require('../parsers').whiteboardData;
     });
 
     it('parses a single simple key/value.', () => {
-      expect(whiteboardData.parse('p=1')).toEqual({p: 1});
+      expect(whiteboardData.parse('p=1')).to.deep.equal({p: 1});
     });
 
     it('parses multiple simple key/values.', () => {
-      expect(whiteboardData.parse('p=2 u=dev')).toEqual({p: 2, u: 'dev'});
+      expect(whiteboardData.parse('p=2 u=dev')).to.deep.equal({p: 2, u: 'dev'});
     });
 
     it('parses a tokenized item.', () => {
-      expect(whiteboardData.parse('[good first bug]')).toEqual({'good first bug': true});
+      expect(whiteboardData.parse('[good first bug]')).to.deep.equal({'good first bug': true});
     });
 
     it('parses multiple tokenized items.', () => {
-      expect(whiteboardData.parse('[foo bar] [baz]')).toEqual({'foo bar': true, baz: true});
+      expect(whiteboardData.parse('[foo bar] [baz]')).to.deep.equal({'foo bar': true, baz: true});
     });
 
     it('parses mixed items', () => {
       expect(whiteboardData.parse('u=dev c=user [good first bug] s=2015.6 p=2 [need-verify]'))
-        .toEqual({
+        .to.deep.equal({
           u: 'dev',
           c: 'user',
           s: 2015.6,
@@ -43,27 +43,27 @@ describe('bugReferences', () => {
     let bugReferences;
 
     beforeEach(() => {
-      bugReferences = require.requireActual('../parsers').bugReferences;
+      bugReferences = require('../parsers').bugReferences;
     });
 
     it('parses a line with no refs.', () => {
-      expect(bugReferences.parse('Fix the foo.')).toEqual([]);
+      expect(bugReferences.parse('Fix the foo.')).to.deep.equal([]);
     });
 
     it('parses a simple bug ref.', () => {
-      expect(bugReferences.parse('[Bug 123] Fix the foo.')).toEqual([123]);
+      expect(bugReferences.parse('[Bug 123] Fix the foo.')).to.deep.equal([123]);
     });
 
     it('parses a double bug ref.', () => {
-      expect(bugReferences.parse('[Bug 123, 456] Fix the foo.')).toEqual([123, 456]);
+      expect(bugReferences.parse('[Bug 123, 456] Fix the foo.')).to.deep.equal([123, 456]);
     });
 
     it('parses two bug refs.', () => {
-      expect(bugReferences.parse('[Bug 123][Bug 456] Fix the foo.')).toEqual([123, 456]);
+      expect(bugReferences.parse('[Bug 123][Bug 456] Fix the foo.')).to.deep.equal([123, 456]);
     });
 
     it('parses a complex set of bug refs.', () => {
-      expect(bugReferences.parse('[Bug 123,456][Bug 789] Fix the foo.')).toEqual([123, 456, 789]);
+      expect(bugReferences.parse('[Bug 123,456][Bug 789] Fix the foo.')).to.deep.equal([123, 456, 789]);
     });
   });
 });

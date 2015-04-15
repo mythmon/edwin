@@ -33,11 +33,7 @@ class _PRStore extends BaseStore {
  * @param {Object} pr The pr to augment. Will be modified and returned.
  */
 function augmentPR(pr) {
-  try {
-    pr.bugs_referenced = parsers.bugReferences.parse(pr.title);
-  } catch(e) {
-    pr.bugs_referenced = [];
-  }
+  pr.bugs_referenced = parsers.bugReferences.parse(pr.title);
   return pr;
 }
 

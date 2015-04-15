@@ -6,10 +6,7 @@
     "url": "git://github.com/mythmon/edwin.git"
   },
   "dependencies": {
-    "babelify": "^6.0.2",
-    "browserify": "^9.0.7",
-    "clean-css": "^3.1.9",
-    "cssmin": "^0.4.3",
+    "es6-symbol": "^2.0.1",
     "flux": "^2.0.1",
     "immutable": "^3.7.1",
     "less": "^2.5.0",
@@ -18,31 +15,22 @@
     "react": "^0.13.1",
     "react-gravatar": "^1.1.0",
     "superagent": "^1.1.0",
-    "uglifyjs": "^2.4.10",
     "whatwg-fetch": "^0.7.0"
+  },
+  "scripts": {
+    "test": "mocha --compilers js:babel/register edwin/**/test/**/*.js"
   },
   "engines": {
     "node": "0.10.x"
   },
   "devDependencies": {
     "babel": "^5.0.12",
-    "babel-jest": "^5.0.1",
-    "jest-cli": "^0.4.0"
-  },
-  "scripts": {
-    "test": "jest"
-  },
-  "jest": {
-    "scriptPreprocessor": "node_modules/babel-jest",
-    "testFileExtensions": [
-      "es6",
-      "js"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "es6"
-    ],
-    "testPathIgnorePatterns": ["edwin/static/", "/node_modules/"]
+    "babelify": "^6.0.2",
+    "browserify": "^9.0.7",
+    "chai": "^2.2.0",
+    "clean-css": "^3.1.9",
+    "cssmin": "^0.4.3",
+    "mocha": "^2.2.4",
+    "uglifyjs": "^2.4.10"
   }
 }
