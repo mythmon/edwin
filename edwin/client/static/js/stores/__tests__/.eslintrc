@@ -1,0 +1,7 @@
+globals:
+  jest: false
+  describe: false
+  it: false
+  expect: false
+  require: false
+  beforeEach: false,

@@ -9,10 +9,10 @@
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
 import TimelineConstants from '../constants/TimelineConstants';
-import {List} from 'immutable';
+import Immutable from 'immutable';
 import * as whiteboard from '../utils/whiteboard';
 
-let bugs = List();
+let bugs = Immutable.List();
 
 class _BugStore extends BaseStore {
   /**
@@ -48,7 +48,7 @@ const BugStore = new _BugStore();
 BugStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
     case TimelineConstants.SET_RAW_BUGS:
-      bugs = List(action.newBugs.map(augmentBug));
+      bugs = Immutable.fromJS(action.newBugs.map(augmentBug));
       BugStore.emitChange();
       break;
 

@@ -9,7 +9,7 @@ import TimelineConstants from '../constants/TimelineConstants';
 export function updateSearch(newVars) {
   TimelineDispatcher.dispatch({
     type: TimelineConstants.UPDATE_SEARCH,
-    newVars: newVars,
+    newVars,
   });
 }
 
@@ -21,6 +21,14 @@ export function updateSearch(newVars) {
 export function setBugs(newBugs) {
   TimelineDispatcher.dispatch({
     type: TimelineConstants.SET_RAW_BUGS,
-    newBugs: newBugs,
+    newBugs,
+  });
+}
+
+
+export function setPRs(newPRs) {
+  TimelineDispatcher.dispatch({
+    type: TimelineConstants.SET_RAW_PRS,
+    newPRs,
   });
 }

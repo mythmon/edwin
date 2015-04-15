@@ -42,6 +42,7 @@
       "js",
       "json",
       "es6"
-    ]
+    ],
+    "testPathIgnorePatterns": ["edwin/static/", "/node_modules/"]
   }
 }

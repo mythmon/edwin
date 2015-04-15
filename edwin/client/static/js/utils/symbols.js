@@ -1,3 +1,5 @@
+import Symbol from 'es6-symbol'; // Polyfill
+
 /**
  * Generates a mapping from names to Symbols bearing those names.
  *
@@ -5,8 +7,6 @@
  */
 export function symbolMap(names) {
   let map = {};
-  for (var key of names) {
-    map[key] = Symbol(key);
-  }
+  names.forEach((name) => { map[name] = Symbol[name]; });
   return map;
 }
