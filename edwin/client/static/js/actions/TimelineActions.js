@@ -1,6 +1,11 @@
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import TimelineConstants from '../constants/TimelineConstants';
 
+/**
+ * Updates fields in the bugzilla query.
+ *
+ * @param {Object.<string, string>} newVars Parameters to add.
+ */
 export function updateSearch(newVars) {
   TimelineDispatcher.dispatch({
     type: TimelineConstants.UPDATE_SEARCH,
@@ -9,6 +14,10 @@ export function updateSearch(newVars) {
 }
 
 
+/**
+ * Replace the current set of bugs with `newBugs`, which are raw from the API.
+ * @param {Array} newBugs Bug descriptions from the Bugzilla API.
+ */
 export function setBugs(newBugs) {
   TimelineDispatcher.dispatch({
     type: TimelineConstants.SET_RAW_BUGS,

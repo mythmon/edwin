@@ -2,12 +2,21 @@ import React from 'react';
 import BugStore from '../stores/BugStore';
 import Gravatar from 'react-gravatar';
 
+/**
+ * Get the current values from every Store, and combine them into an object
+ * ready to be used for the state of {@link TimelineApp}.
+ */
 function getStateFromStores() {
   return {
     bugs: BugStore.getAll(),
   };
 }
 
+/**
+ * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
+ * sections.
+ * @class
+ */
 export default class TimelineApp extends React.Component {
   constructor(props) {
     super(props);
@@ -64,6 +73,9 @@ export default class TimelineApp extends React.Component {
 }
 
 
+/**
+ * Renders a single <tr> in a bug table.
+ */
 class BugRow extends React.Component {
   render() {
     return (
@@ -91,6 +103,11 @@ class BugRow extends React.Component {
 }
 
 
+/**
+ * Renders a small chip for a user. Shows a name and a Gravatar.
+ *
+ * TODO: This is probably useful enough to move somewhere public
+ */
 class AssignedTo extends React.Component {
   render() {
     if (this.props.email === 'nobody@mozilla.org') {

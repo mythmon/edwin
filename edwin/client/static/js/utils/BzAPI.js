@@ -7,7 +7,14 @@ const fetch = window.fetch;
 const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
 
 
-function apiCall(endpoint, params) {
+/**
+ * Make a call to the Bugzilla API.
+ * @param {string} endpoint Endpoint to call, like '/bug'. Don't include
+ *   "/rest". Do in clude a leading "/".
+ * @param {Object} [params={}] Params to serialize into the querystring.
+ * @returns {Promise.} A promise for a Fetch Response.
+ */
+function apiCall(endpoint, params={}) {
   let url = buildUrl(BUGZILLA_API, endpoint, params);
   return fetch(url, {
     // mode: 'cors',
@@ -28,6 +35,10 @@ function apiCall(endpoint, params) {
 }
 
 
+/**
+ * Get bugs from Bugzilla using the current state of the QueryStore, and
+ * dispatch an action with the new bugs when the result comes back.
+ */
 export function getBugs() {
   apiCall('/bug', QueryStore.get().toJS())
     .then((response) => response.json())

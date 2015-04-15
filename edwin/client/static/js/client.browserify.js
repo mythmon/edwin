@@ -1,3 +1,12 @@
+/**
+ * Bootstrap for the app.
+ *
+ * Kicks off initial data load, and rendered everything, and then re-renders.
+ *
+ * TODO: Only render after data has loaded.
+ * TODO: Add loading indicator.
+ */
+
 import React from 'react';
 import TimelineApp from './components/TimelineApp';
 import TimelineDispatcher from './dispatcher/TimelineDispatcher';

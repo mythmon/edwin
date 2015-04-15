@@ -2,6 +2,11 @@ import PEG from 'pegjs';
 
 
 // TODO: Build this at compile time instead of runtime.
+/**
+ * Parses whiteboard strings like "p=2 [good first bug]" into objects like
+ * `{p: 2, 'good first bug': true}`. This object will have a method,
+ * `.parse()`, which takes a string and returns the parsed representation.
+ */
 export const grammar = PEG.buildParser(`
 {
   function merge(one, two) {
