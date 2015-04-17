@@ -11,5 +11,5 @@ class TeamSerializer(serializers.HyperlinkedModelSerializer):
 
 # ViewSets define the view behavior.
 class TeamViewSet(viewsets.ModelViewSet):
-    queryset = Team.objects.all()
+    queryset = Team.objects.order_by('pk').all()
     serializer_class = TeamSerializer
