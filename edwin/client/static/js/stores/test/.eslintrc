@@ -3,4 +3,7 @@ globals:
   it: false
   expect: false
   require: false
-  beforeEach: false,
+  beforeEach: false
+
+rules:
+  no-unused-expressions: false

@@ -1,5 +1,9 @@
-import {expect} from 'chai';
+import chai, {expect} from 'chai';
+import chaiImmutable from 'chai-immutable';
 import Immutable from 'immutable';
+
+chai.use(chaiImmutable);
+
 
 describe('PRStore', () => {
   let BugToPRStore;
@@ -23,7 +27,21 @@ describe('PRStore', () => {
       newPRs: prs,
     });
 
-    expect(BugToPRStore.prsFor(0).toJS()).to.deep.equal([prs[0]]);
-    expect(BugToPRStore.prsFor(1).toJS()).to.deep.equal([prs[1]]);
+    expect(BugToPRStore.prsFor(0)).to.equal(Immutable.fromJS([prs[0]]));
+    expect(BugToPRStore.prsFor(1)).to.equal(Immutable.fromJS([prs[1]]));
+  });
+
+  it('returns an empty list for known bugs with no PRs', () => {
+    TimelineDispatcher.dispatch({
+      type: TimelineConstants.SET_RAW_BUGS,
+      newBugs: [{id: 0, whiteboard: ''}, {id: 1, whiteboard: ''}],
+    });
+    TimelineDispatcher.dispatch({
+      type: TimelineConstants.SET_RAW_PRS,
+      newPRs: [],
+    });
+
+    expect(BugToPRStore.prsFor(0)).to.equal(new Immutable.List());
+    expect(BugToPRStore.prsFor(1)).to.equal(new Immutable.List());
   });
 });

@@ -42,6 +42,8 @@ BugToPRStore.dispatchToken = TimelineDispatcher.register((action) => {
 
       // Make a map of bug ids to a list of PRs that reference them.
       bugToPRs = new Immutable.Map().withMutations(map => {
+        bugIds.forEach((bugId) => map.set(bugId, new Immutable.List()));
+
         // For each PR
         for (let pr of PRStore.getAll()) {
           // For every bug in that PR
@@ -49,7 +51,7 @@ BugToPRStore.dispatchToken = TimelineDispatcher.register((action) => {
             // If it is in BugStore
             if (bugIds.contains(bugId)) {
               // Add an entry to bugToPRs
-              map.update(bugId, new Immutable.List(), (prList) => prList.push(pr));
+              map.update(bugId, (prList) => prList.push(pr));
             }
           }
         }
