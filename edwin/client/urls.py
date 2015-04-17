@@ -4,5 +4,5 @@ from edwin.client import views
 
 
 urlpatterns = [
-    url(r'^$', views.client),
+    url(r'^$', views.client, name='client'),
 ]

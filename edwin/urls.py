@@ -4,9 +4,9 @@ from django.conf import settings
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'api', include('edwin.teams.urls')),
+    url(r'api', include('edwin.teams.urls', namespace='teams', app_name='teams')),
+    url(r'', include('edwin.client.urls', namespace='client', app_name='client')),
     url(r'admin', include(admin.site.urls)),
-    url(r'', include('edwin.client.urls')),
 ]
 
 if settings.DEBUG:
