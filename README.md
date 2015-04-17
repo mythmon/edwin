@@ -9,6 +9,13 @@ Edwin is a bug management system.
 * **status** [![Build Status](https://travis-ci.org/mythmon/edwin.svg?branch=master)](https://travis-ci.org/mythmon/edwin)
 
 
+# Requirements
+
+1. Python 3.4
+2. npm
+3. a monkey with a banana
+
+
 # Install for hacking
 
 1. create a virtual environment
