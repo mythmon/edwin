@@ -4,3 +4,6 @@ globals:
   expect: false
   require: false
   beforeEach: false,
+
+rules:
+  no-unused-expressions: false

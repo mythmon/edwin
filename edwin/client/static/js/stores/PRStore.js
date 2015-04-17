@@ -41,7 +41,7 @@ const PRStore = new _PRStore();
 
 PRStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
-    case TimelineConstants.SET_RAW_BUGS:
+    case TimelineConstants.SET_RAW_PRS:
       prs = Immutable.fromJS(action.newPRs.map(augmentPR));
       PRStore.emitChange();
       break;

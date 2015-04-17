@@ -10,7 +10,7 @@ import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
 import TimelineConstants from '../constants/TimelineConstants';
 import Immutable from 'immutable';
-import * as whiteboard from '../utils/whiteboard';
+import * as whiteboard from '../utils/parsers';
 
 let bugs = Immutable.List();
 

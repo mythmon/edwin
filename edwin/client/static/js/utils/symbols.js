@@ -7,6 +7,6 @@ import Symbol from 'es6-symbol'; // Polyfill
  */
 export function symbolMap(names) {
   let map = {};
-  names.forEach((name) => { map[name] = Symbol[name]; });
+  names.forEach((name) => { map[name] = Symbol(name); });
   return map;
 }
