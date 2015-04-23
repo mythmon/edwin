@@ -93,7 +93,7 @@ class BugRow extends React.Component {
           {bug.getIn(['whiteboard_parsed', 'p'])}
         </td>
         <td className="BugTable__data--number">
-          {prs.map((pr) => <a href={pr.get('url')}>#{pr.get('number')}</a>)}
+          {prs.map((pr) => <a href={pr.get('html_url')}>#{pr.get('number')}</a>)}
         </td>
       </tr>
     );
