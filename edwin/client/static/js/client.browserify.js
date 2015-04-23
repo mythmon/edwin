@@ -12,6 +12,7 @@ import TimelineApp from './components/TimelineApp';
 import TimelineDispatcher from './dispatcher/TimelineDispatcher';
 import * as TimelineActions from './actions/TimelineActions';
 import './utils/bzAPI';
+import './utils/githubAPI';
 
 TimelineDispatcher.register((action) => {
   console.log('Dispatched action:', action);
@@ -19,4 +20,4 @@ TimelineDispatcher.register((action) => {
 
 React.render(<TimelineApp/>, document.body);
 
-TimelineActions.updateSearch({whiteboard: 's=2015.6'});
+TimelineActions.updateSearch({whiteboard: 's=2015.7'});

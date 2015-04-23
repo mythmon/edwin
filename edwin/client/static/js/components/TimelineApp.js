@@ -1,40 +1,25 @@
 import React from 'react';
-import BugStore from '../stores/BugStore';
 import Gravatar from 'react-gravatar';
 
-/**
- * Get the current values from every Store, and combine them into an object
- * ready to be used for the state of {@link TimelineApp}.
- */
-function getStateFromStores() {
-  return {
-    bugs: BugStore.getAll(),
-  };
-}
+import BaseComponent from '../utils/BaseComponent';
+import BugStore from '../stores/BugStore';
+import BugToPRStore from '../stores/BugToPRStore';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
  * sections.
  * @class
  */
-export default class TimelineApp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = getStateFromStores();
-
-    this.onChange = this.onChange.bind(this);
+export default class TimelineApp extends BaseComponent {
+  get stores() {
+    return [BugStore, BugToPRStore];
   }
 
-  componentDidMount() {
-    BugStore.addChangeListener(this.onChange);
-  }
-
-  componentWillUnmount() {
-    BugStore.removeChangeListener(this.onChange);
-  }
-
-  onChange() {
-    this.setState(getStateFromStores());
+  getNewState() {
+    return {
+      bugs: BugStore.getAll(),
+      bugToPRs: BugToPRStore.getAll(),
+    };
   }
 
   render() {
@@ -58,13 +43,19 @@ export default class TimelineApp extends React.Component {
               <th className="BugTable__head--number">
                 Points
               </th>
+              <th className="BugTable__head--number">
+                PR
+              </th>
             </tr>
           </thead>
 
           <tbody>
-            {this.state.bugs.map((bug) => (
-              <BugRow key={`bug-${bug.id}`} {...bug}/>
-            ))}
+            {this.state.bugs.map((bug) => {
+              return <BugRow
+                key={`bug-${bug.get('id')}`}
+                bug={bug}
+                prs={BugToPRStore.get(bug.get('id'))}/>;
+            })}
           </tbody>
         </table>
       </div>
@@ -78,24 +69,31 @@ export default class TimelineApp extends React.Component {
  */
 class BugRow extends React.Component {
   render() {
+    let bug = this.props.bug;
+    let prs = this.props.prs;
+    let bugUrl = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.get('id')}`;
+
     return (
       <tr>
         <td className="BugTable__data--number">
-          <a href={`https://bugzilla.mozilla.org/show_bug.cgi?id=${this.props.id}`}>
-            {this.props.id}
+          <a href={bugUrl}>
+            {bug.get('id')}
           </a>
         </td>
         <td className="BugTable__data">
-          {this.props.summary}
+          {bug.get('summary')}
         </td>
         <td className="BugTable__data">
-          <AssignedTo {...this.props.assigned_to_detail}/>
+          <AssignedTo user={bug.get('assigned_to_detail')}/>
         </td>
         <td className="BugTable__data">
-          {this.props.status}
+          {bug.get('status')}
         </td>
         <td className="BugTable__data--number">
-          {this.props.whiteboard_parsed.p}
+          {bug.getIn(['whiteboard_parsed', 'p'])}
+        </td>
+        <td className="BugTable__data--number">
+          {prs.map((pr) => <a href={pr.get('url')}>#{pr.get('number')}</a>)}
         </td>
       </tr>
     );
@@ -110,15 +108,14 @@ class BugRow extends React.Component {
  */
 class AssignedTo extends React.Component {
   render() {
-    if (this.props.email === 'nobody@mozilla.org') {
+    const user = this.props.user;
+    if (user.get('email') === 'nobody@mozilla.org') {
       return <span/>;
     } else {
-      return (
-        <span>
-          <Gravatar email={this.props.email} https size={32}/>
-          {this.props.real_name || this.props.name}
-        </span>
-      );
+      return <span>
+        <Gravatar email={user.get('email')} https size={32}/>
+        {user.get('real_name', user.get('name'))}
+      </span>;
     }
   }
 }

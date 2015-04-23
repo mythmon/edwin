@@ -14,11 +14,11 @@ describe('PRStore', () => {
   it('recieves PR data', () => {
     TimelineDispatcher.dispatch({
       type: TimelineConstants.SET_RAW_PRS,
-      newPRs: [{id: 1, title: ''}, {id: 2, title: ''}],
+      newPRs: [{number: 1, title: ''}, {number: 2, title: ''}],
     });
     let prs = PRStore.getAll();
-    expect(prs.getIn([0, 'id'])).to.equal(1);
-    expect(prs.getIn([1, 'id'])).to.equal(2);
+    expect(prs.getIn([0, 'number'])).to.equal(1);
+    expect(prs.getIn([1, 'number'])).to.equal(2);
   });
 
   it('augments PRs without bug references with an empty list', () => {

@@ -7,6 +7,7 @@ import {buildUrl} from '../utils/urls';
 const fetch = window.fetch;
 const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
 const fields = [
+  'assigned_to',
   'blocks',
   'depends_on',
   'id',
@@ -58,9 +59,6 @@ export function getBugs() {
 
   apiCall('/bug', params.toJS())
     .then((response) => response.json())
-    .catch((err) => {
-      console.error('Error fetching bugs', err);
-    })
     .then((data) => TimelineActions.setBugs(data.bugs))
     .catch((err) => {
       console.error('Error updating bugs', err);
