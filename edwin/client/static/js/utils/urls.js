@@ -1,5 +1,13 @@
 import _ from 'lodash';
 
+function qsValue(key, value) {
+  if (Array.isArray(value)) {
+    return value.map((v) => qsValue(key, v)).join('&');
+  } else {
+    return `${key}=${value}`;
+  }
+}
+
 /**
  * @param {string} base Base of the url, such as 'http://example.com/api'
  * @param {string} endpoint Endpoint of the url, such as "/book/create".
@@ -8,7 +16,7 @@ import _ from 'lodash';
  */
 export function buildUrl(base, endpoint, query={}) {
   let qs = '';
-  let qsParts = _.map(query, (value, key) => `${key}=${value}`);
+  let qsParts = _.map(query, (value, key) => qsValue(key, value));
 
   if (qsParts.length > 0) {
     qs = '?' + qsParts.join('&');
