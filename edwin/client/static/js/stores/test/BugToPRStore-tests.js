@@ -17,23 +17,23 @@ describe('PRStore', () => {
 
     // Empty the stores
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_BUGS,
+      type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs: [],
     });
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_PRS,
+      type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: [],
     });
   });
 
   it('makes a mapping from PRs to Bugs', () => {
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_BUGS,
+      type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs: [{id: 0, whiteboard: ''}, {id: 1, whiteboard: ''}],
     });
     let prs = [{number: 0, title: '[Bug 0] Bar'}, {number: 1, title: '[Bug 1] Foo'}];
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_PRS,
+      type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: prs,
     });
 
@@ -43,7 +43,7 @@ describe('PRStore', () => {
 
   it('returns an empty list for known bugs with no PRs', () => {
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_BUGS,
+      type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs: [{id: 0, whiteboard: ''}, {id: 1, whiteboard: ''}],
     });
 
@@ -58,12 +58,12 @@ describe('PRStore', () => {
 
   it('returns the entire mapping', () => {
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_BUGS,
+      type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs: [{id: 0, whiteboard: ''}, {id: 1, whiteboard: ''}],
     });
     let prs = [{number: 0, title: '[Bug 0] Bar'}, {number: 1, title: '[Bug 1] Foo'}];
     TimelineDispatcher.dispatch({
-      type: TimelineConstants.SET_RAW_PRS,
+      type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: prs,
     });
 
