@@ -1,9 +1,11 @@
 import React from 'react';
 import Gravatar from 'react-gravatar';
+import Immutable from 'immutable';
 
 import BaseComponent from '../utils/BaseComponent';
 import BugStore from '../stores/BugStore';
 import BugToPRStore from '../stores/BugToPRStore';
+import BugStateStore from '../stores/BugStateStore';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
@@ -12,13 +14,14 @@ import BugToPRStore from '../stores/BugToPRStore';
  */
 export default class TimelineApp extends BaseComponent {
   get stores() {
-    return [BugStore, BugToPRStore];
+    return [BugStore, BugToPRStore, BugStateStore];
   }
 
   getNewState() {
     return {
       bugs: BugStore.getAll(),
       bugToPRs: BugToPRStore.getAll(),
+      bugStates: BugStateStore.getAll(),
     };
   }
 
@@ -46,15 +49,20 @@ export default class TimelineApp extends BaseComponent {
               <th className="BugTable__head--number">
                 PR
               </th>
+              <th className="BugTable__head">
+                State
+              </th>
             </tr>
           </thead>
 
           <tbody>
             {this.state.bugs.map((bug) => {
+              let bugId = bug.get('id');
               return <BugRow
-                key={`bug-${bug.get('id')}`}
+                key={`bug-${bugId}`}
                 bug={bug}
-                prs={BugToPRStore.get(bug.get('id'))}/>;
+                prs={this.state.bugToPRs.get(bugId, new Immutable.List())}
+                bugState={this.state.bugStates.get(bugId)}/>;
             })}
           </tbody>
         </table>
@@ -93,7 +101,10 @@ class BugRow extends React.Component {
           {bug.getIn(['whiteboard_parsed', 'p'])}
         </td>
         <td className="BugTable__data--number">
-          {prs.map((pr) => <a href={pr.get('html_url')}>#{pr.get('number')}</a>)}
+          {prs.map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
+        </td>
+        <td className="BugTable__data">
+          {(this.props.bugState || 'Unknown').toString()}
         </td>
       </tr>
     );
