@@ -10,7 +10,7 @@ import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
 import TimelineConstants from '../constants/TimelineConstants';
 import Immutable from 'immutable';
-import * as whiteboard from '../utils/parsers';
+import * as parsers from '../utils/parsers';
 
 let bugs = Immutable.List();
 
@@ -35,11 +35,7 @@ class _BugStore extends BaseStore {
  * @param {Object} bug The bug to augment. Will be modified and returned.
  */
 function augmentBug(bug) {
-  try {
-    bug.whiteboard_parsed = whiteboard.grammar.parse(bug.whiteboard);
-  } catch(e) {
-    bug.whiteboard_parsed = null;
-  }
+  bug.whiteboard_parsed = parsers.whiteboardData.parse(bug.whiteboard);
   return bug;
 }
 

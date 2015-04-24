@@ -43,10 +43,10 @@ function apiCall(endpoint, params={}) {
 export function getPRs() {
   let bugs = BugStore.getAll();
 
-  apiCall(`/${REPO}/pulls`)
+  apiCall(`/repos/${REPO}/pulls`)
     .then((response) => response.json())
-    .catch((err) => {
-      console.error('Error fetching PRs', err);
+    .then((data) => {
+      return data;
     })
     .then((data) => TimelineActions.setPRs(data))
     .catch((err) => {
@@ -55,4 +55,4 @@ export function getPRs() {
 }
 
 
-QueryStore.addChangeListener(getPRs);
+BugStore.addChangeListener(getPRs);

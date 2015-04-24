@@ -23,8 +23,12 @@ class _BugToPRStore extends BaseStore {
    * @param {Number} bug_id The Id of the bug to fetch PRs for.
    * @returns {Ojbect} A PR.
    */
-  prsFor(bug_id) {
-    return bugToPRs.get(bug_id);
+  get(bugId) {
+    return bugToPRs.get(bugId, new Immutable.List());
+  }
+
+  getAll() {
+    return bugToPRs;
   }
 }
 
@@ -37,25 +41,22 @@ BugToPRStore.dispatchToken = TimelineDispatcher.register((action) => {
     case TimelineConstants.SET_RAW_PRS:
       // Wait for both Bugs and PRs to settle.
       TimelineDispatcher.waitFor([BugStore.dispatchToken, PRStore.dispatchToken]);
+
       // Get all bug ids.
       let bugIds = new Immutable.Set(BugStore.getAll().map((bug) => bug.get('id')));
 
       // Make a map of bug ids to a list of PRs that reference them.
-      bugToPRs = new Immutable.Map().withMutations(map => {
-        bugIds.forEach((bugId) => map.set(bugId, new Immutable.List()));
+      bugToPRs = new Immutable.Map();
+      bugIds.forEach((bugId) => bugToPRs.set(bugId, new Immutable.List()));
 
-        // For each PR
-        for (let pr of PRStore.getAll()) {
-          // For every bug in that PR
-          for (let bugId of pr.get('bugs_referenced')) {
-            // If it is in BugStore
-            if (bugIds.contains(bugId)) {
-              // Add an entry to bugToPRs
-              map.update(bugId, (prList) => prList.push(pr));
-            }
-          }
+      // For each PR
+      for (let pr of PRStore.getAll()) {
+        // For every bug in that PR
+        for (let bugId of pr.get('bugs_referenced')) {
+          // Add an entry to bugToPRs
+          bugToPRs = bugToPRs.update(bugId, new Immutable.List(), (prList) => prList.push(pr));
         }
-      });
+      }
 
       BugToPRStore.emitChange();
       break;
