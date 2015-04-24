@@ -8,3 +8,13 @@ export const ActionTypes = symbolMap([
   /* Reset all the PRs in the store to the provided raw bugs. */
   'SET_RAW_PRS',
 ]);
+
+export const BugStates = symbolMap([
+  'NOT_READY',
+  'READY',
+  'STARTED',
+  'IN_REVIEW',
+  'MERGED',
+  'DONE',
+  'UNKNOWN',
+]);
