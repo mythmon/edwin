@@ -7,3 +7,6 @@ install:
 script:
   - DJANGO_SETTINGS_MODULE=edwin.settings DJANGO_CONFIGURATION=Test ./manage.py test
   - npm test
+branches:
+  only:
+    - master
