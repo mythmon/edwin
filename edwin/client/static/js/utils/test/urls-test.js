@@ -17,5 +17,10 @@ describe('urls', () => {
       let url = buildUrl('http://example.com', '/api', {foo: 'bar'});
       expect(url).to.equal('http://example.com/api?foo=bar');
     });
+
+    it('allows lists of values in querystrings', () => {
+      let url = buildUrl('https://example.com', '/api', {foo: ['bar', 'baz']});
+      expect(url).to.equal('https://example.com/api?foo=bar&foo=baz');
+    });
   });
 });
