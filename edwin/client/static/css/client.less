@@ -30,3 +30,26 @@ h1 {
     text-align: right;
   }
 }
+
+.StateProgress,
+.StateProgress--unknown {
+  display: inline-block;
+  height: 16px;
+  width: 64px;
+  display: flex;
+
+  &__cell,
+  &__cell--filled,
+  &__cell--empty {
+    flex: 1 1;
+    margin-right: 1px;
+  }
+
+  &__cell--filled {
+    background: #2C96Bf;
+  }
+
+  &__cell--empty {
+    background: #8C7161;
+  }
+}

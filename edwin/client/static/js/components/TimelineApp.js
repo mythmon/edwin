@@ -6,6 +6,7 @@ import BaseComponent from '../utils/BaseComponent';
 import BugStore from '../stores/BugStore';
 import BugToPRStore from '../stores/BugToPRStore';
 import BugStateStore from '../stores/BugStateStore';
+import {BugStates} from '../constants/TimelineConstants';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
@@ -80,6 +81,8 @@ class BugRow extends React.Component {
     let bug = this.props.bug;
     let prs = this.props.prs;
     let bugUrl = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.get('id')}`;
+    let bugStateList = new Immutable.List(Immutable.fromJS(BugStates).values())
+      .filter((state) => state !== BugStates.UNKNOWN);
 
     return (
       <tr>
@@ -104,7 +107,7 @@ class BugRow extends React.Component {
           {prs.map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
         </td>
         <td className="BugTable__data">
-          {(this.props.bugState || 'Unknown').toString()}
+          <StateProgress allStates={bugStateList} currentState={this.props.bugState}/>
         </td>
       </tr>
     );
@@ -116,6 +119,10 @@ class BugRow extends React.Component {
  * Renders a small chip for a user. Shows a name and a Gravatar.
  *
  * TODO: This is probably useful enough to move somewhere public
+ *
+ * @component
+ * @prop {Immutable.Map} user The user to render. Should have an email field
+ *       and either a real_name or name field.
  */
 class AssignedTo extends React.Component {
   render() {
@@ -128,5 +135,44 @@ class AssignedTo extends React.Component {
         {user.get('real_name', user.get('name'))}
       </span>;
     }
+  }
+}
+
+
+/**
+ * Renders a small segmented progress bar of multiple states.
+ *
+ * @component
+ * @prop {Immutable.List} allStates An ordered list of all the states to be represented.
+ * @prop currentState The state to represent.
+ */
+class StateProgress extends React.Component {
+  render() {
+    let numCells = this.props.allStates.count() - 1;
+    let cellsToFill = 0;
+
+    if (!this.props.allStates.contains(this.props.currentState)) {
+      return (
+        <div className="StateProgress--unknown" title={(this.props.currentState || 'unknown').toString()}>
+          ???
+        </div>
+      );
+    }
+
+    for (let state of this.props.allStates) {
+      if (state === this.props.currentState) {
+        break;
+      }
+      cellsToFill++;
+    }
+
+    return (
+      <div className="StateProgress" title={(this.props.currentState || 'unknown').toString()}>
+        {Immutable.Range(0, cellsToFill)
+          .map((i) => <div key={`cell-${i}`} className="StateProgress__cell--filled"/>)}
+        {Immutable.Range(cellsToFill, numCells)
+          .map((i) => <div key={`cell-${i}`} className="StateProgress__cell--empty"/>)}
+      </div>
+    );
   }
 }
