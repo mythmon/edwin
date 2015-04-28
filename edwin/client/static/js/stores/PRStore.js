@@ -7,7 +7,7 @@
 
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
-import TimelineConstants from '../constants/TimelineConstants';
+import * as TimelineConstants from '../constants/TimelineConstants';
 import Immutable from 'immutable';
 import * as parsers from '../utils/parsers';
 
@@ -41,7 +41,7 @@ const PRStore = new _PRStore();
 
 PRStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
-    case TimelineConstants.SET_RAW_PRS:
+    case TimelineConstants.ActionTypes.SET_RAW_PRS:
       prs = Immutable.fromJS(action.newPRs.map(augmentPR));
       PRStore.emitChange();
       break;

@@ -7,7 +7,7 @@
 
 import Immutable from 'immutable';
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
-import TimelineConstants from '../constants/TimelineConstants';
+import * as TimelineConstants from '../constants/TimelineConstants';
 import BaseStore from '../utils/BaseStore';
 
 window.Immutable = Immutable;
@@ -28,7 +28,7 @@ const QueryStore = new _QueryStore();
 
 QueryStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
-    case TimelineConstants.UPDATE_SEARCH:
+    case TimelineConstants.ActionTypes.UPDATE_SEARCH:
       query = Immutable.Map(action.newVars);
       QueryStore.emitChange();
       break;

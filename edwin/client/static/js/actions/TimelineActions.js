@@ -1,5 +1,5 @@
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
-import TimelineConstants from '../constants/TimelineConstants';
+import * as TimelineConstants from '../constants/TimelineConstants';
 
 /**
  * Updates fields in the bugzilla query.
@@ -8,7 +8,7 @@ import TimelineConstants from '../constants/TimelineConstants';
  */
 export function updateSearch(newVars) {
   TimelineDispatcher.dispatch({
-    type: TimelineConstants.UPDATE_SEARCH,
+    type: TimelineConstants.ActionTypes.UPDATE_SEARCH,
     newVars,
   });
 }
@@ -20,7 +20,7 @@ export function updateSearch(newVars) {
  */
 export function setBugs(newBugs) {
   TimelineDispatcher.dispatch({
-    type: TimelineConstants.SET_RAW_BUGS,
+    type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
     newBugs,
   });
 }
@@ -28,7 +28,7 @@ export function setBugs(newBugs) {
 
 export function setPRs(newPRs) {
   TimelineDispatcher.dispatch({
-    type: TimelineConstants.SET_RAW_PRS,
+    type: TimelineConstants.ActionTypes.SET_RAW_PRS,
     newPRs,
   });
 }

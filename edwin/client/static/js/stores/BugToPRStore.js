@@ -9,7 +9,7 @@
 import Immutable from 'immutable';
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
-import TimelineConstants from '../constants/TimelineConstants';
+import * as TimelineConstants from '../constants/TimelineConstants';
 import BugStore from './BugStore';
 import PRStore from './PRStore';
 import * as parsers from '../utils/parsers';
@@ -18,15 +18,20 @@ let bugToPRs = Immutable.Map();
 
 class _BugToPRStore extends BaseStore {
   /**
-   * Get the current state of all PRs.
+   * Get the list of PRs that reference a bug.
    *
-   * @param {Number} bug_id The Id of the bug to fetch PRs for.
-   * @returns {Ojbect} A PR.
+   * @param {Number} bugId The Id of the bug to fetch PRs for.
+   * @returns {Array.<Object>} All the PRs that reference {@link bugId}.
    */
   get(bugId) {
     return bugToPRs.get(bugId, new Immutable.List());
   }
 
+  /**
+   * Get the full Bug->PR mapping.
+   *
+   * @returns {Immutable.Map}
+   */
   getAll() {
     return bugToPRs;
   }
@@ -37,8 +42,8 @@ const BugToPRStore = new _BugToPRStore();
 BugToPRStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
     // Respond the same to both SET_RAW_PRS and SET_RAW_BUGS.
-    case TimelineConstants.SET_RAW_BUGS:
-    case TimelineConstants.SET_RAW_PRS:
+    case TimelineConstants.ActionTypes.SET_RAW_BUGS:
+    case TimelineConstants.ActionTypes.SET_RAW_PRS:
       // Wait for both Bugs and PRs to settle.
       TimelineDispatcher.waitFor([BugStore.dispatchToken, PRStore.dispatchToken]);
 

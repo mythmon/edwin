@@ -8,7 +8,7 @@
 
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
-import TimelineConstants from '../constants/TimelineConstants';
+import * as TimelineConstants from '../constants/TimelineConstants';
 import Immutable from 'immutable';
 import * as parsers from '../utils/parsers';
 
@@ -43,7 +43,7 @@ const BugStore = new _BugStore();
 
 BugStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
-    case TimelineConstants.SET_RAW_BUGS:
+    case TimelineConstants.ActionTypes.SET_RAW_BUGS:
       bugs = Immutable.fromJS(action.newBugs.map(augmentBug));
       BugStore.emitChange();
       break;
