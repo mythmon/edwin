@@ -1,55 +1,100 @@
+body {
+  background: #f2f2f2;
+  font-family: sans;
+}
+
 h1 {
   text-align: center;
   width: 100%;
 }
 
+a:link,
+a:visited {
+  color: #2D69BF;
+  text-decoration: none;
+}
+a:hover,
+a:active {
+  color: #2CA4BF;
+  text-decoration: underline;
+}
+
 .BugTable {
   border-collapse: collapse;
+  margin: 10px auto;
 
-  &__head,
-  &__head--number {
-    border-bottom: 1px solid #888;
+  &__head {
+    border-bottom: 2px solid #8C7161;
     padding: 4px 5px;
-    text-align: left;
     font-weight: normal;
   }
 
-  &__head--number {
-    text-align: right;
-  }
-
   &__data,
-  &__data--number {
+  &__data--center,
+  &__data--right {
     height: 48px;
     max-width: 400px;
     padding: 4px 5px;
     text-align: left;
+    vertical-align: top;
   }
 
-  &__data--number {
+  &__data--right {
     text-align: right;
+  }
+
+  &__data--center {
+    text-align: center;
+  }
+}
+
+.AssignedTo {
+  display: flex;
+  align-items: center;
+  max-width: 180px;
+
+  &__name {
+    margin-left: 5px;
+  }
+
+  &__avatar,
+  &__avatar--empty {
+    background-color: #f0f0f0;
+    display: inline-block;
+    height: 36px;
+    margin-top: 1px;
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+    width: 36px;
+  }
+
+  &__avatar--empty {
+    margin-right: 10px;
   }
 }
 
 .StateProgress,
 .StateProgress--unknown {
   display: inline-block;
-  height: 16px;
+  font-size: 0.8em;
   width: 64px;
-  display: flex;
 
-  &__cell,
-  &__cell--filled,
-  &__cell--empty {
-    flex: 1 1;
-    margin-right: 1px;
-  }
+  &__bar {
+    display: flex;
+    height: 12px;
 
-  &__cell--filled {
-    background: #2C96Bf;
-  }
+    &__cell,
+    &__cell--filled,
+    &__cell--empty {
+      flex: 1 1;
+      margin-right: 1px;
+    }
 
-  &__cell--empty {
-    background: #8C7161;
+    &__cell--filled {
+      background: #2C96Bf;
+    }
+
+    &__cell--empty {
+      background: #8C7161;
+    }
   }
 }

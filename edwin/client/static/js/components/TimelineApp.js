@@ -32,7 +32,7 @@ export default class TimelineApp extends BaseComponent {
         <table className="BugTable">
           <thead>
             <tr>
-              <th className="BugTable__head--number">
+              <th className="BugTable__head">
                 ID
               </th>
               <th className="BugTable__head">
@@ -42,12 +42,9 @@ export default class TimelineApp extends BaseComponent {
                 Assigned to
               </th>
               <th className="BugTable__head">
-                Status
-              </th>
-              <th className="BugTable__head--number">
                 Points
               </th>
-              <th className="BugTable__head--number">
+              <th className="BugTable__head">
                 PR
               </th>
               <th className="BugTable__head">
@@ -84,9 +81,28 @@ class BugRow extends React.Component {
     let bugStateList = new Immutable.List(Immutable.fromJS(BugStates).values())
       .filter((state) => state !== BugStates.UNKNOWN);
 
+    function prettyBugState(bugState) {
+      switch (bugState) {
+        case BugStates.NOT_READY:
+          return 'Not Ready';
+        case BugStates.READY:
+          return 'Ready';
+        case BugStates.STARTED:
+          return 'Started';
+        case BugStates.IN_REVIEW:
+          return 'In Review';
+        case BugStates.MERGED:
+          return 'Merged';
+        case BugStates.DONE:
+          return 'Done';
+        default:
+          return 'Unknown';
+      }
+    }
+
     return (
       <tr>
-        <td className="BugTable__data--number">
+        <td className="BugTable__data--right">
           <a href={bugUrl}>
             {bug.get('id')}
           </a>
@@ -97,17 +113,14 @@ class BugRow extends React.Component {
         <td className="BugTable__data">
           <AssignedTo user={bug.get('assigned_to_detail')}/>
         </td>
-        <td className="BugTable__data">
-          {bug.get('status')}
-        </td>
-        <td className="BugTable__data--number">
+        <td className="BugTable__data--center">
           {bug.getIn(['whiteboard_parsed', 'p'])}
         </td>
-        <td className="BugTable__data--number">
+        <td className="BugTable__data--center">
           {prs.map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
         </td>
-        <td className="BugTable__data">
-          <StateProgress allStates={bugStateList} currentState={this.props.bugState}/>
+        <td className="BugTable__data--center">
+          <StateProgress allStates={bugStateList} currentState={this.props.bugState} toDisplay={prettyBugState}/>
         </td>
       </tr>
     );
@@ -128,11 +141,16 @@ class AssignedTo extends React.Component {
   render() {
     const user = this.props.user;
     if (user.get('email') === 'nobody@mozilla.org') {
-      return <span/>;
+      return (
+        <span className="AssignedTo">
+          <span className="AssignedTo__avatar--empty"/>
+          <span className="AssignedTo__name">—</span>
+        </span>
+      );
     } else {
-      return <span>
-        <Gravatar email={user.get('email')} https size={32}/>
-        {user.get('real_name', user.get('name'))}
+      return <span className="AssignedTo">
+        <Gravatar className="AssignedTo__avatar" email={user.get('email')} https size={36}/>
+        <span className="AssignedTo__name">{user.get('real_name', user.get('name'))}</span>
       </span>;
     }
   }
@@ -167,11 +185,14 @@ class StateProgress extends React.Component {
     }
 
     return (
-      <div className="StateProgress" title={(this.props.currentState || 'unknown').toString()}>
-        {Immutable.Range(0, cellsToFill)
-          .map((i) => <div key={`cell-${i}`} className="StateProgress__cell--filled"/>)}
-        {Immutable.Range(cellsToFill, numCells)
-          .map((i) => <div key={`cell-${i}`} className="StateProgress__cell--empty"/>)}
+      <div className="StateProgress">
+        <div className="StateProgress__bar">
+          {Immutable.Range(0, cellsToFill)
+            .map((i) => <div key={`cell-${i}`} className="StateProgress__bar__cell--filled"/>)}
+          {Immutable.Range(cellsToFill, numCells)
+            .map((i) => <div key={`cell-${i}`} className="StateProgress__bar__cell--empty"/>)}
+        </div>
+        {this.props.toDisplay(this.props.currentState)}
       </div>
     );
   }
