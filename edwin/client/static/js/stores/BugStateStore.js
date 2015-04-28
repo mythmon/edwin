@@ -40,6 +40,13 @@ BugStateStore.dispatchToken = TimelineDispatcher.register((action) => {
 
       bugStates = new Immutable.Map();
 
+      /* TODO: This doesn't handle bugs that are blocked, and it should.
+       * Unfortunaty, that is probably going to require some sort of toposort,
+       * since if bug A is blocked on bug B, and bug B is READY or better, it
+       * is allowed for bug A to be READY as well. It is only the case that
+       * bug A cannot be READY if bug B is NOT_READY.
+       */
+
       BugStore.getAll().forEach((bug) => {
         const bugId = bug.get('id');
         let prs = BugToPRStore.get(bugId);
