@@ -6,11 +6,13 @@
  * 	 processed to add calculated fields.
  */
 
+import Immutable from 'immutable';
+
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
-import * as TimelineConstants from '../constants/TimelineConstants';
-import Immutable from 'immutable';
-import * as parsers from '../utils/parsers';
+import PRStore from './PRStore';
+import {ActionTypes, BugStates} from '../constants/TimelineConstants';
+import {whiteboardData} from '../utils/parsers';
 
 let bugs = Immutable.List();
 
@@ -25,27 +27,84 @@ class _BugStore extends BaseStore {
   }
 }
 
+const BugStore = new _BugStore();
+
 /**
  * Adds useful calculated fields to bugs.
  *
  * Fields added:
- * - whiteboard_parsed: If the bug's whiteboard matches
+ * - whiteboardParsed: If the bug's whiteboard matches
  *   {@link utils.whiteboard}'s expected grammar, this holds the parsed value.
+ * - state: A state like DONE or READY.
  *
  * @param {Object} bug The bug to augment. Will be modified and returned.
  */
 function augmentBug(bug) {
-  bug.whiteboard_parsed = parsers.whiteboardData.parse(bug.whiteboard);
+  // Parse the whiteboard field
+  bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard'))));
+
+  // Store all the PRs that reference this bug.
+  bug = bug.update('prs', (prs) => {
+    if (prs === undefined) {
+      prs = new Immutable.List();
+    }
+    PRStore.getAll().forEach((pr) => {
+      if (pr.get('bugsReferenced').contains(bug.get('id'))) {
+        prs = prs.push(pr);
+      }
+    });
+    return prs;
+  });
+
+  /* NB: bug.status comes from Bugzilla, and is RESOLVED, NEW, etc.
+   * bug.state on the other hand comes from Edwin, and is one of {@link BugStates} */
+
+  // If the bug is RESOLVED: DONE.
+  if (bug.get('status') === 'RESOLVED') {
+    bug = bug.set('state', BugStates.DONE);
+
+  // If there are PRs, and every one is merged: MERGED.
+  } else if (!bug.get('prs').isEmpty() && bug.get('prs').every((pr) => pr.get('merged'))) {
+    bug = bug.set('state', BugStates.MERGED);
+
+  // If there are PRs (and not all are merged): IN_REVIEW.
+  } else if (!bug.get('prs').isEmpty()) {
+    bug = bug.set('state', BugStates.IN_REVIEW);
+
+  // If the bug is assigned and ASSIGNED: STARTED
+  } else if (bug.get('status', 'ASSIGNED') && bug.get('assigned_to') !== 'nobody@mozilla.com') {
+    bug = bug.set('state', BugStates.STARTED);
+
+  // If there is an estimate: READY.
+  } else if (typeof bug.getIn(['whiteboardParsed', 'p']) === 'number') {
+    bug = bug.set('state', BugStates.READY);
+
+  // Otherwise: NOT_READY.
+  } else {
+    bug = bug.set('state', BugStates.NOT_READY);
+  }
+
   return bug;
 }
 
-const BugStore = new _BugStore();
+function updateBugs() {
+  let oldBugs = bugs;
+  bugs = bugs.map(augmentBug);
+  if (oldBugs !== bugs) {
+    BugStore.emitChange();
+  }
+}
 
 BugStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
-    case TimelineConstants.ActionTypes.SET_RAW_BUGS:
-      bugs = Immutable.fromJS(action.newBugs.map(augmentBug));
-      BugStore.emitChange();
+    case ActionTypes.SET_RAW_BUGS:
+      bugs = Immutable.fromJS(action.newBugs);
+      updateBugs();
+      break;
+
+    case ActionTypes.SET_RAW_PRS:
+      TimelineDispatcher.waitFor([PRStore.dispatchToken]);
+      updateBugs();
       break;
 
     default:

@@ -4,8 +4,6 @@ import Immutable from 'immutable';
 
 import BaseComponent from '../utils/BaseComponent';
 import BugStore from '../stores/BugStore';
-import BugToPRStore from '../stores/BugToPRStore';
-import BugStateStore from '../stores/BugStateStore';
 import {BugStates} from '../constants/TimelineConstants';
 
 /**
@@ -15,17 +13,22 @@ import {BugStates} from '../constants/TimelineConstants';
  */
 export default class TimelineApp extends BaseComponent {
   get stores() {
-    return [BugStore, BugToPRStore, BugStateStore];
+    return [BugStore];
   }
 
   getNewState() {
     return {
       bugs: BugStore.getAll(),
-      bugToPRs: BugToPRStore.getAll(),
-      bugStates: BugStateStore.getAll(),
     };
   }
 
+  render() {
+    let bugs = this.state.bugs.sortBy((bug) => bug.get('state').value);
+    return <BugTable bugs={bugs}/>;
+  }
+}
+
+class BugTable extends React.Component {
   render() {
     return (
       <div>
@@ -54,13 +57,11 @@ export default class TimelineApp extends BaseComponent {
           </thead>
 
           <tbody>
-            {this.state.bugs.map((bug) => {
+            {this.props.bugs.map((bug) => {
               let bugId = bug.get('id');
               return <BugRow
                 key={`bug-${bugId}`}
-                bug={bug}
-                prs={this.state.bugToPRs.get(bugId, new Immutable.List())}
-                bugState={this.state.bugStates.get(bugId)}/>;
+                bug={bug}/>;
             })}
           </tbody>
         </table>
@@ -76,7 +77,6 @@ export default class TimelineApp extends BaseComponent {
 class BugRow extends React.Component {
   render() {
     let bug = this.props.bug;
-    let prs = this.props.prs;
     let bugUrl = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.get('id')}`;
     let bugStateList = new Immutable.List(Immutable.fromJS(BugStates).values())
       .filter((state) => state !== BugStates.UNKNOWN);
@@ -114,10 +114,10 @@ class BugRow extends React.Component {
           <AssignedTo user={bug.get('assigned_to_detail')}/>
         </td>
         <td className="BugTable__data--center">
-          {bug.getIn(['whiteboard_parsed', 'p'])}
+          {bug.getIn(['whiteboardParsed', 'p'])}
         </td>
         <td className="BugTable__data--center">
-          {prs.map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
+          {bug.get('prs').map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
         </td>
         <td className="BugTable__data--center">
           <StateProgress allStates={bugStateList} currentState={this.props.bugState} toDisplay={prettyBugState}/>
@@ -184,6 +184,8 @@ class StateProgress extends React.Component {
       cellsToFill++;
     }
 
+    console.log(this.props.currentState, cellsToFill, this.props.currentState.value);
+
     return (
       <div className="StateProgress">
         <div className="StateProgress__bar">
@@ -193,6 +195,7 @@ class StateProgress extends React.Component {
             .map((i) => <div key={`cell-${i}`} className="StateProgress__bar__cell--empty"/>)}
         </div>
         {this.props.toDisplay(this.props.currentState)}
+        {this.props.currentState.value}
       </div>
     );
   }

@@ -12,6 +12,7 @@ const fields = [
   'depends_on',
   'id',
   'last_change_time',
+  'priority',
   'resolution',
   'status',
   'summary',

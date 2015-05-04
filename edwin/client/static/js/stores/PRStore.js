@@ -5,11 +5,13 @@
  * - SET_RAW_PRS: Replaces the PR state with new PRs.
  */
 
+import Immutable from 'immutable';
+
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
+import BugStore from './BugStore';
 import * as TimelineConstants from '../constants/TimelineConstants';
-import Immutable from 'immutable';
-import * as parsers from '../utils/parsers';
+import {bugReferences} from '../utils/parsers';
 
 let prs = Immutable.List();
 
@@ -24,26 +26,39 @@ class _PRStore extends BaseStore {
   }
 }
 
+const PRStore = new _PRStore();
+
 /**
  * Adds useful calculated fields to PRs.
  *
  * Fields added:
- * - bugs_referenced: A list of bugs mentioned in the PR.
+ * - bugsReferenced: A list of bugs mentioned in the PR.
  *
  * @param {Object} pr The pr to augment. Will be modified and returned.
  */
 function augmentPR(pr) {
-  pr.bugs_referenced = parsers.bugReferences.parse(pr.title);
+  pr = pr.set('bugsReferenced', Immutable.fromJS(bugReferences.parse(pr.get('title'))));
   return pr;
 }
 
-const PRStore = new _PRStore();
+function update() {
+  let oldPRs = prs;
+  prs = prs.map(augmentPR);
+  if (oldPRs !== prs) {
+    PRStore.emitChange();
+  }
+}
 
 PRStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
     case TimelineConstants.ActionTypes.SET_RAW_PRS:
-      prs = Immutable.fromJS(action.newPRs.map(augmentPR));
-      PRStore.emitChange();
+      prs = Immutable.fromJS(action.newPRs).map(augmentPR);
+      update();
+      break;
+
+    case TimelineConstants.ActionTypes.SET_RAW_BUGS:
+      TimelineDispatcher.waitFor([BugStore.dispatchToken]);
+      update();
       break;
 
     default:

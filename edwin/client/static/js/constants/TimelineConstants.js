@@ -1,6 +1,6 @@
-import {symbolMap} from '../utils/symbols';
+import {constantMap} from '../utils/constants';
 
-export const ActionTypes = symbolMap([
+export const ActionTypes = constantMap([
   /* Update the Bugzilla search query. */
   'UPDATE_SEARCH',
   /* Reset all the bugs in the store to the provided raw bugs. */
@@ -9,12 +9,12 @@ export const ActionTypes = symbolMap([
   'SET_RAW_PRS',
 ]);
 
-export const BugStates = symbolMap([
+export const BugStates = constantMap([
+  'UNKNOWN',
   'NOT_READY',
   'READY',
   'STARTED',
   'IN_REVIEW',
   'MERGED',
   'DONE',
-  'UNKNOWN',
 ]);

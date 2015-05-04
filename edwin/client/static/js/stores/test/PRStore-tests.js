@@ -1,4 +1,7 @@
-import {expect} from 'chai';
+import chai, {expect} from 'chai';
+import chaiImmutable from 'chai-immutable';
+import Immutable from 'immutable';
+
 
 describe('PRStore', () => {
   let PRStore;
@@ -9,6 +12,16 @@ describe('PRStore', () => {
     PRStore = require('../PRStore');
     TimelineDispatcher = require('../../dispatcher/TimelineDispatcher');
     TimelineConstants = require('../../constants/TimelineConstants');
+
+    // Empty the stores
+    TimelineDispatcher.dispatch({
+      type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
+      newBugs: [],
+    });
+    TimelineDispatcher.dispatch({
+      type: TimelineConstants.ActionTypes.SET_RAW_PRS,
+      newPRs: [],
+    });
   });
 
   it('recieves PR data', () => {
@@ -27,7 +40,7 @@ describe('PRStore', () => {
       newPRs: [{title: 'Fix it'}],
     });
     let prs = PRStore.getAll();
-    expect(prs.getIn([0, 'bugs_referenced']).toJS()).to.deep.equal([]);
+    expect(prs.getIn([0, 'bugsReferenced']).toJS()).to.deep.equal([]);
   });
 
   it('augments PRs with referenced bug ids', () => {
@@ -36,7 +49,8 @@ describe('PRStore', () => {
       newPRs: [{title: '[Bug 123] Fix it'}, {title: '[Bug 456, 789] fix it fix it'}],
     });
     let prs = PRStore.getAll();
-    expect(prs.getIn([0, 'bugs_referenced']).toJS()).to.deep.equal([123]);
-    expect(prs.getIn([1, 'bugs_referenced']).toJS()).to.deep.equal([456, 789]);
+    console.log(JSON.stringify(prs.toJS()));
+    expect(prs.getIn([0, 'bugsReferenced']).toJS()).to.deep.equal([123]);
+    expect(prs.getIn([1, 'bugsReferenced']).toJS()).to.deep.equal([456, 789]);
   });
 });
