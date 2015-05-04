@@ -55,4 +55,4 @@ export function getPRs() {
 }
 
 
-BugStore.addChangeListener(getPRs);
+export default {getPRs};

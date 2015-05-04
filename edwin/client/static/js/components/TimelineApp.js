@@ -4,7 +4,11 @@ import Immutable from 'immutable';
 
 import BaseComponent from '../utils/BaseComponent';
 import BugStore from '../stores/BugStore';
+import QueryStore from '../stores/QueryStore';
+import PRStore from '../stores/PRStore';
 import {BugStates} from '../constants/TimelineConstants';
+import bzAPI from '../utils/bzAPI';
+import githubAPI from '../utils/githubAPI';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
@@ -14,6 +18,15 @@ import {BugStates} from '../constants/TimelineConstants';
 export default class TimelineApp extends BaseComponent {
   get stores() {
     return [BugStore];
+  }
+
+  /**
+   * On mounting, fetch data from APIs.
+   */
+  componentDidMount() {
+    super.componentDidMount();
+    bzAPI.getBugs();
+    githubAPI.getPRs();
   }
 
   getNewState() {
@@ -120,7 +133,7 @@ class BugRow extends React.Component {
           {bug.get('prs').map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
         </td>
         <td className="BugTable__data--center">
-          <StateProgress allStates={bugStateList} currentState={this.props.bugState} toDisplay={prettyBugState}/>
+          <StateProgress allStates={bugStateList} currentState={bug.get('state')} toDisplay={prettyBugState}/>
         </td>
       </tr>
     );
@@ -184,8 +197,6 @@ class StateProgress extends React.Component {
       cellsToFill++;
     }
 
-    console.log(this.props.currentState, cellsToFill, this.props.currentState.value);
-
     return (
       <div className="StateProgress">
         <div className="StateProgress__bar">
@@ -195,7 +206,6 @@ class StateProgress extends React.Component {
             .map((i) => <div key={`cell-${i}`} className="StateProgress__bar__cell--empty"/>)}
         </div>
         {this.props.toDisplay(this.props.currentState)}
-        {this.props.currentState.value}
       </div>
     );
   }

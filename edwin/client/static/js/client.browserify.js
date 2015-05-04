@@ -18,6 +18,5 @@ TimelineDispatcher.register((action) => {
   console.log('Dispatched action:', action);
 });
 
+TimelineActions.updateSearch({'comment_tag': 'edwin-sumo'});
 React.render(<TimelineApp/>, document.body);
-
-TimelineActions.updateSearch({whiteboard: 's=2015.7'});

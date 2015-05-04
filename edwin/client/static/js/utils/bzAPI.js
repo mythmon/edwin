@@ -67,4 +67,4 @@ export function getBugs() {
 }
 
 
-QueryStore.addChangeListener(getBugs);
+export default {getBugs};

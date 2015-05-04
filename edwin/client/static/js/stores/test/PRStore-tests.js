@@ -49,7 +49,6 @@ describe('PRStore', () => {
       newPRs: [{title: '[Bug 123] Fix it'}, {title: '[Bug 456, 789] fix it fix it'}],
     });
     let prs = PRStore.getAll();
-    console.log(JSON.stringify(prs.toJS()));
     expect(prs.getIn([0, 'bugsReferenced']).toJS()).to.deep.equal([123]);
     expect(prs.getIn([1, 'bugsReferenced']).toJS()).to.deep.equal([456, 789]);
   });
