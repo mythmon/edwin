@@ -6,17 +6,15 @@ import BugStore from '../stores/BugStore';
 import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
-const GITHUB_API = 'https://api.github.com';
-const REPO = 'mozilla/kitsune';
 
 /**
- * Make a call to the Github API.
- * @param {string} endpoint Endpoint to call, like '/repos'. Include a leading "/".
+ * Make a call to the Edwin API.
+ * @param {string} endpoint Endpoint to call, like '/teams/'. Include a leading "/".
  * @param {Object} [params={}] Params to serialize into the querystring.
  * @returns {Promise.} A promise for a Fetch Response.
  */
 function apiCall(endpoint, params={}) {
-  let url = buildUrl(GITHUB_API, endpoint, params);
+  let url = buildUrl('/api', endpoint, params);
   return fetch(url, {
     headers: {
       'Accept': 'application/json',
@@ -36,22 +34,22 @@ function apiCall(endpoint, params={}) {
 
 
 /**
- * Get PRs from GitHub and dispatch an action with the new PRs when the result
- * comes back.
+ * Get bugs from Bugzilla using the current state of the QueryStore, and
+ * dispatch an action with the new bugs when the result comes back.
  */
-export function getPRs() {
+export function getTeams() {
   let bugs = BugStore.getAll();
 
-  apiCall(`/repos/${REPO}/pulls`)
+  apiCall('/teams/')
     .then((response) => response.json())
     .then((data) => {
       return data;
     })
-    .then((data) => TimelineActions.setPRs(data))
+    .then((data) => TimelineActions.setTeams(data))
     .catch((err) => {
-      console.error('Error updating PRs', err);
+      console.error('Error updating Teams', err);
     });
 }
 
 
-export default {getPRs};
+export default {getTeams};
