@@ -49,7 +49,7 @@ class APITestCase(TestCase):
     def test_single_team(self):
         team1 = Team.objects.create(name='awesome', slug='awesome', current_burn_rate=10)
 
-        resp = self.client.get(reverse('teams:team-detail', args=(team1.pk,)))
+        resp = self.client.get(reverse('teams:team-detail', args=(team1.slug,)))
         self.assertEquals(resp.status_code, 200)
         self.assertEquals(
             json.loads(smart_text(resp.content)),
