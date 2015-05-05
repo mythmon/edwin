@@ -64,7 +64,7 @@ function augmentBug(bug) {
     bug = bug.set('state', BugStates.DONE);
 
   // If there are PRs, and every one is merged: MERGED.
-  } else if (!bug.get('prs').isEmpty() && bug.get('prs').every((pr) => pr.get('merged'))) {
+  } else if (!bug.get('prs').isEmpty() && bug.get('prs').every((pr) => pr.get('state') === 'closed')) {
     bug = bug.set('state', BugStates.MERGED);
 
   // If there are PRs (and not all are merged): IN_REVIEW.

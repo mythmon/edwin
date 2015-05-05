@@ -43,7 +43,7 @@ function apiCall(endpoint, params={}) {
 export function getPRs() {
   let bugs = BugStore.getAll();
 
-  apiCall(`/repos/${REPO}/pulls`)
+  apiCall(`/repos/${REPO}/pulls`, {state: 'all'})
     .then((response) => response.json())
     .then((data) => {
       return data;
