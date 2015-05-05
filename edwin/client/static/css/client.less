@@ -2,9 +2,11 @@ body {
   background: #f2f2f2;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
+  margin: 0;
+  padding: 0;
 }
 
-.TimelineApp {
+.App {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,6 +21,34 @@ a:hover,
 a:active {
   color: #2CA4BF;
   text-decoration: underline;
+}
+
+.Header {
+  background: #2CA4BF;
+  margin-bottom: 8px;
+  width: 100%;
+
+  & header {
+    max-width: 860px;
+    margin: auto;
+
+    nav {
+      a {
+        color: #000;
+        margin: 0 8px;
+
+        &:hover {
+          font-weight: bold;
+          text-decoration: none;
+          margin: 0 7px;
+        }
+
+        &.active {
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }
 
 .BugTable {
