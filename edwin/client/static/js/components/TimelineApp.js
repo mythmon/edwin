@@ -2,7 +2,7 @@ import React from 'react';
 import Gravatar from 'react-gravatar';
 import Immutable from 'immutable';
 
-import BaseComponent from '../utils/BaseComponent';
+import ControllerComponent from '../utils/ControllerComponent';
 import BugStore from '../stores/BugStore';
 import QueryStore from '../stores/QueryStore';
 import PRStore from '../stores/PRStore';
@@ -15,7 +15,7 @@ import githubAPI from '../utils/githubAPI';
  * sections.
  * @class
  */
-export default class TimelineApp extends BaseComponent {
+export default class TimelineApp extends ControllerComponent {
   get stores() {
     return [BugStore];
   }

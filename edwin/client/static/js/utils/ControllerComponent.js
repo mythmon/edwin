@@ -5,7 +5,7 @@ import Immutable from 'immutable';
  * Base for components that need to use stores, and want autobinding.
  * @class
  */
-export default class BaseComponent extends React.Component {
+export default class ControllerComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.getNewState();
