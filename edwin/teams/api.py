@@ -13,3 +13,4 @@ class TeamSerializer(serializers.HyperlinkedModelSerializer):
 class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.order_by('pk').all()
     serializer_class = TeamSerializer
+    lookup_field = 'slug'
