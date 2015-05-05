@@ -36,8 +36,18 @@ export default class TimelineApp extends BaseComponent {
   }
 
   render() {
-    let bugs = this.state.bugs.sortBy((bug) => bug.get('state').value);
-    return <BugTable bugs={bugs}/>;
+    let bugs = this.state.bugs.sortBy((bug) => -bug.get('state').value);
+    let undoneBugs = bugs.filter((bug) => bug.get('state') !== BugStates.DONE);
+    let doneBugs = bugs.filter((bug) => bug.get('state') === BugStates.DONE);
+
+    return (
+      <div className="TimelineApp">
+        <div>
+          {undoneBugs.count()} undone bugs shown. {doneBugs.count()} done bugs not shown.
+        </div>
+        <BugTable bugs={undoneBugs}/>;
+      </div>
+    );
   }
 }
 
