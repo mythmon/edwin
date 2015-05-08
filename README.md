@@ -20,25 +20,20 @@ Edwin is a bug management system.
 
 1. create a virtual environment
 2. run `pip install -r requirements.txt`
-3. run `DJANGO_CONFIGURATION=Dev ./manage.py migrate`
+3. run `./manage.py migrate`
 4. run `npm install`
 
 > **Note**
 >
-> You'll be using the `Dev` configuration, so you'll want to set:
->
-> ```
-> DJANGO_CONFIGURATION=Dev
-> ```
->
-> in your environment.
+> You'll be using the `Dev` configuration by default. Make sure to change this
+> for deployments by setting the DJANGO_CONFIGURATION environment variable.
 
 
 # Run tests
 
 ## Python tests
 
-1. run `DJANGO_CONFIGURATION=Dev ./manage.py test` to run tests for the backend.
+1. run `./manage.py test` to run tests for the backend.
 
 ## JS tests
 
@@ -46,6 +41,22 @@ Edwin is a bug management system.
 
 
 # Deployments
+
+# Environment Variables
+
+For deployments, a few environment variables should be set.
+
+* `DJANGO_CONFIGURATION` - This should be set to `Base` for most production
+  deployments.
+* `DJANGO_SECRET_KEY` - This should be a long random string.
+* `DJANGO_ALLOWED_HOSTS` - This should be the hostname (and only the hostname)
+  the deployment can be reached at. It may be multiple values separated by
+  commas. Example: `edwin-dev.herokuapp.com,edwin.example.com`.
+* `DJANGO_DATABASES` - This should be set to a DB URL for your database.
+  Example: `sqlite://` for an in-memory sqlite storage. Heroku sets this
+  automatically.
+
+## Heroku
 
 Edwin is designed to be deployed with [Heroku Docker][].
 This section assumes you have Heroku set up already.
