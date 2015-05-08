@@ -45,7 +45,7 @@ export default class TimelineApp extends ControllerComponent {
         <div>
           {undoneBugs.count()} undone bugs shown. {doneBugs.count()} done bugs not shown.
         </div>
-        <BugTable bugs={undoneBugs}/>;
+        <BugTable bugs={undoneBugs}/>
       </div>
     );
   }

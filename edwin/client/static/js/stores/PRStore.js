@@ -2,7 +2,9 @@
  * PRStore holds the state of all the GitHub pull requests in the system.
  *
  * Action responses:
- * - SET_RAW_PRS: Replaces the PR state with new PRs.
+ * - SET_RAW_PRS: Replaces the PR state with new PRs, and then update PR
+ *   references.
+ * - SET_RAW_BUGS: Wait for BugStore, and then update PR references..
  */
 
 import Immutable from 'immutable';

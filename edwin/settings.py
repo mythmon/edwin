@@ -124,6 +124,7 @@ class Base(ConstantSettings):
 class Dev(Base):
     DEBUG = True
     SECRET_KEY = 'not a secret'
+    PIPELINE_BROWSERIFY_ARGUMENTS = '-t babelify -d'
 
 
 class Test(Base):

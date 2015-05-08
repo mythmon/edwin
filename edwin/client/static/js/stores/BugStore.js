@@ -3,7 +3,8 @@
  *
  * Action responses:
  * - SET_RAW_BUGS: Replaces the bug state with new bugs. These bugs will be
- * 	 processed to add calculated fields.
+ * 	 processed to add calculated fields, including PR references.
+ * - SET_RAW_PRS: Wait for PRStore, and then update PR references.
  */
 
 import Immutable from 'immutable';
