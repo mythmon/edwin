@@ -43,3 +43,17 @@ Edwin is a bug management system.
 ## JS tests
 
 1. run `npm test` to run Jest tests for frontend code.
+
+
+# Deployments
+
+Edwin is designed to be deployed with [Heroku Docker][].
+This section assumes you have Heroku set up already.
+
+To install set up the Heroku Docker tools, run `heroku plugins:install heroku-docker`.
+
+To run in a Heroku-like environment locally, run `heroku docker:start`.
+
+To deploy to Heroku using docker, run `heroku docker:release`.
+
+[Heroku Docker]: https://devcenter.heroku.com/articles/introduction-local-development-with-docker

@@ -121,6 +121,13 @@ class Base(ConstantSettings):
     STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
 
+class Build(Base):
+    """
+    These settings are used at build time.
+    """
+    SECRET_KEY = 'not a secret'
+
+
 class Dev(Base):
     DEBUG = True
     SECRET_KEY = 'not a secret'
