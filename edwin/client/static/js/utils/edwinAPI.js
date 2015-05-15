@@ -1,7 +1,6 @@
 import 'whatwg-fetch';
 import Immutable from 'immutable';
 import * as TimelineActions from '../actions/TimelineActions';
-import QueryStore from '../stores/QueryStore';
 import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
