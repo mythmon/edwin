@@ -52,6 +52,9 @@ ONBUILD USER root
 ONBUILD RUN chown -R app:app /app/src
 ONBUILD USER app
 
+# Remove non-tracked files from the repo.
+ONBUILD RUN git clean -fXd
+
 # Install dependencies
 ONBUILD RUN npm install
 ONBUILD RUN pip install -r requirements.txt
