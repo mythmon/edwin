@@ -69,3 +69,23 @@ specify environment variables.
 To deploy to Heroku using docker, run `heroku docker:release`.
 
 [Heroku Docker]: https://devcenter.heroku.com/articles/introduction-local-development-with-docker
+
+
+# Usage
+
+## Creating a super user account
+
+You need a super user account to log into the admin. Run:
+
+    ./manage.py createsuperuser
+
+and answer the questions.
+
+
+## Creating and editing teams
+
+1. Go to the admin `https://HOST/admin`.
+1. Log in as the superuser.
+1. Click on `Teams`.
+
+You can create, edit and delete teams here.
