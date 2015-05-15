@@ -20,3 +20,14 @@ test:
   override:
     - python manage.py test
     - npm test
+
+deployment:
+  dev:
+    owner: mythmon
+    branch: circleci
+    commands:
+      - heroku plugins:install heroku-docker
+      - heroku maintenance:on --app edwin-dev
+      - heroku docker:release --app edwin-dev
+      - heroku run --app edwin-dev python manage.py migrate
+      - heroku maintenance:off --app edwin-dev
