@@ -173,7 +173,7 @@ class BugRow extends React.Component {
 
 
 /**
- * Renders a small chip for a user. Shows a name and a Gravatar.
+ * Renders a small chip for a user. Shows a Gravatar.
  *
  * TODO: This is probably useful enough to move somewhere public
  *
@@ -188,13 +188,11 @@ class AssignedTo extends React.Component {
       return (
         <span className="AssignedTo">
           <span className="AssignedTo__avatar--empty"/>
-          <span className="AssignedTo__name">—</span>
         </span>
       );
     } else {
       return <span className="AssignedTo">
         <Gravatar className="AssignedTo__avatar" email={user.get('email')} https size={36}/>
-        <span className="AssignedTo__name">{user.get('real_name', user.get('name'))}</span>
       </span>;
     }
   }
