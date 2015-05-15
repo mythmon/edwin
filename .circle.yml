@@ -9,8 +9,8 @@ machine:
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
 
 dependencies:
-  override:
-    - npm install
+  post:
+    - pythom manage.py collectstatic --noinput
     - pip install -r requirements.txt
 
 database:
