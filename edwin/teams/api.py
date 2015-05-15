@@ -6,7 +6,7 @@ from edwin.teams.models import Team
 class TeamSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Team
-        fields = ('name', 'slug', 'current_burn_rate')
+        fields = ('name', 'slug', 'current_burn_rate', 'github_repo')
 
 
 # ViewSets define the view behavior.

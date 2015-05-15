@@ -31,8 +31,6 @@ let routes = (
   </Route>
 );
 
-TimelineActions.updateSearch({'comment_tag': 'edwin-sumo'});
-
 Router.run(routes, Router.HistoryLocation, (Root) => {
   React.render(<Root/>, document.body);
 });

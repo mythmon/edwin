@@ -1,7 +1,6 @@
 import 'whatwg-fetch';
 import Immutable from 'immutable';
 import * as TimelineActions from '../actions/TimelineActions';
-import QueryStore from '../stores/QueryStore';
 import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
@@ -48,22 +47,24 @@ function apiCall(endpoint, params={}) {
 
 
 /**
- * Get bugs from Bugzilla using the current state of the QueryStore, and
- * dispatch an action with the new bugs when the result comes back.
+ * Get bugs from Bugzilla, and dispatch an action with the new bugs when the
+ * result comes back.
+ *
+ * @resolves {undefined} Resolves when the API call is done.
+ * @rejects {Error} Rejects with any API errors.
  */
-export function getBugs() {
+export function getBugs(query) {
   let defaults = Immutable.Map({
     include_fields: fields.join(','),
   });
 
-  let params = defaults.merge(QueryStore.get());
+  let params = defaults.merge(Immutable.fromJS(query));
 
-  apiCall('/bug', params.toJS())
+  return apiCall('/bug', params.toJS())
     .then((response) => response.json())
     .then((data) => TimelineActions.setBugs(data.bugs))
-    .catch((err) => {
-      console.error('Error updating bugs', err);
-    });
+    // Don't return any data, just signal completion.
+    .then(() => undefined);
 }
 
 

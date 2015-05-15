@@ -21,6 +21,10 @@ class _TeamStore extends BaseStore {
   getAll() {
     return teams;
   }
+
+  get(slug) {
+    return teams.find((t) => t.get('slug') === slug);
+  }
 }
 
 const TeamStore = new _TeamStore();

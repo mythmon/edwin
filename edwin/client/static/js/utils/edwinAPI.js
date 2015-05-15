@@ -2,7 +2,6 @@ import 'whatwg-fetch';
 import Immutable from 'immutable';
 import * as TimelineActions from '../actions/TimelineActions';
 import QueryStore from '../stores/QueryStore';
-import BugStore from '../stores/BugStore';
 import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
@@ -34,13 +33,11 @@ function apiCall(endpoint, params={}) {
 
 
 /**
- * Get bugs from Bugzilla using the current state of the QueryStore, and
- * dispatch an action with the new bugs when the result comes back.
+ * Get all teams from Edwin, and dispatch an action with the new teams when the
+ * result comes back.
  */
 export function getTeams() {
-  let bugs = BugStore.getAll();
-
-  apiCall('/teams/')
+  return apiCall('/teams/')
     .then((response) => response.json())
     .then((data) => {
       return data;
@@ -50,6 +47,5 @@ export function getTeams() {
       console.error('Error updating Teams', err);
     });
 }
-
 
 export default {getTeams};

@@ -4,10 +4,11 @@ import Immutable from 'immutable';
 
 import ControllerComponent from '../utils/ControllerComponent';
 import BugStore from '../stores/BugStore';
-import QueryStore from '../stores/QueryStore';
 import PRStore from '../stores/PRStore';
+import TeamStore from '../stores/TeamStore';
 import {BugStates} from '../constants/TimelineConstants';
 import bzAPI from '../utils/bzAPI';
+import edwinAPI from '../utils/edwinAPI';
 import githubAPI from '../utils/githubAPI';
 
 /**
@@ -20,13 +21,33 @@ export default class TimelineApp extends ControllerComponent {
     return [BugStore];
   }
 
+  fetchData() {
+    return edwinAPI.getTeams()
+    .then(() => {
+      let teamSlug = this.props.params.team;
+      let team = TeamStore.get(teamSlug);
+
+      let promises = [];
+
+      promises.push(bzAPI.getBugs({'comment_tag': `edwin-${teamSlug}`}));
+
+      if (team && team.get('github_repo')) {
+        promises.push(githubAPI.getPRs(team.get('github_repo')));
+      }
+
+      return Promise.all(promises);
+    });
+  }
+
   /**
    * On mounting, fetch data from APIs.
    */
   componentDidMount() {
     super.componentDidMount();
-    bzAPI.getBugs();
-    githubAPI.getPRs();
+    this.fetchData()
+    .catch((err) => {
+      console.error('Error loading data:', err);
+    });
   }
 
   getNewState() {

@@ -7,7 +7,6 @@ import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
 const GITHUB_API = 'https://api.github.com';
-const REPO = 'mozilla/kitsune';
 
 /**
  * Make a call to the Github API.
@@ -38,19 +37,20 @@ function apiCall(endpoint, params={}) {
 /**
  * Get PRs from GitHub and dispatch an action with the new PRs when the result
  * comes back.
+ *
+ * @param {string} repo Something like "user/repo".
  */
-export function getPRs() {
+export function getPRs(repo) {
   let bugs = BugStore.getAll();
 
-  apiCall(`/repos/${REPO}/pulls`, {state: 'all'})
+  apiCall(`/repos/${repo}/pulls`, {state: 'all'})
     .then((response) => response.json())
     .then((data) => {
       return data;
     })
     .then((data) => TimelineActions.setPRs(data))
-    .catch((err) => {
-      console.error('Error updating PRs', err);
-    });
+    // Don't return any data, just signal completion.
+    .then(() => undefined);
 }
 
 

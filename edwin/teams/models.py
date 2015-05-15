@@ -6,3 +6,5 @@ class Team(models.Model):
     slug = models.SlugField(max_length=64)
     # Burn rate is points per week
     current_burn_rate = models.IntegerField()
+    # Like "mozilla/edwin"
+    github_repo = models.CharField(max_length=64, blank=True)
