@@ -20,4 +20,3 @@ test:
   override:
     - python manage.py test
     - npm test
-    - python manage.py collectstatic --noinput
