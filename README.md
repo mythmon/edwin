@@ -69,3 +69,14 @@ specify environment variables.
 To deploy to Heroku using docker, run `heroku docker:release`.
 
 [Heroku Docker]: https://devcenter.heroku.com/articles/introduction-local-development-with-docker
+
+
+# Usage
+
+## Create a team
+
+Run:
+
+   ./manage.py addteam [NAME] [SLUG]
+
+Note: Slugs must be unique.
