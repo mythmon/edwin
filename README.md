@@ -63,7 +63,8 @@ This section assumes you have Heroku set up already.
 
 To install set up the Heroku Docker tools, run `heroku plugins:install heroku-docker`.
 
-To run in a Heroku-like environment locally, run `heroku docker:start`.
+To run in a Heroku-like environment locally, run `heroku docker:start`. Use `.env` file to
+specify environment variables.
 
 To deploy to Heroku using docker, run `heroku docker:release`.
 
