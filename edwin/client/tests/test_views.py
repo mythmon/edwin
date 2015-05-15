@@ -1,9 +1,14 @@
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
+from django.test import TestCase
 
 
 class ClientTestCase(TestCase):
     def test_client(self):
-        client = Client()
-        resp = client.get(reverse('client:client'))
-        assert resp.status_code == 200
+        resp = self.client.get(reverse('client:client'))
+        self.assertEquals(resp.status_code, 200)
+        self.assertTemplateUsed('index.html')
+
+    def test_client_all_urls(self):
+        resp = self.client.get('/ou812')
+        self.assertEquals(resp.status_code, 200)
+        self.assertTemplateUsed('index.html')
