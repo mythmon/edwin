@@ -36,7 +36,7 @@ export default class TeamList extends ControllerComponent {
         <h1>Teams</h1>
         <ul>
           {this.state.teams.map((team) => (
-            <li key={`team-${team.slug}`}>
+            <li key={`team-${team.get('slug')}`}>
               <Link to="timeline" params={{team: team.get('slug')}}>
                 {team.get('name')}
               </Link>
