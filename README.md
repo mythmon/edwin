@@ -42,7 +42,7 @@ Edwin is a bug management system.
 
 # Deployments
 
-# Environment Variables
+## Environment Variables
 
 For deployments, a few environment variables should be set.
 
