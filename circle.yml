@@ -11,6 +11,8 @@ machine:
     - docker
 
 dependencies:
+  pre:
+    - docker info
   post:
     - python manage.py collectstatic --noinput
 
