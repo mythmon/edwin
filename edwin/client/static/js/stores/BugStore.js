@@ -73,7 +73,7 @@ function augmentBug(bug) {
     bug = bug.set('state', BugStates.IN_REVIEW);
 
   // If the bug is assigned and ASSIGNED: STARTED
-  } else if (bug.get('status', 'ASSIGNED') && bug.get('assigned_to') !== 'nobody@mozilla.org') {
+  } else if (bug.get('status') === 'ASSIGNED' && bug.get('assigned_to') !== 'nobody@mozilla.org') {
     bug = bug.set('state', BugStates.STARTED);
 
   // If there is an estimate: READY.
