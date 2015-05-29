@@ -2,6 +2,7 @@ import React from 'react';
 import Router from 'react-router';
 
 import ControllerComponent from '../utils/ControllerComponent';
+import Data from './Data';
 import * as edwinAPI from '../utils/edwinAPI';
 import TeamStore from '../stores/TeamStore';
 
@@ -35,13 +36,15 @@ export default class TeamList extends ControllerComponent {
       <div className="Welcome">
         <h1>Teams</h1>
         <ul>
-          {this.state.teams.map((team) => (
-            <li key={`team-${team.get('slug')}`}>
+          {this.state.teams.map((team) => {
+            let key = `team-${team.get('slug')}`;
+            return <li key={key}>
               <Link to="timeline" params={{team: team.get('slug')}}>
                 {team.get('name')}
               </Link>
-            </li>
-          ))}
+              <Data name={key} data={team}/>
+            </li>;
+          })}
         </ul>
       </div>
     );

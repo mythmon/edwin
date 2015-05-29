@@ -3,6 +3,7 @@ import Gravatar from 'react-gravatar';
 import Immutable from 'immutable';
 
 import ControllerComponent from '../utils/ControllerComponent';
+import Data from './Data';
 import BugStore from '../stores/BugStore';
 import PRStore from '../stores/PRStore';
 import TeamStore from '../stores/TeamStore';
@@ -178,6 +179,7 @@ class BugRow extends React.Component {
         <td className="BugTable__data--center">
           <StateProgress allStates={bugStateList} currentState={bug.get('state')} toDisplay={prettyBugState}/>
         </td>
+        <Data name={`bug-${bug.get('id')}`} data={bug}/>
       </tr>
     );
   }
