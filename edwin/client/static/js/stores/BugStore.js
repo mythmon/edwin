@@ -108,6 +108,13 @@ BugStore.dispatchToken = TimelineDispatcher.register((action) => {
       updateBugs();
       break;
 
+    case ActionTypes.SET_BUG_COMMENT_TAGS:
+      let [idx, ] = bugs.findEntry((bug) => bug.id === action.bugId);
+      let commentTags = Immutable.fromJS(action.commentTags);
+      bugs.updateIn([idx, 'comment_tags'], () => commentTags);
+      BugStore.emitChange();
+      break;
+
     default:
       // do nothing
   }

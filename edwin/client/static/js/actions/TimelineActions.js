@@ -1,5 +1,8 @@
+import Immutable from 'immutable';
+
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import * as TimelineConstants from '../constants/TimelineConstants';
+import bzAPI from '../utils/bzAPI';
 
 /**
  * Updates fields in the bugzilla query.
@@ -23,6 +26,7 @@ export function setBugs(newBugs) {
     type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
     newBugs,
   });
+  getCommentTags(newBugs.map((bug) => bug.id));
 }
 
 
@@ -47,4 +51,28 @@ export function setTeams(newTeams) {
     type: TimelineConstants.ActionTypes.SET_RAW_TEAMS,
     newTeams,
   });
+}
+
+
+/**
+ * Get all comment tags for all `bugs`, and fire events for each.
+ * @param {Array<Immutable.Map>} An array of immutable.js objects representing
+ * the bugs to get comment tags for.
+ */
+export function getCommentTags(bugIds) {
+  for (let bugId of bugIds) {
+    bzAPI.getBugComments(bugId)
+    .then((comments) => {
+      let commentTags = new Immutable.Set();
+      for (let comment of comments) {
+        commentTags = commentTags.union(comment.tags);
+      }
+      TimelineDispatcher.dispatch({
+        type: TimelineConstants.ActionTypes.SET_BUG_COMMENT_TAGS,
+        commentTags: commentTags.toJS(),
+        bugId: bugId,
+      });
+    })
+    .catch((err) => console.error('uh oh!', err));
+  }
 }

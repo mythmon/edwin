@@ -9,7 +9,11 @@ export const ActionTypes = constantMap([
   'SET_RAW_PRS',
   /* Reset all the teams in the store to the provided raw teams. */
   'SET_RAW_TEAMS',
+  /* Reset the comment tags on a given bug. */
+  'SET_BUG_COMMENT_TAGS',
 ]);
+
+window.ActionTypes = ActionTypes;
 
 export const BugStates = constantMap([
   'UNKNOWN',

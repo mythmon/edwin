@@ -17,7 +17,7 @@ import githubAPI from '../utils/githubAPI';
  * sections.
  * @class
  */
-export default class TimelineApp extends ControllerComponent {
+export default class Timeline extends ControllerComponent {
   get stores() {
     return [BugStore];
   }
@@ -64,7 +64,7 @@ export default class TimelineApp extends ControllerComponent {
     let teamTag = 'edwin-' + this.props.params.team;
 
     return (
-      <div className="TimelineApp">
+      <div className="Timeline">
         <div>
           {undoneBugs.count()} undone bugs shown. {doneBugs.count()} done bugs not shown.
         </div>
@@ -165,7 +165,7 @@ class BugRow extends React.Component {
           </a>
         </td>
         <td className="BugTable__data">
-          {bug.get('summary')}
+          {bug.get('summary')} ({bug.get('comment_tags', []).join(',')})
         </td>
         <td className="BugTable__data">
           <AssignedTo user={bug.get('assigned_to_detail')}/>
@@ -205,9 +205,11 @@ class AssignedTo extends React.Component {
         </span>
       );
     } else {
-      return <span className="AssignedTo">
-        <Gravatar className="AssignedTo__avatar" email={user.get('email')} https size={36}/>
-      </span>;
+      return (
+        <span className="AssignedTo">
+          <Gravatar className="AssignedTo__avatar" email={user.get('email')} https size={36}/>
+        </span>
+      );
     }
   }
 }
