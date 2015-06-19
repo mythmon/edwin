@@ -11,5 +11,5 @@ TimelineDispatcher.register((action) => {
   if (action.type === undefined) {
     throw `Action with undefined type thrown: ${JSON.stringify(action)}`;
   }
-  console.debug(`Dispatched action: ${action.type.name}`, action);
+  console.log(`Dispatched action: ${action.type.name}`, action);
 });

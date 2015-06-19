@@ -11,8 +11,6 @@ export const ActionTypes = constantMap([
   'SET_COMMENT_TAGS',
 ]);
 
-window.ActionTypes = ActionTypes;
-
 export const BugStates = constantMap([
   'UNKNOWN',
   'NOT_READY',

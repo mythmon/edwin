@@ -16,6 +16,7 @@
     "react-gravatar": "^1.1.0",
     "react-router": "^0.13.3",
     "superagent": "^1.1.0",
+    "toposort": "^0.2.10",
     "whatwg-fetch": "^0.7.0"
   },
   "scripts": {
