@@ -27,7 +27,7 @@ function apiCall(endpoint, params={}) {
         response.json().then(reject);
       });
     } else {
-      return response;
+      return response.json();
     }
   });
 }
@@ -40,16 +40,7 @@ function apiCall(endpoint, params={}) {
  * @param {string} repo Something like "user/repo".
  */
 export function getPRs(repo) {
-  let bugs = BugStore.getAll();
-
-  apiCall(`/repos/${repo}/pulls`, {state: 'all'})
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    })
-    .then((data) => TimelineActions.setPRs(data))
-    // Don't return any data, just signal completion.
-    .then(() => undefined);
+  return apiCall(`/repos/${repo}/pulls`, {state: 'all'});
 }
 
 

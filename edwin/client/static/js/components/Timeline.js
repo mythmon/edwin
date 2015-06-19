@@ -8,9 +8,8 @@ import BugStore from '../stores/BugStore';
 import PRStore from '../stores/PRStore';
 import TeamStore from '../stores/TeamStore';
 import {BugStates} from '../constants/TimelineConstants';
-import bzAPI from '../utils/bzAPI';
-import edwinAPI from '../utils/edwinAPI';
-import githubAPI from '../utils/githubAPI';
+import TimelineActions from '../actions/TimelineActions.js';
+import edwinAPI from '../utils/edwinAPI.js';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
@@ -22,38 +21,26 @@ export default class Timeline extends ControllerComponent {
     return [BugStore];
   }
 
-  fetchData() {
-    return edwinAPI.getTeams()
+  loadData() {
+    return TimelineActions.loadTeams()
     .then(() => {
       let teamSlug = this.props.params.team;
       let team = TeamStore.get(teamSlug);
 
-      let promises = [];
-
-      promises.push(bzAPI.getBugs({'comment_tag': `edwin-${teamSlug}`}));
+      let promises = [TimelineActions.loadBugs({'comment_tag': `edwin-${teamSlug}`})];
 
       if (team && team.get('github_repo')) {
-        promises.push(githubAPI.getPRs(team.get('github_repo')));
+        promises.push(TimelineActions.loadPRs(team.get('github_repo')));
       }
 
       return Promise.all(promises);
     });
   }
 
-  /**
-   * On mounting, fetch data from APIs.
-   */
-  componentDidMount() {
-    super.componentDidMount();
-    this.fetchData()
-    .catch((err) => {
-      console.error('Error loading data:', err);
-    });
-  }
-
   getNewState() {
     return {
       bugs: BugStore.getAll(),
+      prs: PRStore.getAll(),
     };
   }
 
@@ -165,7 +152,9 @@ class BugRow extends React.Component {
           </a>
         </td>
         <td className="BugTable__data">
-          {bug.get('summary')} ({bug.get('comment_tags', []).join(',')})
+          {bug.get('summary')}
+          ({bug.get('comment_tags', []).join(',')})
+          after: [{bug.get('after', []).join(',')}]
         </td>
         <td className="BugTable__data">
           <AssignedTo user={bug.get('assigned_to_detail')}/>

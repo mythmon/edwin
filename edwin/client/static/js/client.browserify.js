@@ -19,10 +19,6 @@ import Welcome from './components/Welcome';
 import TeamList from './components/TeamList';
 import Timeline from './components/Timeline';
 
-TimelineDispatcher.register((action) => {
-  console.debug('Dispatched action:', action);
-});
-
 let routes = (
   <Route handler={App}>
     <DefaultRoute name="home" handler={Welcome}/>

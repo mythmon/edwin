@@ -25,26 +25,17 @@ function apiCall(endpoint, params={}) {
         response.json().then(reject);
       });
     } else {
-      return response;
+      return response.json();
     }
   });
 }
 
 
 /**
- * Get all teams from Edwin, and dispatch an action with the new teams when the
- * result comes back.
+ * Get all teams from Edwin.
  */
 export function getTeams() {
-  return apiCall('/teams/')
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    })
-    .then((data) => TimelineActions.setTeams(data))
-    .catch((err) => {
-      console.error('Error updating Teams', err);
-    });
+  return apiCall('/teams/');
 }
 
 export default {getTeams};

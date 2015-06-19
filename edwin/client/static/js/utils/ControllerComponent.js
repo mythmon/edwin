@@ -42,10 +42,29 @@ export default class ControllerComponent extends React.Component {
   }
 
   /**
+   * Dispatch async events to load data required for this component.
+   * @promise {undefined} Signals completion. Data is ignored.
+   */
+  loadData() {
+    return Promise.resolve();
+  }
+
+  /**
    * When a store changes, call {@link getNewState()}.
    */
   onChange() {
     this.setState(this.getNewState());
+  }
+
+  /**
+   * Call {@link fetchData} when the component is being mounted.
+   */
+  componentWillMount() {
+    this.loadData()
+    .catch(err => {
+      console.error('Error loading data:', err);
+      throw err;
+    });
   }
 
   /**

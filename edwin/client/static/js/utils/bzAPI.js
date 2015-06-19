@@ -40,7 +40,7 @@ function apiCall(endpoint, params={}) {
         response.json().then(reject);
       });
     } else {
-      return response;
+      return response.json();
     }
   });
 }
@@ -61,15 +61,11 @@ export function getBugs(query) {
   let params = defaults.merge(Immutable.fromJS(query));
 
   return apiCall('/bug', params.toJS())
-  .then((response) => response.json())
-  .then((data) => TimelineActions.setBugs(data.bugs))
-  // Don't return any data, just signal completion.
-  .then(() => undefined);
+  .then(data => data.bugs);
 }
 
 export function getBugComments(bugId) {
   return apiCall(`/bug/${bugId}/comment`)
-  .then((response) => response.json())
   .then((data) => {
     return data.bugs[bugId].comments;
   });

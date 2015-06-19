@@ -8,6 +8,7 @@
  */
 
 import Immutable from 'immutable';
+import toposort from 'toposort';
 
 import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
 import BaseStore from '../utils/BaseStore';
@@ -15,7 +16,7 @@ import PRStore from './PRStore';
 import {ActionTypes, BugStates} from '../constants/TimelineConstants';
 import {whiteboardData} from '../utils/parsers';
 
-let bugs = Immutable.List();
+let bugMap = Immutable.OrderedMap();
 
 class _BugStore extends BaseStore {
   /**
@@ -24,7 +25,8 @@ class _BugStore extends BaseStore {
    * @returns {Immutable.List} A list of all bugs.
    */
   getAll() {
-    return bugs;
+    // discard keys
+    return bugMap.toList();
   }
 }
 
@@ -85,33 +87,47 @@ function augmentBug(bug) {
     bug = bug.set('state', BugStates.NOT_READY);
   }
 
+  for (let tag of bug.get('comment_tags', [])) {
+    let match = /^edwin-after-(\d+)$/.exec(tag);
+    if (match) {
+      let id = parseInt(match[1]);
+      bug = bug.update('after', new Immutable.List(), after => after.push(id));
+    }
+  }
+
   return bug;
 }
 
-function updateBugs() {
-  let oldBugs = bugs;
-  bugs = bugs.map(augmentBug);
-  if (oldBugs !== bugs) {
-    BugStore.emitChange();
-  }
+function sortBugs() {
+  let sorted = new Immutable.OrderedMap();
+  let graph = [];
 }
 
 BugStore.dispatchToken = TimelineDispatcher.register((action) => {
   switch(action.type) {
     case ActionTypes.SET_RAW_BUGS:
-      bugs = Immutable.fromJS(action.newBugs);
-      updateBugs();
+      bugMap = new Immutable.OrderedMap().withMutations((bugs) => {
+        for (let bug of action.newBugs) {
+          bugs.set(bug.id, Immutable.fromJS(bug));
+        }
+      });
+      bugMap = bugMap.map(augmentBug);
+      sortBugs();
+      BugStore.emitChange();
       break;
 
     case ActionTypes.SET_RAW_PRS:
       TimelineDispatcher.waitFor([PRStore.dispatchToken]);
-      updateBugs();
+      bugMap = bugMap.map(augmentBug);
+      BugStore.emitChange();
       break;
 
-    case ActionTypes.SET_BUG_COMMENT_TAGS:
-      let [idx, ] = bugs.findEntry((bug) => bug.id === action.bugId);
-      let commentTags = Immutable.fromJS(action.commentTags);
-      bugs.updateIn([idx, 'comment_tags'], () => commentTags);
+    case ActionTypes.SET_COMMENT_TAGS:
+      for (let [bugId, commentTags] of action.bugIdsAndCommentTags) {
+        bugMap = bugMap.setIn([bugId, 'comment_tags'], Immutable.fromJS(commentTags));
+      }
+      bugMap = bugMap.map(augmentBug);
+      sortBugs();
       BugStore.emitChange();
       break;
 

@@ -5,6 +5,7 @@ import ControllerComponent from '../utils/ControllerComponent';
 import Data from './Data';
 import * as edwinAPI from '../utils/edwinAPI';
 import TeamStore from '../stores/TeamStore';
+import TimelineActions from '../actions/TimelineActions.js';
 
 const {Link} = Router;
 
@@ -23,12 +24,8 @@ export default class TeamList extends ControllerComponent {
     };
   }
 
-  /**
-   * On mounting, fetch data from APIs.
-   */
-  componentDidMount() {
-    super.componentDidMount();
-    edwinAPI.getTeams();
+  loadData() {
+    return TimelineActions.loadTeams();
   }
 
   render() {
@@ -38,12 +35,14 @@ export default class TeamList extends ControllerComponent {
         <ul>
           {this.state.teams.map((team) => {
             let key = `team-${team.get('slug')}`;
-            return <li key={key}>
-              <Link to="timeline" params={{team: team.get('slug')}}>
-                {team.get('name')}
-              </Link>
-              <Data name={key} data={team}/>
-            </li>;
+            return (
+              <li key={key}>
+                <Link to="timeline" params={{team: team.get('slug')}}>
+                  {team.get('name')}
+                </Link>
+                <Data name={key} data={team}/>
+              </li>
+            );
           })}
         </ul>
       </div>
