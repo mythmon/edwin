@@ -45,17 +45,13 @@ export default class Timeline extends ControllerComponent {
   }
 
   render() {
-    let bugs = this.state.bugs.sortBy((bug) => -bug.get('state').value);
-    let undoneBugs = bugs.filter((bug) => bug.get('state') !== BugStates.DONE);
-    let doneBugs = bugs.filter((bug) => bug.get('state') === BugStates.DONE);
+    // let bugs = this.state.bugs.sortBy((bug) => -bug.get('state').value);
+    let bugs = this.state.bugs;
     let teamTag = 'edwin-' + this.props.params.team;
 
     return (
       <div className="Timeline">
-        <div>
-          {undoneBugs.count()} undone bugs shown. {doneBugs.count()} done bugs not shown.
-        </div>
-        <BugTable bugs={undoneBugs}/>
+        <BugTable bugs={bugs}/>
         <div>
           Help: To add bugs to the queue, add a tag to the bug description with <code>{teamTag}</code>.
         </div>

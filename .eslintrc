@@ -23,16 +23,16 @@ ecmaFeatures:
 
 rules:
   quotes: [2, single, avoid-escape]
-  no-shadow: false
-  no-alert: true
-  no-console: false
-  no-unused-vars: false
-  no-var: true
-  comma-dangle: false
-  new-cap: false
-  camelcase: false
-  no-loop-func: false
-  no-use-before-define: nofunc
+  no-shadow: [2, {hoist: all}]
+  no-alert: [2]
+  no-console: [0]
+  no-unused-vars: [0]
+  no-var: [2]
+  comma-dangle: [0]
+  new-cap: [0]
+  camelcase: [0]
+  no-loop-func: [0]
+  no-use-before-define: [2, nofunc]
 
 env:
   es6: true

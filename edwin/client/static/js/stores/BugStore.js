@@ -44,7 +44,7 @@ const BugStore = new _BugStore();
  */
 function augmentBug(bug) {
   // Parse the whiteboard field
-  bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard'))));
+  bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard', ''))));
 
   // Store all the PRs that reference this bug.
   bug = bug.update('prs', (prs) => {
@@ -99,8 +99,29 @@ function augmentBug(bug) {
 }
 
 function sortBugs() {
-  let sorted = new Immutable.OrderedMap();
-  let graph = [];
+  let edges = [];
+  for (let bug of bugMap.toList()) {
+    for (let afterBugId of bug.get('after', [])) {
+      edges.push([bug.get('id'), afterBugId]);
+    }
+  }
+
+  let sortedIds = toposort(edges).reverse();
+
+  let sorted = new Immutable.OrderedMap().withMutations((map) => {
+    for (let id of sortedIds) {
+      let bug = bugMap.get(id);
+      console.log('inserting', id, bug);
+      if (bug !== undefined) {
+        bug = bug.set('sorted', true);
+        map.set(id, bug);
+      }
+    }
+  });
+
+  let unsorted = bugMap.filter((val, key) => !sorted.has(key));
+
+  bugMap = sorted.concat(unsorted);
 }
 
 BugStore.dispatchToken = TimelineDispatcher.register((action) => {
