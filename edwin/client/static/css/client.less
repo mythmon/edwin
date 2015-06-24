@@ -31,8 +31,11 @@ a:active {
   & header {
     max-width: 860px;
     margin: auto;
+    display: flex;
 
     nav {
+      flex-basis: 100%;
+
       a {
         color: #000;
         margin: 0 8px;
@@ -46,6 +49,21 @@ a:active {
         &.active {
           font-weight: bold;
         }
+      }
+    }
+
+    .UserManager {
+      flex-basis: 100%;
+      text-align: right;
+
+      &:not(.logged-in) {
+        .fa {
+          opacity: 0.4;
+        }
+      }
+
+      .fa {
+        margin-left: 5px;
       }
     }
   }

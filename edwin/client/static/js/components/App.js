@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Router from 'react-router';
+import UserManager from './UserManager';
 
 let {Link, RouteHandler} = Router;
 
@@ -28,6 +29,7 @@ class Navigation {
             <Link to="home">Edwin</Link>
             <Link to="team-list">Teams</Link>
           </nav>
+          <UserManager/>
         </header>
       </div>
     );

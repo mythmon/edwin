@@ -59,6 +59,7 @@ class ConstantSettings(bundles.BundleConfiguration, Configuration):
         'immutable': ['dist/immutable.js'],
         'lodash': ['index.js'],
         'react': ['dist/react.js'],
+        'font-awesome': ['css/font-awesome.css', 'fonts/*'],
     }
 
     ROOT_URLCONF = 'edwin.urls'

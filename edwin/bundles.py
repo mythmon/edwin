@@ -3,6 +3,7 @@ class BundleConfiguration(object):
         return {
             'client': {
                 'source_filenames': [
+                    'font-awesome/css/font-awesome.css',
                     'css/client.less',
                 ],
                 'output_filename': 'css/client.css',
