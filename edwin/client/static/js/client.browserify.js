@@ -11,7 +11,7 @@ import React from 'react';
 import * as Router from 'react-router';
 const {Route, DefaultRoute} = Router;
 
-import TimelineDispatcher from './dispatcher/TimelineDispatcher';
+import Dispatcher from './dispatcher';
 import * as TimelineActions from './actions/TimelineActions';
 
 import App from './components/App';

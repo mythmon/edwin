@@ -7,7 +7,7 @@
 
 import Immutable from 'immutable';
 
-import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
+import Dispatcher from '../dispatcher';
 import BaseStore from '../utils/BaseStore';
 import * as TimelineConstants from '../constants/TimelineConstants';
 
@@ -29,7 +29,7 @@ class _TeamStore extends BaseStore {
 
 const TeamStore = new _TeamStore();
 
-TeamStore.dispatchToken = TimelineDispatcher.register((action) => {
+TeamStore.dispatchToken = Dispatcher.register((action) => {
   switch(action.type) {
     case TimelineConstants.ActionTypes.SET_RAW_TEAMS:
       teams = Immutable.fromJS(action.newTeams);

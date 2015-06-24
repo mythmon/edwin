@@ -5,27 +5,27 @@ import Immutable from 'immutable';
 
 describe('PRStore', () => {
   let PRStore;
-  let TimelineDispatcher;
+  let Dispatcher;
   let TimelineConstants;
 
   beforeEach(() => {
     PRStore = require('../PRStore');
-    TimelineDispatcher = require('../../dispatcher/TimelineDispatcher');
+    Dispatcher = require('../../dispatcher');
     TimelineConstants = require('../../constants/TimelineConstants');
 
     // Empty the stores
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs: [],
     });
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: [],
     });
   });
 
   it('recieves PR data', () => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: [{number: 1, title: ''}, {number: 2, title: ''}],
     });
@@ -35,7 +35,7 @@ describe('PRStore', () => {
   });
 
   it('augments PRs without bug references with an empty list', () => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: [{title: 'Fix it'}],
     });
@@ -44,7 +44,7 @@ describe('PRStore', () => {
   });
 
   it('augments PRs with referenced bug ids', () => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs: [{title: '[Bug 123] Fix it'}, {title: '[Bug 456, 789] fix it fix it'}],
     });

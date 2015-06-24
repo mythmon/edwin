@@ -10,7 +10,7 @@
 import Immutable from 'immutable';
 import toposort from 'toposort';
 
-import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
+import Dispatcher from '../dispatcher';
 import BaseStore from '../utils/BaseStore';
 import PRStore from './PRStore';
 import {ActionTypes, BugStates} from '../constants/TimelineConstants';
@@ -49,11 +49,11 @@ function augmentBug(bug) {
   // Store all the PRs that reference this bug.
   bug = bug.update('prs', (prs) => {
     if (prs === undefined) {
-      prs = new Immutable.List();
+      prs = new Immutable.Set();
     }
     PRStore.getAll().forEach((pr) => {
       if (pr.get('bugsReferenced').contains(bug.get('id'))) {
-        prs = prs.push(pr);
+        prs = prs.add(pr);
       }
     });
     return prs;
@@ -124,7 +124,7 @@ function sortBugs() {
   bugMap = sorted.concat(unsorted);
 }
 
-BugStore.dispatchToken = TimelineDispatcher.register((action) => {
+BugStore.dispatchToken = Dispatcher.register((action) => {
   switch(action.type) {
     case ActionTypes.SET_RAW_BUGS:
       bugMap = new Immutable.OrderedMap().withMutations((bugs) => {
@@ -138,7 +138,7 @@ BugStore.dispatchToken = TimelineDispatcher.register((action) => {
       break;
 
     case ActionTypes.SET_RAW_PRS:
-      TimelineDispatcher.waitFor([PRStore.dispatchToken]);
+      Dispatcher.waitFor([PRStore.dispatchToken]);
       bugMap = bugMap.map(augmentBug);
       BugStore.emitChange();
       break;

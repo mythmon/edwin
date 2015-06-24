@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 
-import TimelineDispatcher from '../dispatcher/TimelineDispatcher';
+import Dispatcher from '../dispatcher';
 import * as TimelineConstants from '../constants/TimelineConstants';
 import bzAPI from '../utils/bzAPI';
 import githubAPI from '../utils/githubAPI.js';
@@ -16,7 +16,7 @@ import edwinAPI from '../utils/edwinAPI.js';
 export function loadBugs(query) {
   return bzAPI.getBugs(query)
   .then(newBugs => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs,
     });
@@ -36,7 +36,7 @@ export function loadBugs(query) {
 export function loadPRs(repo) {
   return githubAPI.getPRs(repo)
   .then(newPRs => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs,
     });
@@ -54,7 +54,7 @@ export function loadPRs(repo) {
 export function loadTeams() {
   return edwinAPI.getTeams()
   .then(newTeams => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_TEAMS,
       newTeams,
     });
@@ -81,7 +81,7 @@ export function loadCommentTags(bugIds) {
     })
   )))
   .then(bugIdsAndCommentTags => {
-    TimelineDispatcher.dispatch({
+    Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
       bugIdsAndCommentTags: bugIdsAndCommentTags
     });

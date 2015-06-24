@@ -45,7 +45,6 @@ export default class Timeline extends ControllerComponent {
   }
 
   render() {
-    // let bugs = this.state.bugs.sortBy((bug) => -bug.get('state').value);
     let bugs = this.state.bugs;
     let teamTag = 'edwin-' + this.props.params.team;
 
@@ -149,8 +148,6 @@ class BugRow extends React.Component {
         </td>
         <td className="BugTable__data">
           {bug.get('summary')}
-          ({bug.get('comment_tags', []).join(',')})
-          after: [{bug.get('after', []).join(',')}]
         </td>
         <td className="BugTable__data">
           <AssignedTo user={bug.get('assigned_to_detail')}/>
@@ -159,7 +156,7 @@ class BugRow extends React.Component {
           {bug.getIn(['whiteboardParsed', 'p'])}
         </td>
         <td className="BugTable__data--center">
-          {bug.get('prs').map((pr) => <a key={`pr-${pr.get('id')}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
+          {bug.get('prs').map((pr, i) => <a key={`pr-${pr.get('id')}-${i}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
         </td>
         <td className="BugTable__data--center">
           <StateProgress allStates={bugStateList} currentState={bug.get('state')} toDisplay={prettyBugState}/>

@@ -27,6 +27,7 @@ rules:
   no-alert: [2]
   no-console: [0]
   no-unused-vars: [0]
+  no-unused-expressions: [2]
   no-var: [2]
   comma-dangle: [0]
   new-cap: [0]

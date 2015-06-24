@@ -25,15 +25,24 @@ const fields = [
  * @param {Object} [params={}] Params to serialize into the querystring.
  * @returns {Promise.} A promise for a Fetch Response.
  */
-function apiCall(endpoint, params={}) {
-  let url = buildUrl(BUGZILLA_API, endpoint, params);
-  return fetch(url, {
-    // mode: 'cors',
+function apiCall(endpoint, params={}, method='get') {
+  let url;
+  let data = {
+    method,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-  })
+  };
+
+  if (method === 'get' || method === 'head') {
+    url = buildUrl(BUGZILLA_API, endpoint, params);
+  } else {
+    url = buildUrl(BUGZILLA_API, endpoint);
+    data.body = JSON.stringify(params);
+  }
+
+  return fetch(url, data)
   .then((response) => {
     if(!response.ok) {
       return new Promise((resolve, reject) => {
@@ -73,4 +82,7 @@ export function getBugComments(bugId) {
 
 
 
-export default {getBugs, getBugComments};
+export default {
+  getBugs,
+  getBugComments,
+};

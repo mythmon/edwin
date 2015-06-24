@@ -13,6 +13,7 @@ export default class ControllerComponent extends React.Component {
     for (let name of this.autoBind) {
       this[name] = this[name].bind(this);
     }
+    this.onChange = this.onChange.bind(this);
   }
 
   /**
