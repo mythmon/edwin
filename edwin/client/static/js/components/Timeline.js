@@ -10,6 +10,8 @@ import TeamStore from '../stores/TeamStore';
 import UserStore from '../stores/UserStore.js';
 import {BugStates} from '../constants/TimelineConstants';
 import TimelineActions from '../actions/TimelineActions.js';
+import TimelineConstants from '../constants/TimelineConstants.js';
+import Cacher from '../utils/Cacher.js';
 import edwinAPI from '../utils/edwinAPI.js';
 
 /**
@@ -23,18 +25,22 @@ export default class Timeline extends ControllerComponent {
   }
 
   loadData() {
-    return TimelineActions.loadTeams()
+    return Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_TEAMS)
+    .then(() => Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_BUGS))
+    .then(() => Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_PRS))
+    .then(() => Cacher.recallAction(TimelineConstants.ActionTypes.SET_COMMENT_TAGS))
+    .then(() => TimelineActions.loadTeams())
     .then(() => {
       let teamSlug = this.props.params.team;
       let team = TeamStore.get(teamSlug);
 
-      let promises = [TimelineActions.loadBugs({'comment_tag': `edwin-${teamSlug}`})];
+      let promise = TimelineActions.loadBugs({'comment_tag': `edwin-${teamSlug}`});
 
       if (team && team.get('github_repo')) {
-        promises.push(TimelineActions.loadPRs(team.get('github_repo')));
+        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo')));
       }
 
-      return Promise.all(promises);
+      return promise;
     });
   }
 
@@ -46,12 +52,12 @@ export default class Timeline extends ControllerComponent {
   }
 
   render() {
-    let bugs = this.state.bugs;
+    let unsolvedBugs = this.state.bugs.filter(bug => bug.get('state') !== BugStates.DONE);
     let teamTag = `edwin-${this.props.params.team}`;
 
     return (
       <div className="Timeline">
-        <BugTable {...this.state}/>
+        <BugTable bugs={unsolvedBugs} user={this.state.user}/>
         <div>
           Help: To add bugs to the queue, add a tag to the bug description with <code>{teamTag}</code>.
         </div>

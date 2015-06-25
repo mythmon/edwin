@@ -20,6 +20,9 @@ export function loadBugs(query) {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs,
+      cache: {
+        store: true,
+      },
     });
 
     return loadCommentTags(newBugs.map((bug) => bug.id));
@@ -40,6 +43,9 @@ export function loadPRs(repo) {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
       newPRs,
+      cache: {
+        store: true,
+      },
     });
   })
   // signal completion
@@ -58,6 +64,9 @@ export function loadTeams() {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_TEAMS,
       newTeams,
+      cache: {
+        store: true,
+      },
     });
   })
   // signal completion
@@ -84,7 +93,10 @@ export function loadCommentTags(bugIds) {
   .then(bugIdsAndCommentTags => {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
-      bugIdsAndCommentTags: bugIdsAndCommentTags
+      bugIdsAndCommentTags: bugIdsAndCommentTags,
+      cache: {
+        store: true,
+      },
     });
   });
 }

@@ -126,12 +126,12 @@ function sortBugs() {
 BugStore.dispatchToken = Dispatcher.register((action) => {
   switch(action.type) {
     case ActionTypes.SET_RAW_BUGS:
-      bugMap = new Immutable.OrderedMap().withMutations((bugs) => {
-        for (let bug of action.newBugs) {
-          bugs.set(bug.id, Immutable.fromJS(bug));
-        }
-      });
-      bugMap = bugMap.map(augmentBug);
+      for (let bug of action.newBugs) {
+        bugMap = bugMap.update(bug.id, new Immutable.Map(), (oldBug) => {
+          let newBug = Immutable.fromJS(bug);
+          return augmentBug(oldBug.merge(newBug));
+        });
+      }
       sortBugs();
       BugStore.emitChange();
       break;
