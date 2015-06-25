@@ -4,7 +4,9 @@ import * as TimelineActions from '../actions/TimelineActions';
 import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
-const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
+// const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
+const BUGZILLA_API = 'https://bugzilla-dev.allizom.org/rest';
+
 const fields = [
   'assigned_to',
   'blocks',
@@ -81,8 +83,13 @@ export function getBugComments(bugId) {
 }
 
 
+export function modifyBug(bugId, data) {
+  return apiCall(`/bug/${bugId}`, data, 'put');
+}
+
 
 export default {
   getBugs,
   getBugComments,
+  modifyBug,
 };

@@ -7,6 +7,7 @@ import Data from './Data';
 import BugStore from '../stores/BugStore';
 import PRStore from '../stores/PRStore';
 import TeamStore from '../stores/TeamStore';
+import UserStore from '../stores/UserStore.js';
 import {BugStates} from '../constants/TimelineConstants';
 import TimelineActions from '../actions/TimelineActions.js';
 import edwinAPI from '../utils/edwinAPI.js';
@@ -18,7 +19,7 @@ import edwinAPI from '../utils/edwinAPI.js';
  */
 export default class Timeline extends ControllerComponent {
   get stores() {
-    return [BugStore];
+    return [BugStore, UserStore];
   }
 
   loadData() {
@@ -40,17 +41,17 @@ export default class Timeline extends ControllerComponent {
   getNewState() {
     return {
       bugs: BugStore.getAll(),
-      prs: PRStore.getAll(),
+      user: UserStore.getAll(),
     };
   }
 
   render() {
     let bugs = this.state.bugs;
-    let teamTag = 'edwin-' + this.props.params.team;
+    let teamTag = `edwin-${this.props.params.team}`;
 
     return (
       <div className="Timeline">
-        <BugTable bugs={bugs}/>
+        <BugTable {...this.state}/>
         <div>
           Help: To add bugs to the queue, add a tag to the bug description with <code>{teamTag}</code>.
         </div>
@@ -68,6 +69,8 @@ class BugTable extends React.Component {
         </div>
       );
     }
+
+    let includeActions = this.props.user.get('loggedIn');
 
     return (
       <div>
@@ -92,15 +95,16 @@ class BugTable extends React.Component {
               <th className="BugTable__head">
                 State
               </th>
+              {includeActions ? <th className="BugTable__head">Actions</th> : null}
             </tr>
           </thead>
 
           <tbody>
             {this.props.bugs.map((bug) => {
-              let bugId = bug.get('id');
               return <BugRow
-                key={`bug-${bugId}`}
-                bug={bug}/>;
+                key={`bug-${bug.get('id')}`}
+                bug={bug}
+                includeActions={includeActions}/>;
             })}
           </tbody>
         </table>
@@ -139,6 +143,16 @@ class BugRow extends React.Component {
       }
     }
 
+    // Will only be shown if this.props.includeActions
+    let actions = [];
+    if (bug.get('state') === BugStates.READY) {
+      actions.push(
+        <button key="yoink" onClick={TimelineActions.grabBug.bind(null, bug.get('id'))}>
+          Yoink!
+        </button>
+      );
+    }
+
     return (
       <tr>
         <td className="BugTable__data--right">
@@ -161,11 +175,16 @@ class BugRow extends React.Component {
         <td className="BugTable__data--center">
           <StateProgress allStates={bugStateList} currentState={bug.get('state')} toDisplay={prettyBugState}/>
         </td>
+        {this.props.includeActions ? <td>{actions}</td> : null}
         <Data name={`bug-${bug.get('id')}`} data={bug}/>
       </tr>
     );
   }
 }
+BugRow.propTypes = {
+  bug: React.PropTypes.object.isRequired,
+  includeActions: React.PropTypes.bool.isRequired,
+};
 
 
 /**

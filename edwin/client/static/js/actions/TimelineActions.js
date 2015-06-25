@@ -5,6 +5,7 @@ import * as TimelineConstants from '../constants/TimelineConstants';
 import bzAPI from '../utils/bzAPI';
 import githubAPI from '../utils/githubAPI.js';
 import edwinAPI from '../utils/edwinAPI.js';
+import UserStore from '../stores/UserStore.js';
 
 
 /**
@@ -89,9 +90,35 @@ export function loadCommentTags(bugIds) {
 }
 
 
+export function grabBug(bugId) {
+  const user = UserStore.getAll();
+
+  if (!user.get('loggedIn')) {
+    throw new Error("Can't grab bugs without being loggd in.");
+  }
+
+  const assigned_to = user.get('username');
+  const api_key = user.get('apiKey');
+
+  bzAPI.modifyBug(bugId, {
+    status: 'ASSIGNED',
+    assigned_to,
+    api_key,
+  })
+  .then(() => {
+    Dispatcher.dispatch({
+      type: TimelineConstants.ActionTypes.ASSIGN_BUG,
+      assigned_to,
+      bugId,
+    });
+  });
+}
+
+
 export default {
   loadBugs,
   loadPRs,
   loadTeams,
   loadCommentTags,
+  grabBug,
 };

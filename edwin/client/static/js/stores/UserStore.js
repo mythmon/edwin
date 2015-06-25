@@ -27,8 +27,6 @@ class _UserStore extends BaseStore {
 
 const UserStore = new _UserStore();
 
-console.log('registering UserStore');
-
 UserStore.dispatchToken = Dispatcher.register((action) => {
   switch(action.type) {
     case ActionTypes.USER_LOGIN:

@@ -111,7 +111,6 @@ function sortBugs() {
   let sorted = new Immutable.OrderedMap().withMutations((map) => {
     for (let id of sortedIds) {
       let bug = bugMap.get(id);
-      console.log('inserting', id, bug);
       if (bug !== undefined) {
         bug = bug.set('sorted', true);
         map.set(id, bug);
@@ -149,6 +148,16 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       }
       bugMap = bugMap.map(augmentBug);
       sortBugs();
+      BugStore.emitChange();
+      break;
+
+    case ActionTypes.ASSIGN_BUG:
+      bugMap = bugMap
+        .setIn([action.bugId, 'assigned_to'], action.assigned_to)
+        .setIn([action.bugId, 'assigned_to_detail', 'email'], action.assigned_to)
+        .setIn([action.bugId, 'assigned_to_detail', 'name'], action.assigned_to)
+        .setIn([action.bugId, 'status'], 'ASSIGNED')
+        .update(action.bugId, augmentBug);
       BugStore.emitChange();
       break;
 

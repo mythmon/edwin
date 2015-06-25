@@ -6,6 +6,7 @@
     "url": "git://github.com/mythmon/edwin.git"
   },
   "dependencies": {
+    "classnames": "^2.1.2",
     "es6-symbol": "^2.0.1",
     "flux": "^2.0.1",
     "font-awesome": "^4.3.0",

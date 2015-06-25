@@ -34,7 +34,7 @@ export default class UserManager extends ControllerComponent {
 
     if (user.get('loggedIn')) {
       return (
-        <div className="UserManager logged-in">
+        <div className="UserManager">
           <span>{user.get('username')}</span>
           <Icon onClick={this.handleExpand} name="user"/>
           {this.state.expanded ? <LogoutForm/> : null}

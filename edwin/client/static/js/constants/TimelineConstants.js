@@ -9,6 +9,8 @@ export const ActionTypes = constantMap([
   'SET_RAW_TEAMS',
   // Reset the comment tags on a given bug.
   'SET_COMMENT_TAGS',
+  // Change a bug so it is assigned to the current user and in the STARTED state
+  'ASSIGN_BUG',
 ]);
 
 export const BugStates = constantMap([
