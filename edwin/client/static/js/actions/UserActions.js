@@ -10,12 +10,18 @@ export function login(username, apiKey) {
     type: UserConstants.ActionTypes.USER_LOGIN,
     username,
     apiKey,
+    cache: {
+      store: true,
+    },
   });
 }
 
 export function logout() {
   Dispatcher.dispatch({
     type: UserConstants.ActionTypes.USER_LOGOUT,
+    cache: {
+      invalidate: [UserConstants.ActionTypes.USER_LOGIN],
+    },
   });
 }
 

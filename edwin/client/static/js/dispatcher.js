@@ -10,5 +10,5 @@ disp.register((action) => {
   if (action.type === undefined) {
     throw `Action with undefined type emitted: ${JSON.stringify(action)}`;
   }
-  console.log(`Dispatched action: ${action.type.name}`, action);
+  console.log('Dispatched action:', action);
 });

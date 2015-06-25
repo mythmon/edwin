@@ -4,7 +4,9 @@ import Immutable from 'immutable';
 import ControllerComponent from '../utils/ControllerComponent';
 import UserStore from '../stores/UserStore';
 import UserActions from '../actions/UserActions.js';
+import UserConstants from '../constants/UserConstants.js';
 import Icon from './Icon.js';
+import Cacher from '../utils/Cacher.js';
 
 
 export default class UserManager extends ControllerComponent {
@@ -14,6 +16,10 @@ export default class UserManager extends ControllerComponent {
 
   get autoBind() {
     return ['handleExpand'];
+  }
+
+  loadData() {
+    return Cacher.recallAction(UserConstants.ActionTypes.USER_LOGIN);
   }
 
   getNewState() {
@@ -34,7 +40,7 @@ export default class UserManager extends ControllerComponent {
 
     if (user.get('loggedIn')) {
       return (
-        <div className="UserManager">
+        <div className="UserManager logged-in">
           <span>{user.get('username')}</span>
           <Icon onClick={this.handleExpand} name="user"/>
           {this.state.expanded ? <LogoutForm/> : null}

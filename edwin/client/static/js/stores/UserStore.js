@@ -41,7 +41,7 @@ UserStore.dispatchToken = Dispatcher.register((action) => {
       storeData = storeData
         .set('username', null)
         .set('apiKey', null)
-        .set('loggedIn', false)
+        .set('loggedIn', false);
       UserStore.emitChange();
       break;
 

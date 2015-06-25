@@ -12,7 +12,7 @@ class Constant {
 export function constantMap(names) {
   let constants = {};
   names.forEach((name, idx) => {
-    constants[name] = new Constant(name, idx);
+    constants[name] = name;
   });
   return constants;
 }
