@@ -4,8 +4,7 @@ import * as TimelineActions from '../actions/TimelineActions';
 import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
-// const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
-const BUGZILLA_API = 'https://bugzilla-dev.allizom.org/rest';
+const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
 
 const fields = [
   'assigned_to',
