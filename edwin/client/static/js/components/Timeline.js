@@ -58,7 +58,7 @@ export default class Timeline extends ControllerComponent {
     return (
       <div className="Timeline">
         <BugTable bugs={unsolvedBugs} user={this.state.user}/>
-        <div>
+        <div className="Footer">
           Help: To add bugs to the queue, add a tag to the bug description with <code>{teamTag}</code>.
         </div>
       </div>

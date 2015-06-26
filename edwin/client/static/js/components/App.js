@@ -13,14 +13,14 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Navigation/>
+        <Header/>
         <RouteHandler/>
       </div>
     );
   }
 }
 
-class Navigation {
+class Header {
   render() {
     return (
       <div className="Header">
