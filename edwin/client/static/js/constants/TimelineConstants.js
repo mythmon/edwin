@@ -13,6 +13,8 @@ export const ActionTypes = constantMap([
   'ASSIGN_BUG',
   // Change a bug's internal sortOrder. Usually in preparation for a full sort later.
   'BUG_SET_INTERNAL_SORT',
+  // Walk through the bugs accordint to sortOrder and update comment tags to match.
+  'BUGS_COMMIT_SORT_ORDER',
 ]);
 
 export const BugStates = constantMap([

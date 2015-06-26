@@ -46,6 +46,10 @@ class _BugStore extends BaseStore {
   getNotReadyBugs() {
     return bugMap.toList().filter(bug => bug.get('state') === BugStates.NOT_READY);
   }
+
+  getMap() {
+    return bugMap;
+  }
 }
 
 const BugStore = new _BugStore();
@@ -105,11 +109,13 @@ function augmentBug(bug) {
     bug = bug.set('state', BugStates.NOT_READY);
   }
 
+  bug = bug.set('after', new Immutable.List());
+
   for (let tag of bug.get('comment_tags', [])) {
     let match = /^edwin-after-(\d+)$/.exec(tag);
     if (match) {
       let id = parseInt(match[1]);
-      bug = bug.update('after', new Immutable.List(), after => after.push(id));
+      bug = bug.update('after', after => after.push(id));
     }
   }
 
@@ -149,7 +155,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
   switch(action.type) {
     case ActionTypes.SET_RAW_BUGS:
       for (let bug of action.newBugs) {
-        bugMap = bugMap.update(bug.id, new Immutable.Map(), (oldBug) => {
+        bugMap = bugMap.update(bug.id, new Immutable.Map(), oldBug => {
           let newBug = Immutable.fromJS(bug);
           return augmentBug(oldBug.merge(newBug));
         });
@@ -190,6 +196,39 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
         .setIn([action.bugId, 'sortOrder'], action.sortOrder)
         .setIn([action.bugId, 'sorted'], true);
       BugStore.emitChange();
+      break;
+
+    case ActionTypes.BUGS_COMMIT_SORT_ORDER:
+      // Remove all the after tags from all the bugs.
+      for (let bug of BugStore.getAll()) {
+        bugMap = bugMap.updateIn(
+          [bug.get('id'), 'comment_tags'],
+          new Immutable.Set(),
+          comment_tags => comment_tags.filter(tag => !(/edwin-after-\d+/.exec(tag)))
+        );
+      }
+
+      // Update all the after tags for sorted bugs.
+      let prev = null;
+      let sortedBugs = BugStore.getAll()
+        .filter(bug => bug.get('sorted'))
+        .sortBy(bug => bug.get('sortOrder'));
+
+      for (let bug of sortedBugs) {
+        if (prev !== null) {
+          bugMap = bugMap.updateIn(
+            [bug.get('id'), 'comment_tags'],
+            new Immutable.Set(),
+            comment_tags => comment_tags.push(`edwin-after-${prev.get('id')}`)
+          );
+        }
+        prev = bug;
+      }
+
+      bugMap = bugMap.map(augmentBug);
+      sortBugs();
+      BugStore.emitChange();
+
       break;
 
     default:

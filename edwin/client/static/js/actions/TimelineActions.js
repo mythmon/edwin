@@ -5,6 +5,7 @@ import * as TimelineConstants from '../constants/TimelineConstants';
 import bzAPI from '../utils/bzAPI';
 import githubAPI from '../utils/githubAPI.js';
 import edwinAPI from '../utils/edwinAPI.js';
+import BugStore from '../stores/BugStore.js';
 import UserStore from '../stores/UserStore.js';
 
 
@@ -130,6 +131,47 @@ export function setInternalSort(bugId, sortOrder) {
   });
 }
 
+export function commitSortOrder() {
+  const user = UserStore.getAll();
+  if (!user.get('loggedIn')) {
+    throw new Error("Can't sort bugs without being loggd in.");
+  }
+  const apiKey = user.get('apiKey');
+
+  const oldBugMap = BugStore.getMap();
+  Dispatcher.dispatch({
+    type: TimelineConstants.ActionTypes.BUGS_COMMIT_SORT_ORDER,
+  });
+
+  /* `dispatch` is syncronous, so all the bugs have correct comment tags
+   * now to represent the order they should be in. Compare the new comment
+   * tags with the old comment tags, and commit any diffs to the server.
+   * This would be easier if we could just directly update the comment
+   * tags, but the bugzilla API doesn't work that way.
+   */
+  let promises = [];
+  const newBugMap = BugStore.getMap();
+
+  for (let [bugId, oldBug] of oldBugMap) {
+    const newBug = newBugMap.get(bugId);
+    const oldCommentTags = oldBug.get('comment_tags').toSet();
+    const newCommentTags = newBug.get('comment_tags').toSet();
+    const toAdd = newCommentTags.subtract(oldCommentTags);
+    const toRemove = oldCommentTags.subtract(newCommentTags);
+
+    if (toRemove.count() > 0 || toAdd.count() > 0) {
+      promises.push(bzAPI.updateCommentTags({
+        commentId: oldBug.get('comment_zero_id'),
+        add: toAdd.toJS(),
+        remove: toRemove.toJS(),
+        apiKey,
+      }));
+    }
+  }
+
+  return Promise.all(promises);
+}
+
 
 export default {
   loadBugs,
@@ -138,4 +180,5 @@ export default {
   loadCommentTags,
   grabBug,
   setInternalSort,
+  commitSortOrder,
 };

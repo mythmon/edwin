@@ -86,9 +86,14 @@ export function modifyBug(bugId, data) {
   return apiCall(`/bug/${bugId}`, data, 'put');
 }
 
+export function updateCommentTags({commentId, add=[], remove=[], apiKey}) {
+  return apiCall(`/bug/comment/${commentId}/tags`, {add, remove, api_key: apiKey}, 'put');
+}
+
 
 export default {
   getBugs,
   getBugComments,
   modifyBug,
+  updateCommentTags,
 };

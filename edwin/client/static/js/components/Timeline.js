@@ -53,11 +53,16 @@ export default class Timeline extends ControllerComponent {
     };
   }
 
+  handleCommitSort() {
+    TimelineActions.commitSortOrder();
+  }
+
   render() {
     let teamTag = `edwin-${this.props.params.team}`;
 
     return (
       <div className="Timeline">
+        <button onClick={this.handleCommitSort.bind(this)}>Commit sort</button>
         <BugTable title="Timeline" bugs={this.state.timelineBugs} user={this.state.user}/>
         <BugTable title="Unsorted" bugs={this.state.unsortedBugs} user={this.state.user}/>
         <BugTable title="Not Ready" bugs={this.state.notReadyBugs} user={this.state.user}/>
@@ -133,7 +138,7 @@ class BugRow extends React.Component {
   handleSortOrder({target: {value}}) {
     value = parseInt(value);
     if (isNaN(value)) {
-      return;
+      value = null;
     }
     TimelineActions.setInternalSort(this.props.bug.get('id'), value);
   }
@@ -170,7 +175,11 @@ class BugRow extends React.Component {
     // Will only be shown if this.props.includeActions
     let actions = [];
     actions.push(
-      <input key="sortOrder" onChange={this.handleSortOrder.bind(this)} value={bug.get('sortOrder')}/>
+      <input
+        key="sortOrder"
+        className="sort-order"
+        onChange={this.handleSortOrder.bind(this)}
+        value={bug.get('sortOrder')}/>
     );
     if (bug.get('state') === BugStates.READY) {
       actions.push(
