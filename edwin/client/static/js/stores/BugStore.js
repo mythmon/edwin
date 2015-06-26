@@ -28,6 +28,24 @@ class _BugStore extends BaseStore {
     // discard keys
     return bugMap.toList();
   }
+
+  getTimelineBugs() {
+    return bugMap.filter(bug => (
+      bug.get('sorted') &&
+      bug.get('state') !== BugStates.NOT_READY &&
+      bug.get('state') !== BugStates.DONE));
+  }
+
+  getUnsortedBugs() {
+    return bugMap.filter(bug => (
+      !bug.get('sorted') &&
+      bug.get('state') !== BugStates.NOT_READY &&
+      bug.get('state') !== BugStates.DONE));
+  }
+
+  getNotReadyBugs() {
+    return bugMap.filter(bug => bug.get('state') === BugStates.NOT_READY);
+  }
 }
 
 const BugStore = new _BugStore();
@@ -119,6 +137,9 @@ function sortBugs() {
   });
 
   let unsorted = bugMap.filter((val, key) => !sorted.has(key));
+
+  sorted = sorted.map(bug => bug.set('sorted', true));
+  unsorted = unsorted.map(bug => bug.set('sorted', false));
 
   bugMap = sorted.concat(unsorted);
 }

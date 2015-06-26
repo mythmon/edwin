@@ -46,18 +46,22 @@ export default class Timeline extends ControllerComponent {
 
   getNewState() {
     return {
-      bugs: BugStore.getAll(),
+      timelineBugs: BugStore.getTimelineBugs(),
+      unsortedBugs: BugStore.getUnsortedBugs(),
+      notReadyBugs: BugStore.getNotReadyBugs(),
       user: UserStore.getAll(),
     };
   }
 
   render() {
-    let unsolvedBugs = this.state.bugs.filter(bug => bug.get('state') !== BugStates.DONE);
     let teamTag = `edwin-${this.props.params.team}`;
 
     return (
       <div className="Timeline">
-        <BugTable bugs={unsolvedBugs} user={this.state.user}/>
+        <BugTable title="Timeline" bugs={this.state.timelineBugs} user={this.state.user}/>
+        <BugTable title="Unsorted" bugs={this.state.unsortedBugs} user={this.state.user}/>
+        <BugTable title="Not Ready" bugs={this.state.notReadyBugs} user={this.state.user}/>
+
         <div className="Footer">
           Help: To add bugs to the queue, add a tag to the bug description with <code>{teamTag}</code>.
         </div>
@@ -70,16 +74,18 @@ class BugTable extends React.Component {
   render() {
     if (this.props.bugs.size === 0) {
       return (
-        <div>
+        <section>
+          <h1>{this.props.title}</h1>
           No bugs. Add some bugs!
-        </div>
+        </section>
       );
     }
 
     let includeActions = this.props.user.get('loggedIn');
 
     return (
-      <div>
+      <section>
+        <h1>{this.props.title}</h1>
         <table className="BugTable">
           <thead>
             <tr>
@@ -114,7 +120,7 @@ class BugTable extends React.Component {
             })}
           </tbody>
         </table>
-      </div>
+      </section>
     );
   }
 }
