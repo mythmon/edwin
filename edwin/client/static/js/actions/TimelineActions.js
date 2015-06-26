@@ -83,17 +83,13 @@ export function loadCommentTags(bugIds) {
   return Promise.all(bugIds.map(bugId => (
     bzAPI.getBugComments(bugId)
     .then(comments => {
-      let commentTags = new Immutable.Set();
-      for (let comment of comments) {
-        commentTags = commentTags.union(comment.tags);
-      }
-      return [bugId, commentTags.toJS()];
+      return [bugId, comments[0].id, comments[0].tags];
     })
   )))
-  .then(bugIdsAndCommentTags => {
+  .then(bugIdsAndCommentIdsAndCommentTags => {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
-      bugIdsAndCommentTags: bugIdsAndCommentTags,
+      bugIdsAndCommentIdsAndCommentTags,
       cache: {
         store: true,
       },
@@ -126,6 +122,14 @@ export function grabBug(bugId) {
   });
 }
 
+export function setInternalSort(bugId, sortOrder) {
+  Dispatcher.dispatch({
+    type: TimelineConstants.ActionTypes.BUG_SET_INTERNAL_SORT,
+    bugId,
+    sortOrder,
+  });
+}
+
 
 export default {
   loadBugs,
@@ -133,4 +137,5 @@ export default {
   loadTeams,
   loadCommentTags,
   grabBug,
+  setInternalSort,
 };

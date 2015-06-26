@@ -11,6 +11,8 @@ export const ActionTypes = constantMap([
   'SET_COMMENT_TAGS',
   // Change a bug so it is assigned to the current user and in the STARTED state
   'ASSIGN_BUG',
+  // Change a bug's internal sortOrder. Usually in preparation for a full sort later.
+  'BUG_SET_INTERNAL_SORT',
 ]);
 
 export const BugStates = constantMap([

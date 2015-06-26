@@ -30,21 +30,21 @@ class _BugStore extends BaseStore {
   }
 
   getTimelineBugs() {
-    return bugMap.filter(bug => (
+    return bugMap.toList().filter(bug => (
       bug.get('sorted') &&
       bug.get('state') !== BugStates.NOT_READY &&
       bug.get('state') !== BugStates.DONE));
   }
 
   getUnsortedBugs() {
-    return bugMap.filter(bug => (
+    return bugMap.toList().filter(bug => (
       !bug.get('sorted') &&
       bug.get('state') !== BugStates.NOT_READY &&
       bug.get('state') !== BugStates.DONE));
   }
 
   getNotReadyBugs() {
-    return bugMap.filter(bug => bug.get('state') === BugStates.NOT_READY);
+    return bugMap.toList().filter(bug => bug.get('state') === BugStates.NOT_READY);
   }
 }
 
@@ -138,8 +138,9 @@ function sortBugs() {
 
   let unsorted = bugMap.filter((val, key) => !sorted.has(key));
 
-  sorted = sorted.map(bug => bug.set('sorted', true));
-  unsorted = unsorted.map(bug => bug.set('sorted', false));
+  let count = 0;
+  sorted = sorted.map(bug => bug.set('sorted', true).set('sortOrder', count++));
+  unsorted = unsorted.map(bug => bug.set('sorted', false).set('sortOrder', null));
 
   bugMap = sorted.concat(unsorted);
 }
@@ -164,8 +165,10 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       break;
 
     case ActionTypes.SET_COMMENT_TAGS:
-      for (let [bugId, commentTags] of action.bugIdsAndCommentTags) {
-        bugMap = bugMap.setIn([bugId, 'comment_tags'], Immutable.fromJS(commentTags));
+      for (let [bugId, commentId, commentTags] of action.bugIdsAndCommentIdsAndCommentTags) {
+        bugMap = bugMap
+          .setIn([bugId, 'comment_tags'], Immutable.fromJS(commentTags))
+          .setIn([bugId, 'comment_zero_id'], commentId);
       }
       bugMap = bugMap.map(augmentBug);
       sortBugs();
@@ -179,6 +182,13 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
         .setIn([action.bugId, 'assigned_to_detail', 'name'], action.assigned_to)
         .setIn([action.bugId, 'status'], 'ASSIGNED')
         .update(action.bugId, augmentBug);
+      BugStore.emitChange();
+      break;
+
+    case ActionTypes.BUG_SET_INTERNAL_SORT:
+      bugMap = bugMap
+        .setIn([action.bugId, 'sortOrder'], action.sortOrder)
+        .setIn([action.bugId, 'sorted'], true);
       BugStore.emitChange();
       break;
 

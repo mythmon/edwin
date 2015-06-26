@@ -112,7 +112,7 @@ class BugTable extends React.Component {
           </thead>
 
           <tbody>
-            {this.props.bugs.map((bug) => {
+            {this.props.bugs.map(bug => {
               return <BugRow
                 key={`bug-${bug.get('id')}`}
                 bug={bug}
@@ -130,6 +130,18 @@ class BugTable extends React.Component {
  * Renders a single <tr> in a bug table.
  */
 class BugRow extends React.Component {
+  handleSortOrder({target: {value}}) {
+    value = parseInt(value);
+    if (isNaN(value)) {
+      return;
+    }
+    TimelineActions.setInternalSort(this.props.bug.get('id'), value);
+  }
+
+  handleYoink() {
+    TimelineActions.grabBug(this.props.bug.get('id'));
+  }
+
   render() {
     let bug = this.props.bug;
     let bugUrl = `https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.get('id')}`;
@@ -157,9 +169,12 @@ class BugRow extends React.Component {
 
     // Will only be shown if this.props.includeActions
     let actions = [];
+    actions.push(
+      <input key="sortOrder" onChange={this.handleSortOrder.bind(this)} value={bug.get('sortOrder')}/>
+    );
     if (bug.get('state') === BugStates.READY) {
       actions.push(
-        <button key="yoink" onClick={TimelineActions.grabBug.bind(null, bug.get('id'))}>
+        <button key="yoink" onClick={this.handleYoink.bind(this)}>
           Yoink!
         </button>
       );
