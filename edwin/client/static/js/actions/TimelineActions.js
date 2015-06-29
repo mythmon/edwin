@@ -23,6 +23,7 @@ export function loadBugs(query) {
       newBugs,
       cache: {
         store: true,
+        key: query,
       },
     });
 
@@ -46,6 +47,7 @@ export function loadPRs(repo) {
       newPRs,
       cache: {
         store: true,
+        key: repo,
       },
     });
   })
@@ -93,6 +95,7 @@ export function loadCommentTags(bugIds) {
       bugIdsAndCommentIdsAndCommentTags,
       cache: {
         store: true,
+        key: bugIds,
       },
     });
   });

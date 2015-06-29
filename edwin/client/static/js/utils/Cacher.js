@@ -5,9 +5,20 @@ import Dispatcher from '../dispatcher.js';
 
 const CACHE_VERSION = 1;
 
+function makeKey(...keyParts) {
+  let key = '';
+  for (let keyPart of keyParts) {
+    if (keyPart !== undefined) {
+      key += JSON.stringify(keyPart);
+    }
+  }
+  return key;
+}
+
 let Cacher = {
-  recallAction(actionType) {
-    let key = actionType.toString();
+  recallAction(...keyParts) {
+    let key = makeKey(...keyParts);
+
     return localForage.getItem(key)
     .then(action => {
       if (!action) {
@@ -32,7 +43,7 @@ Cacher.dispatchToken = Dispatcher.register(action => {
   }
 
   if (action.cache.store) {
-    let key = action.type.toString();
+    let key = makeKey(action.type, action.cache.key);
     let value = _.clone(action);
     value.cache = {
       fromCache: true,

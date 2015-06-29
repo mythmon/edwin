@@ -25,21 +25,26 @@ export default class Timeline extends ControllerComponent {
   }
 
   loadData() {
+    let teamSlug = this.props.params.team;
+    let bugQuery = {comment_tag: `edwin-${teamSlug}`};
+
+    // Get everything possible from the cache. And then get it from the apis.
     return Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_TEAMS)
-    .then(() => Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_BUGS))
-    .then(() => Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_PRS))
-    .then(() => Cacher.recallAction(TimelineConstants.ActionTypes.SET_COMMENT_TAGS))
+    .then(() => {
+      let bugIds = BugStore.getMap().keySeq().toJS();
+      return Promise.all([
+        Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_BUGS, bugQuery),
+        Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_PRS, teamSlug),
+        Cacher.recallAction(TimelineConstants.ActionTypes.SET_COMMENT_TAGS, bugIds),
+      ]);
+    })
     .then(() => TimelineActions.loadTeams())
     .then(() => {
-      let teamSlug = this.props.params.team;
       let team = TeamStore.get(teamSlug);
-
-      let promise = TimelineActions.loadBugs({'comment_tag': `edwin-${teamSlug}`});
-
+      let promise = TimelineActions.loadBugs(bugQuery);
       if (team && team.get('github_repo')) {
         promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo')));
       }
-
       return promise;
     });
   }
