@@ -205,8 +205,9 @@ class BugRow extends React.Component {
         </td>
         <td className="BugTable__data">
           {bug.get('summary')}
+          <WhiteboardGroup data={bug.get('whiteboardParsed').filter((_, key) => key !== 'p')}/>
         </td>
-        <td className="BugTable__data">
+        <td className="BugTable__data--center">
           <AssignedTo user={bug.get('assigned_to_detail')}/>
         </td>
         <td className="BugTable__data--center">
@@ -296,6 +297,22 @@ class StateProgress extends React.Component {
         </div>
         {this.props.toDisplay(this.props.currentState)}
       </div>
+    );
+  }
+}
+
+class WhiteboardGroup extends React.Component {
+  render() {
+    return (
+      <span className="WhiteboardGroup">
+        {this.props.data
+          .map((value, name) => (
+            <span className="WhiteboardGroup__Data" key={name}>
+              {name}={value}{' '}
+            </span>
+          ))
+          .toList().toJS()}
+      </span>
     );
   }
 }
