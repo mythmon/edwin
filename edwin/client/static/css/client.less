@@ -55,6 +55,7 @@ a:active {
     .UserManager {
       flex-basis: 100%;
       text-align: right;
+      position: relative;
 
       &:not(.logged-in) {
         .fa {
@@ -64,6 +65,30 @@ a:active {
 
       .fa {
         margin-left: 5px;
+      }
+
+      &__LoginForm,
+      &__LogoutForm {
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        position: absolute;
+        right: -20px;
+        top: 30px;
+        z-index: 1;
+
+        &::before {
+          position: absolute;
+          width: 14px;
+          height: 14px;
+          background: #fff;
+          content: " ";
+          top: -6px;
+          right: 22px;
+          box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
+          transform: rotate(45deg);
+        }
       }
     }
   }

@@ -91,6 +91,9 @@ class LoginForm extends React.Component {
         <div>
           <button onClick={this.handleSubmit}>Log In</button>
         </div>
+        <div>
+          Get an API key from <a href="https://bugzilla.mozilla.org/userprefs.cgi?tab=apikey">Bugzilla</a>
+        </div>
       </div>
     );
   }
