@@ -28,17 +28,7 @@ export default class Timeline extends ControllerComponent {
     let teamSlug = this.props.params.team;
     let bugQuery = {comment_tag: `edwin-${teamSlug}`};
 
-    // Get everything possible from the cache. And then get it from the apis.
-    return Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_TEAMS)
-    .then(() => {
-      let bugIds = BugStore.getMap().keySeq().toJS();
-      return Promise.all([
-        Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_BUGS, bugQuery),
-        Cacher.recallAction(TimelineConstants.ActionTypes.SET_RAW_PRS, teamSlug),
-        Cacher.recallAction(TimelineConstants.ActionTypes.SET_COMMENT_TAGS, bugIds),
-      ]);
-    })
-    .then(() => TimelineActions.loadTeams())
+    return TimelineActions.loadTeams()
     .then(() => {
       let team = TeamStore.get(teamSlug);
       let promise = TimelineActions.loadBugs(bugQuery);
