@@ -57,9 +57,12 @@ export default class Timeline extends ControllerComponent {
 
     return (
       <div className="Timeline">
-        {this.state.user.get('loggedIn')
-          ? <button onClick={this.handleCommitSort.bind(this)}>Commit sort</button>
-          : null}
+        <div className="Timeline__Actions">
+          {this.state.user.get('loggedIn')
+            ? <button onClick={this.handleCommitSort.bind(this)}>Commit sort</button>
+            : null}
+          <button onClick={this.loadData.bind(this)}>Refresh</button>
+        </div>
         <BugTable title="Timeline" bugs={this.state.timelineBugs} user={this.state.user}/>
         <BugTable title="Unsorted" bugs={this.state.unsortedBugs} user={this.state.user}/>
         <BugTable title="Not Ready" bugs={this.state.notReadyBugs} user={this.state.user}/>
