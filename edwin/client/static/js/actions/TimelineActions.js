@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import * as TimelineConstants from '../constants/TimelineConstants';
+import TimelineConstants from '../constants/TimelineConstants';
 import bzAPI from '../utils/bzAPI';
 import githubAPI from '../utils/githubAPI.js';
 import edwinAPI from '../utils/edwinAPI.js';
@@ -27,7 +27,11 @@ export function loadBugs(query) {
       },
     });
 
-    return loadCommentTags(newBugs.map((bug) => bug.id));
+    let idsForCommentTags = BugStore.getAll()
+      .filter(bug => bug.get('state') !== TimelineConstants.BugStates.NOT_READY)
+      .map(bug => bug.get('id'));
+
+    return loadCommentTags(idsForCommentTags);
   })
   // signal completion
   .then(() => undefined);

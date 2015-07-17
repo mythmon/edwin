@@ -31,14 +31,14 @@ class _BugStore extends BaseStore {
 
   getTimelineBugs() {
     return bugMap.toList().filter(bug => (
-      bug.get('sorted') &&
+      bug.get('sortOrder', null) !== null &&
       bug.get('state') !== BugStates.NOT_READY &&
       bug.get('state') !== BugStates.DONE));
   }
 
   getUnsortedBugs() {
     return bugMap.toList().filter(bug => (
-      !bug.get('sorted') &&
+      bug.get('sortOrder', null) === null &&
       bug.get('state') !== BugStates.NOT_READY &&
       bug.get('state') !== BugStates.DONE));
   }
@@ -136,7 +136,6 @@ function sortBugs() {
     for (let id of sortedIds) {
       let bug = bugMap.get(id);
       if (bug !== undefined) {
-        bug = bug.set('sorted', true);
         map.set(id, bug);
       }
     }
@@ -145,8 +144,8 @@ function sortBugs() {
   let unsorted = bugMap.filter((val, key) => !sorted.has(key));
 
   let count = 0;
-  sorted = sorted.map(bug => bug.set('sorted', true).set('sortOrder', count++));
-  unsorted = unsorted.map(bug => bug.set('sorted', false).set('sortOrder', null));
+  sorted = sorted.map(bug => bug.set('sortOrder', count++));
+  unsorted = unsorted.map(bug => bug.set('sortOrder', null));
 
   bugMap = sorted.concat(unsorted);
 }
@@ -193,8 +192,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
 
     case ActionTypes.BUG_SET_INTERNAL_SORT:
       bugMap = bugMap
-        .setIn([action.bugId, 'sortOrder'], action.sortOrder)
-        .setIn([action.bugId, 'sorted'], true);
+        .setIn([action.bugId, 'sortOrder'], action.sortOrder);
       BugStore.emitChange();
       break;
 
@@ -211,7 +209,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       // Update all the after tags for sorted bugs.
       let prev = null;
       let sortedBugs = BugStore.getAll()
-        .filter(bug => bug.get('sorted'))
+        .filter(bug => bug.get('sortOrder') !== null)
         .sortBy(bug => bug.get('sortOrder'));
 
       for (let bug of sortedBugs) {
