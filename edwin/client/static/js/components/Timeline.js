@@ -301,7 +301,9 @@ class WhiteboardGroup extends React.Component {
         {this.props.data
           .map((value, name) => (
             <span className="WhiteboardGroup__Data" key={name}>
-              {name}={value}{' '}
+              {value === true
+                ? `[${name}] `
+                : `${name}=${value} `}
             </span>
           ))
           .toList().toJS()}
