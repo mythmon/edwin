@@ -42,6 +42,8 @@ Edwin is a bug management system.
 
 # Deployments
 
+Edwin is designed to be deployed on Heroku using the multi-buildpack.
+
 ## Environment Variables
 
 For deployments, a few environment variables should be set.
@@ -55,21 +57,6 @@ For deployments, a few environment variables should be set.
 * `DJANGO_DATABASES` - This should be set to a DB URL for your database.
   Example: `sqlite://` for an in-memory sqlite storage. Heroku sets this
   automatically.
-
-## Heroku
-
-Edwin is designed to be deployed with [Heroku Docker][].
-This section assumes you have Heroku set up already.
-
-To install set up the Heroku Docker tools, run `heroku plugins:install heroku-docker`.
-
-To run in a Heroku-like environment locally, run `heroku docker:start`. Use `.env` file to
-specify environment variables.
-
-To deploy to Heroku using docker, run `heroku docker:release`.
-
-[Heroku Docker]: https://devcenter.heroku.com/articles/introduction-local-development-with-docker
-
 
 # Usage
 
