@@ -54,6 +54,40 @@ class _BugStore extends BaseStore {
 
 const BugStore = new _BugStore();
 
+function getBugState(bug) {
+  // If the bug is RESOLVED: DONE.
+  if (bug.get('status') === 'RESOLVED') {
+    return BugStates.DONE;
+  }
+
+  // If there are PRs, and every one is closed and at least one is merged: MERGED.
+  const prs = bug.get('prs');
+  if (!prs.isEmpty() &&
+      prs.every(pr => pr.get('state') === 'closed') &&
+      prs.some(pr => pr.get('merged_at') !== null)) {
+
+    return BugStates.MERGED;
+  }
+
+  // If there are PRs (and not all are closed): IN_REVIEW.
+  if (!prs.isEmpty() && prs.some(pr => pr.get('state') !== 'closed')) {
+    return BugStates.IN_REVIEW;
+  }
+
+  // If the bug is assigned and status is ASSIGNED: STARTED
+  if (bug.get('status') === 'ASSIGNED' && bug.get('assigned_to') !== 'nobody@mozilla.org') {
+    return BugStates.STARTED;
+  }
+
+  // If there is an estimate: READY.
+  if (typeof bug.getIn(['whiteboardParsed', 'p']) === 'number') {
+    return BugStates.READY;
+  }
+
+  // Otherwise: NOT_READY.
+  return BugStates.NOT_READY;
+}
+
 /**
  * Adds useful calculated fields to bugs.
  *
@@ -83,34 +117,9 @@ function augmentBug(bug) {
 
   /* NB: bug.status comes from Bugzilla, and is RESOLVED, NEW, etc.
    * bug.state on the other hand comes from Edwin, and is one of {@link BugStates} */
-
-  // If the bug is RESOLVED: DONE.
-  if (bug.get('status') === 'RESOLVED') {
-    bug = bug.set('state', BugStates.DONE);
-
-  // If there are PRs, and every one is merged: MERGED.
-  } else if (!bug.get('prs').isEmpty() && bug.get('prs').every((pr) => pr.get('state') === 'closed')) {
-    bug = bug.set('state', BugStates.MERGED);
-
-  // If there are PRs (and not all are merged): IN_REVIEW.
-  } else if (!bug.get('prs').isEmpty()) {
-    bug = bug.set('state', BugStates.IN_REVIEW);
-
-  // If the bug is assigned and ASSIGNED: STARTED
-  } else if (bug.get('status') === 'ASSIGNED' && bug.get('assigned_to') !== 'nobody@mozilla.org') {
-    bug = bug.set('state', BugStates.STARTED);
-
-  // If there is an estimate: READY.
-  } else if (typeof bug.getIn(['whiteboardParsed', 'p']) === 'number') {
-    bug = bug.set('state', BugStates.READY);
-
-  // Otherwise: NOT_READY.
-  } else {
-    bug = bug.set('state', BugStates.NOT_READY);
-  }
+  bug = bug.set('state', getBugState(bug));
 
   bug = bug.set('after', new Immutable.List());
-
   for (let tag of bug.get('comment_tags', [])) {
     let match = /^edwin-after-(\d+)$/.exec(tag);
     if (match) {
