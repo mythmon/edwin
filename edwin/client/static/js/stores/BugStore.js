@@ -160,7 +160,7 @@ function sortBugs() {
 }
 
 BugStore.dispatchToken = Dispatcher.register((action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SET_RAW_BUGS:
       for (let bug of action.newBugs) {
         bugMap = bugMap.update(bug.id, new Immutable.Map(), oldBug => {

@@ -75,6 +75,9 @@ export default class Timeline extends ControllerComponent {
     );
   }
 }
+Timeline.propTypes = {
+  params: React.PropTypes.object.isRequired,
+};
 
 class BugTable extends React.Component {
   render() {
@@ -119,10 +122,12 @@ class BugTable extends React.Component {
 
           <tbody>
             {this.props.bugs.map(bug => {
-              return <BugRow
-                key={`bug-${bug.get('id')}`}
-                bug={bug}
-                includeActions={includeActions}/>;
+              return (
+                <BugRow
+                  key={`bug-${bug.get('id')}`}
+                  bug={bug}
+                  includeActions={includeActions}/>
+              );
             })}
           </tbody>
         </table>
@@ -130,6 +135,11 @@ class BugTable extends React.Component {
     );
   }
 }
+BugTable.propTypes = {
+  bugs: React.PropTypes.object.isRequired,
+  title: React.PropTypes.string.isRequired,
+  user: React.PropTypes.object.isRequired,
+};
 
 
 /**
@@ -252,6 +262,9 @@ class AssignedTo extends React.Component {
     }
   }
 }
+AssignedTo.propTypes = {
+  user: React.PropTypes.object.isRequired,
+};
 
 
 /**
@@ -294,6 +307,11 @@ class StateProgress extends React.Component {
     );
   }
 }
+StateProgress.propTypes = {
+  allStates: React.PropTypes.object.isRequired,
+  currentState: React.PropTypes.string.isRequired,
+  toDisplay: React.PropTypes.func.isRequired,
+};
 
 class WhiteboardGroup extends React.Component {
   render() {
@@ -312,6 +330,9 @@ class WhiteboardGroup extends React.Component {
     );
   }
 }
+WhiteboardGroup.propTypes = {
+  data: React.PropTypes.object.isRequired,
+};
 
 class PullRequestLink extends React.Component {
   render() {
