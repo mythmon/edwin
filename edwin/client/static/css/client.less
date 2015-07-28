@@ -126,6 +126,12 @@ a:active {
     text-align: center;
   }
 
+  &__LinkList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
   .sort-order {
     text-align: right;
     width: 35px;
@@ -187,4 +193,17 @@ a:active {
   color: #444;
   display: block;
   font: 0.9em mono;
+}
+
+.PullRequestLink {
+  &--closed {
+    opacity: 0.5;
+
+    &.PullRequestLink--merged::after {
+      content: "\2713" // U+2713 CHECK MARK
+    }
+    &:not(.PullRequestLink--merged)::after {
+      content: "\274C" // U+274C CROSS MARK
+    }
+  }
 }

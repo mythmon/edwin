@@ -1,6 +1,7 @@
 import React from 'react';
 import Gravatar from 'react-gravatar';
 import Immutable from 'immutable';
+import cx from 'classnames';
 
 import ControllerComponent from '../utils/ControllerComponent';
 import Data from './Data';
@@ -107,7 +108,7 @@ class BugTable extends React.Component {
                 Points
               </th>
               <th className="BugTable__head">
-                PR
+                PRs
               </th>
               <th className="BugTable__head">
                 State
@@ -192,9 +193,7 @@ class BugRow extends React.Component {
     return (
       <tr>
         <td className="BugTable__data--right">
-          <a href={bugUrl}>
-            {bug.get('id')}
-          </a>
+          <a href={bugUrl}>{bug.get('id')}</a>
         </td>
         <td className="BugTable__data">
           {bug.get('summary')}
@@ -207,7 +206,9 @@ class BugRow extends React.Component {
           {bug.getIn(['whiteboardParsed', 'p'])}
         </td>
         <td className="BugTable__data--center">
-          {bug.get('prs').map((pr, i) => <a key={`pr-${pr.get('id')}-${i}`} href={pr.get('html_url')}>#{pr.get('number')}</a>)}
+          <ul className="BugTable__LinkList">
+            {bug.get('prs').map(pr => <li key={`pr-${pr.get('id')}`}><PullRequestLink pr={pr}/></li>)}
+          </ul>
         </td>
         <td className="BugTable__data--center">
           <StateProgress allStates={bugStateList} currentState={bug.get('state')} toDisplay={prettyBugState}/>
@@ -311,3 +312,22 @@ class WhiteboardGroup extends React.Component {
     );
   }
 }
+
+class PullRequestLink extends React.Component {
+  render() {
+    const className = cx('PullRequestLink', {
+      'PullRequestLink--closed': this.props.pr.get('state') === 'closed',
+      'PullRequestLink--merged': this.props.pr.get('merged_at') !== null,
+    });
+    return (
+      <a href={this.props.pr.get('html_url')}>
+        <span className={className}>
+          #{this.props.pr.get('number')}
+        </span>
+      </a>
+    );
+  }
+}
+PullRequestLink.propTypes = {
+  pr: React.PropTypes.object.isRequired,
+};

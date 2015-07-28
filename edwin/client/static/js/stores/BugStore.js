@@ -105,11 +105,11 @@ function augmentBug(bug) {
   // Store all the PRs that reference this bug.
   bug = bug.update('prs', (prs) => {
     if (prs === undefined) {
-      prs = new Immutable.Set();
+      prs = new Immutable.Map();
     }
     PRStore.getAll().forEach((pr) => {
       if (pr.get('bugsReferenced').contains(bug.get('id'))) {
-        prs = prs.add(pr);
+        prs = prs.set(pr.get('id'), pr);
       }
     });
     return prs;
