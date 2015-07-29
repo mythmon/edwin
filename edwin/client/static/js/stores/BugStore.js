@@ -88,6 +88,17 @@ function getBugState(bug) {
   return BugStates.NOT_READY;
 }
 
+function getNeedinfo(bug) {
+  // Filters the flags for needinfo flags.
+  return bug.get('flags', Immutable.fromJS([]))
+    .filter(flag => flag.get('name', '') === 'needinfo')
+    .map(flag => {
+      return {
+        name: flag.get('requestee', 'Unknown').split('@')[0]
+      };
+    });
+}
+
 /**
  * Adds useful calculated fields to bugs.
  *
@@ -101,6 +112,9 @@ function getBugState(bug) {
 function augmentBug(bug) {
   // Parse the whiteboard field
   bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard', ''))));
+
+  // Get needinfo flags for this bug.
+  bug = bug.set('needinfo', getNeedinfo(bug));
 
   // Store all the PRs that reference this bug.
   bug = bug.update('prs', (prs) => {

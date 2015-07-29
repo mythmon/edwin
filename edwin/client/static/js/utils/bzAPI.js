@@ -17,6 +17,7 @@ const fields = [
   'status',
   'summary',
   'whiteboard',
+  'flags',
 ];
 
 /**

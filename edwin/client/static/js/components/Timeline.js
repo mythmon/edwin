@@ -208,6 +208,7 @@ class BugRow extends React.Component {
         <td className="BugTable__data">
           {bug.get('summary')}
           <WhiteboardGroup data={bug.get('whiteboardParsed').filter((_, key) => key !== 'p')}/>
+          <NeedinfoGroup data={bug.get('needinfo', [])}/>
         </td>
         <td className="BugTable__data--center">
           <AssignedTo user={bug.get('assigned_to_detail')}/>
@@ -331,6 +332,25 @@ class WhiteboardGroup extends React.Component {
   }
 }
 WhiteboardGroup.propTypes = {
+  data: React.PropTypes.object.isRequired,
+};
+
+class NeedinfoGroup extends React.Component {
+  render() {
+    return (
+      <span className="NeedinfoGroup">
+        {this.props.data
+          .map(flag => (
+            <span className="NeedinfoGroup__Data">
+              ni? {flag.name}
+            </span>
+          ))
+         .toJS()}
+      </span>
+    );
+  }
+}
+NeedinfoGroup.propTypes = {
   data: React.PropTypes.object.isRequired,
 };
 
