@@ -8,6 +8,7 @@ import Data from './Data';
 import BugStore from '../stores/BugStore';
 import PRStore from '../stores/PRStore';
 import TeamStore from '../stores/TeamStore';
+import UserActions from '../actions/UserActions.js';
 import UserStore from '../stores/UserStore.js';
 import {BugStates} from '../constants/TimelineConstants';
 import TimelineActions from '../actions/TimelineActions.js';
@@ -29,7 +30,8 @@ export default class Timeline extends ControllerComponent {
     let teamSlug = this.props.params.team;
     let bugQuery = {comment_tag: `edwin-${teamSlug}`};
 
-    return TimelineActions.loadTeams()
+    return UserActions.restore()
+    .then(() => TimelineActions.loadTeams())
     .then(() => {
       let team = TeamStore.get(teamSlug);
       let promise = TimelineActions.loadBugs(bugQuery);

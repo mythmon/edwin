@@ -14,6 +14,7 @@ import BaseStore from '../utils/BaseStore';
 import {ActionTypes} from '../constants/UserConstants';
 
 let storeData = Immutable.fromJS({
+  initialized: false,
   username: null,
   apiKey: null,
   loggedIn: false,
@@ -33,7 +34,8 @@ UserStore.dispatchToken = Dispatcher.register((action) => {
       storeData = storeData
         .set('username', action.username)
         .set('apiKey', action.apiKey)
-        .set('loggedIn', true);
+        .set('loggedIn', true)
+        .set('initialized', true);
       UserStore.emitChange();
       break;
 
@@ -41,7 +43,8 @@ UserStore.dispatchToken = Dispatcher.register((action) => {
       storeData = storeData
         .set('username', null)
         .set('apiKey', null)
-        .set('loggedIn', false);
+        .set('loggedIn', false)
+        .set('initialized', true);
       UserStore.emitChange();
       break;
 

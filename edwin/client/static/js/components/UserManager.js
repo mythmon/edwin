@@ -19,7 +19,7 @@ export default class UserManager extends ControllerComponent {
   }
 
   loadData() {
-    return Cacher.recallAction(UserConstants.ActionTypes.USER_LOGIN);
+    return UserActions.restore();
   }
 
   getNewState() {
