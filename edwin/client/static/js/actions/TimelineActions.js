@@ -16,6 +16,12 @@ import UserStore from '../stores/UserStore.js';
  * @promises {undefined} Signals completion with no data.
  */
 export function loadBugs(query) {
+  const user = UserStore.getAll();
+
+  if (user.get('loggedIn')) {
+    query.api_key = user.get('apiKey');
+  }
+
   return bzAPI.getBugs(query)
   .then(newBugs => {
     Dispatcher.dispatch({
