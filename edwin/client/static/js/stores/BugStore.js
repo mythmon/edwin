@@ -193,9 +193,9 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       break;
 
     case ActionTypes.SET_COMMENT_TAGS:
-      for (let [bugId, commentId, commentTags] of action.bugIdsAndCommentIdsAndCommentTags) {
+      for (let {bugId, commentId, tags} of action.commentSpecs) {
         bugMap = bugMap
-          .setIn([bugId, 'comment_tags'], Immutable.fromJS(commentTags))
+          .setIn([bugId, 'comment_tags'], Immutable.fromJS(tags))
           .setIn([bugId, 'comment_zero_id'], commentId);
       }
       bugMap = bugMap.map(augmentBug);

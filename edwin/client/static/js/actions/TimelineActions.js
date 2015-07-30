@@ -7,6 +7,7 @@ import githubAPI from '../utils/githubAPI.js';
 import edwinAPI from '../utils/edwinAPI.js';
 import BugStore from '../stores/BugStore.js';
 import UserStore from '../stores/UserStore.js';
+import PromiseExt from '../utils/PromiseExt.js';
 
 
 /**
@@ -93,20 +94,18 @@ export function loadTeams() {
  * the bugs to get comment tags for.
  */
 export function loadCommentTags(bugIds) {
-  return Promise.all(bugIds.map(bugId => (
+  let commentPromises = bugIds.map(bugId => (
     bzAPI.getBugComments(bugId)
     .then(comments => {
-      return [bugId, comments[0].id, comments[0].tags];
+      return {bugId, commentId: comments[0].id, tags: comments[0].tags};
     })
-  )))
-  .then(bugIdsAndCommentIdsAndCommentTags => {
+  )).toJS();
+
+  return PromiseExt.allResolves(commentPromises)
+  .then(commentSpecs => {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
-      bugIdsAndCommentIdsAndCommentTags,
-      cache: {
-        store: true,
-        key: bugIds,
-      },
+      commentSpecs,
     });
   });
 }
