@@ -220,7 +220,7 @@ class BugRow extends React.Component {
         </td>
         <td className="BugTable__data--center">
           <ul className="BugTable__LinkList">
-            {bug.get('prs').map(pr => <li key={`pr-${pr.get('id')}`}><PullRequestLink pr={pr}/></li>)}
+            {bug.get('prs').toList().map(pr => <li key={`pr-${pr.get('id')}`}><PullRequestLink pr={pr}/></li>)}
           </ul>
         </td>
         <td className="BugTable__data--center">
@@ -341,13 +341,13 @@ class NeedinfoGroup extends React.Component {
   render() {
     return (
       <span className="NeedinfoGroup">
-        {this.props.data
-          .map(flag => (
-            <span className="NeedinfoGroup__Data">
+        {this.props.data.toList().toJS()
+          .map((flag, i) => (
+            <span key={`flag-${i}`} className="NeedinfoGroup__Data">
               ni? {flag.name}
             </span>
           ))
-         .toJS()}
+        }
       </span>
     );
   }
