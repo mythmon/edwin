@@ -75,8 +75,8 @@ export function getBugs(query) {
   .then(data => data.bugs);
 }
 
-export function getBugComments(bugId) {
-  return apiCall(`/bug/${bugId}/comment`)
+export function getBugComments(bugId, params={}) {
+  return apiCall(`/bug/${bugId}/comment`, params)
   .then((data) => {
     return data.bugs[bugId].comments;
   });

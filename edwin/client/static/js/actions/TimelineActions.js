@@ -94,8 +94,15 @@ export function loadTeams() {
  * the bugs to get comment tags for.
  */
 export function loadCommentTags(bugIds) {
+  let params = {};
+
+  const user = UserStore.getAll();
+  if (user.get('loggedIn')) {
+    params.api_key = user.get('apiKey');
+  }
+
   let commentPromises = bugIds.map(bugId => (
-    bzAPI.getBugComments(bugId)
+    bzAPI.getBugComments(bugId, params)
     .then(comments => {
       return {bugId, commentId: comments[0].id, tags: comments[0].tags};
     })
