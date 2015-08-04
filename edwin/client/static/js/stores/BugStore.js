@@ -134,7 +134,7 @@ function augmentBug(bug) {
   bug = bug.set('state', getBugState(bug));
 
   bug = bug.set('after', new Immutable.List());
-  for (let tag of bug.get('comment_tags', [])) {
+  for (let tag of bug.get('comment_tags', new Immutable.Set())) {
     let match = /^edwin-after-(\d+)$/.exec(tag);
     if (match) {
       let id = parseInt(match[1]);
@@ -195,7 +195,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
     case ActionTypes.SET_COMMENT_TAGS:
       for (let {bugId, commentId, tags} of action.commentSpecs) {
         bugMap = bugMap
-          .setIn([bugId, 'comment_tags'], Immutable.fromJS(tags))
+          .setIn([bugId, 'comment_tags'], Immutable.fromJS(tags).toSet())
           .setIn([bugId, 'comment_zero_id'], commentId);
       }
       bugMap = bugMap.map(augmentBug);
@@ -240,7 +240,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
           bugMap = bugMap.updateIn(
             [bug.get('id'), 'comment_tags'],
             new Immutable.Set(),
-            comment_tags => comment_tags.push(`edwin-after-${prev.get('id')}`)
+            comment_tags => comment_tags.add(`edwin-after-${prev.get('id')}`)
           );
         }
         prev = bug;

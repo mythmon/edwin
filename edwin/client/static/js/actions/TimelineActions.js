@@ -166,8 +166,8 @@ export function commitSortOrder() {
 
   for (let [bugId, oldBug] of oldBugMap) {
     const newBug = newBugMap.get(bugId);
-    const oldCommentTags = oldBug.get('comment_tags').toSet();
-    const newCommentTags = newBug.get('comment_tags').toSet();
+    const oldCommentTags = oldBug.get('comment_tags', new Immutable.Set());
+    const newCommentTags = newBug.get('comment_tags', new Immutable.Set());
     const toAdd = newCommentTags.subtract(oldCommentTags);
     const toRemove = oldCommentTags.subtract(newCommentTags);
 
