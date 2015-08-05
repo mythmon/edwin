@@ -15,6 +15,7 @@ import TimelineActions from '../actions/TimelineActions.js';
 import TimelineConstants from '../constants/TimelineConstants.js';
 import Cacher from '../utils/Cacher.js';
 import edwinAPI from '../utils/edwinAPI.js';
+import Icon from './Icon.js';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready
@@ -208,6 +209,7 @@ class BugRow extends React.Component {
           <a href={bugUrl}>{bug.get('id')}</a>
         </td>
         <td className="BugTable__data">
+          {bug.get('secure') ? <SecureWarning/> : null}
           {bug.get('summary')}
           <WhiteboardGroup data={bug.get('whiteboardParsed').filter((_, key) => key !== 'p')}/>
           <NeedinfoGroup data={bug.get('needinfo', [])}/>
@@ -374,3 +376,13 @@ class PullRequestLink extends React.Component {
 PullRequestLink.propTypes = {
   pr: React.PropTypes.object.isRequired,
 };
+
+class SecureWarning extends React.Component {
+  render() {
+    return (
+      <span className="SecureWarning" title="This is a secure bug, use caution when sharing information about it!">
+        <Icon name="exclamation-triangle"/>
+      </span>
+    );
+  }
+}

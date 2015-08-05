@@ -10,6 +10,7 @@ const fields = [
   'assigned_to',
   'blocks',
   'depends_on',
+  'groups',
   'id',
   'last_change_time',
   'priority',
@@ -46,7 +47,7 @@ function apiCall(endpoint, params={}, method='get') {
 
   return fetch(url, data)
   .then((response) => {
-    if(!response.ok) {
+    if (!response.ok) {
       return new Promise((resolve, reject) => {
         response.json().then(reject);
       });

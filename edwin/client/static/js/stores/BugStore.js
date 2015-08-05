@@ -90,13 +90,21 @@ function getBugState(bug) {
 
 function getNeedinfo(bug) {
   // Filters the flags for needinfo flags.
-  return bug.get('flags', Immutable.fromJS([]))
+  return bug.get('flags', new Immutable.List())
     .filter(flag => flag.get('name', '') === 'needinfo')
     .map(flag => {
       return {
         name: flag.get('requestee', 'Unknown').split('@')[0]
       };
     });
+}
+
+function getSecure(bug) {
+  let groups = bug.get('groups');
+  return (
+    groups.contains('mozilla-employee-confidential') ||
+    groups.contains('websites-security')
+  );
 }
 
 /**
@@ -113,8 +121,8 @@ function augmentBug(bug) {
   // Parse the whiteboard field
   bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard', ''))));
 
-  // Get needinfo flags for this bug.
   bug = bug.set('needinfo', getNeedinfo(bug));
+  bug = bug.set('secure', getSecure(bug));
 
   // Store all the PRs that reference this bug.
   bug = bug.update('prs', (prs) => {
