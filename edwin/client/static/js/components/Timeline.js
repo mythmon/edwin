@@ -381,7 +381,7 @@ class SecureWarning extends React.Component {
   render() {
     return (
       <span className="SecureWarning" title="This is a secure bug, use caution when sharing information about it!">
-        <Icon name="exclamation-triangle"/>
+        <Icon name="lock"/>
       </span>
     );
   }

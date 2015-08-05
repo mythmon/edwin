@@ -5,8 +5,10 @@ export default class Icon extends React.Component {
     return <span onClick={this.props.onClick} className={`fa fa-${this.props.name}`}/>;
   }
 }
-
 Icon.propTypes = {
   name: React.PropTypes.string.isRequired,
   onClick: React.PropTypes.func,
+};
+Icon.defaultProps = {
+  onClick: null,
 };
