@@ -56,7 +56,7 @@ const BugStore = new _BugStore();
 
 function getBugState(bug) {
   // If the bug is RESOLVED: DONE.
-  if (bug.get('status') === 'RESOLVED') {
+  if (bug.get('status') === 'RESOLVED' || bug.get('status') === 'VERIFIED') {
     return BugStates.DONE;
   }
 
