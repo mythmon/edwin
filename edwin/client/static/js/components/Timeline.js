@@ -37,7 +37,7 @@ export default class Timeline extends ControllerComponent {
       let team = TeamStore.get(teamSlug);
       let promise = TimelineActions.loadBugs(bugQuery);
       if (team && team.get('github_repo')) {
-        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo')));
+        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()));
       }
       return promise;
     });

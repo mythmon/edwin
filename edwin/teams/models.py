@@ -7,9 +7,8 @@ class Team(models.Model):
     current_burn_rate = models.IntegerField(
         help_text='Burn rate is in points per week')
     github_repo = models.CharField(
-        max_length=64, blank=True,
-        help_text='Like "mozilla/edwin"')
+        max_length=1024, blank=True,
+        help_text='Comma-separated list of repos, like "mozilla/edwin,mozilla/edwin2"')
 
     def __str__(self):
         return str(self.name)
-    

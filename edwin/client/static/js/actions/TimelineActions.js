@@ -28,10 +28,6 @@ export function loadBugs(query) {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
       newBugs,
-      cache: {
-        store: true,
-        key: query,
-      },
     });
 
     let idsForCommentTags = BugStore.getAll()
@@ -50,16 +46,16 @@ export function loadBugs(query) {
  * @param  {string} repo A repo name like "mythmon/edwin".
  * @promises {undefined} Signals completion with no data.
  */
-export function loadPRs(repo) {
-  return githubAPI.getPRs(repo)
-  .then(newPRs => {
+export function loadPRs(repos) {
+  Promise.all(repos.map(repo => githubAPI.getPRs(repo)))
+  .then(prLists => {
+    let flattened = [];
+    for (let prList of prLists) {
+      flattened = flattened.concat(prList);
+    }
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_PRS,
-      newPRs,
-      cache: {
-        store: true,
-        key: repo,
-      },
+      newPRs: flattened,
     });
   })
   // signal completion
@@ -78,9 +74,6 @@ export function loadTeams() {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_TEAMS,
       newTeams,
-      cache: {
-        store: true,
-      },
     });
   })
   // signal completion

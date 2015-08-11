@@ -27,7 +27,7 @@ class APITestCase(TestCase):
                 {'name': team1.name,
                  'slug': team1.slug,
                  'current_burn_rate': team1.current_burn_rate,
-                 'github_repo': team1.github_repo},
+                 'github_repo': []},
             ]
         )
 
@@ -41,11 +41,11 @@ class APITestCase(TestCase):
                 {'name': team1.name,
                  'slug': team1.slug,
                  'current_burn_rate': team1.current_burn_rate,
-                 'github_repo': team1.github_repo},
+                 'github_repo': []},
                 {'name': team2.name,
                  'slug': team2.slug,
                  'current_burn_rate': team2.current_burn_rate,
-                 'github_repo': team2.github_repo},
+                 'github_repo': []},
             ]
         )
 
@@ -59,5 +59,5 @@ class APITestCase(TestCase):
             {'name': team1.name,
              'slug': team1.slug,
              'current_burn_rate': team1.current_burn_rate,
-             'github_repo': team1.github_repo}
+             'github_repo': []}
         )
