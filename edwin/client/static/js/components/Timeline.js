@@ -6,6 +6,7 @@ import cx from 'classnames';
 import ControllerComponent from '../utils/ControllerComponent';
 import Data from './Data';
 import BugStore from '../stores/BugStore';
+import IndicatorStore from '../stores/IndicatorStore';
 import PRStore from '../stores/PRStore';
 import TeamStore from '../stores/TeamStore';
 import UserActions from '../actions/UserActions.js';
@@ -13,6 +14,8 @@ import UserStore from '../stores/UserStore.js';
 import {BugStates} from '../constants/TimelineConstants';
 import TimelineActions from '../actions/TimelineActions.js';
 import TimelineConstants from '../constants/TimelineConstants.js';
+import IndicatorActions from '../actions/IndicatorActions.js';
+import {LoadingStates} from '../constants/IndicatorConstants';
 import Cacher from '../utils/Cacher.js';
 import edwinAPI from '../utils/edwinAPI.js';
 import Icon from './Icon.js';
@@ -24,22 +27,34 @@ import Icon from './Icon.js';
  */
 export default class Timeline extends ControllerComponent {
   get stores() {
-    return [BugStore, UserStore];
+    return [BugStore, UserStore, IndicatorStore];
   }
 
   loadData() {
     let teamSlug = this.props.params.team;
     let bugQuery = {comment_tag: `edwin-${teamSlug}`};
 
+    IndicatorActions.updateState(LoadingStates.USER_RESTORE);
     return UserActions.restore()
-    .then(() => TimelineActions.loadTeams())
+    .then(() => {
+      IndicatorActions.updateState(LoadingStates.LOAD_TEAMS);
+      TimelineActions.loadTeams()
+    })
     .then(() => {
       let team = TeamStore.get(teamSlug);
       let promise = TimelineActions.loadBugs(bugQuery);
+
+      IndicatorActions.updateState(LoadingStates.LOAD_BUGS);
       if (team && team.get('github_repo')) {
-        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()));
+        promise = promise.then(() => {
+          IndicatorActions.updateState(LoadingStates.LOAD_PRS);
+          TimelineActions.loadPRs(team.get('github_repo').toJS())
+        });
       }
       return promise;
+    })
+    .then(() => {
+      IndicatorActions.updateState(LoadingStates.DONE);
     });
   }
 
@@ -49,6 +64,7 @@ export default class Timeline extends ControllerComponent {
       unsortedBugs: BugStore.getUnsortedBugs(),
       notReadyBugs: BugStore.getNotReadyBugs(),
       user: UserStore.getAll(),
+      indicator: IndicatorStore.getAll(),
     };
   }
 
@@ -66,6 +82,7 @@ export default class Timeline extends ControllerComponent {
             ? <button onClick={this.handleCommitSort.bind(this)}>Commit sort</button>
             : null}
           <button onClick={this.loadData.bind(this)}>Refresh</button>
+          <Indicator state={this.state.indicator}/>
         </div>
         <BugTable title="Timeline" bugs={this.state.timelineBugs} user={this.state.user}/>
         <BugTable title="Unsorted" bugs={this.state.unsortedBugs} user={this.state.user}/>
@@ -80,6 +97,22 @@ export default class Timeline extends ControllerComponent {
 }
 Timeline.propTypes = {
   params: React.PropTypes.object.isRequired,
+};
+
+class Indicator extends React.Component {
+  render() {
+    let state = this.props.state.toJS().state;
+    if (state !== LoadingStates.DONE.toString()) {
+      return (
+        <span className="Indicator">{state} ...</span>
+      );
+    } else {
+      return (<span></span>);
+    };
+  };
+}
+Indicator.propTypes = {
+  state: React.PropTypes.object.isRequired,
 };
 
 class BugTable extends React.Component {
