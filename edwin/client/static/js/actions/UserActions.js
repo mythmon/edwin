@@ -5,6 +5,7 @@ import UserConstants from '../constants/UserConstants.js';
 import UserStore from '../stores/UserStore.js';
 import bzAPI from '../utils/bzAPI';
 import Cacher from '../utils/Cacher.js';
+import ProgressActions from '../actions/ProgressActions.js';
 
 
 export function login(username, apiKey) {
@@ -28,9 +29,12 @@ export function logout() {
 }
 
 export function restore() {
+  ProgressActions.startTask('Restore user');
   if (UserStore.getAll().get('initialized')) {
+    ProgressActions.endTask('Restore user');
     return Promise.resolve();
   } else {
+    ProgressActions.endTask('Restore user');
     return Cacher.recallAction(UserConstants.ActionTypes.USER_LOGIN)
     .then(() => {
       if (!UserStore.getAll().get('initialized')) {

@@ -8,6 +8,7 @@ import edwinAPI from '../utils/edwinAPI.js';
 import BugStore from '../stores/BugStore.js';
 import UserStore from '../stores/UserStore.js';
 import PromiseExt from '../utils/PromiseExt.js';
+import ProgressActions from '../actions/ProgressActions.js';
 
 
 /**
@@ -18,6 +19,8 @@ import PromiseExt from '../utils/PromiseExt.js';
  */
 export function loadBugs(query) {
   const user = UserStore.getAll();
+
+  ProgressActions.startTask('Load bugs');
 
   if (user.get('loggedIn')) {
     query.api_key = user.get('apiKey');
@@ -36,6 +39,7 @@ export function loadBugs(query) {
 
     return loadCommentTags(idsForCommentTags);
   })
+  .then(() => ProgressActions.endTask('Load bugs'))
   // signal completion
   .then(() => undefined);
 }
@@ -47,6 +51,7 @@ export function loadBugs(query) {
  * @promises {undefined} Signals completion with no data.
  */
 export function loadPRs(repos) {
+  ProgressActions.startTask('Load PRs');
   Promise.all(repos.map(repo => githubAPI.getPRs(repo)))
   .then(prLists => {
     let flattened = [];
@@ -58,6 +63,7 @@ export function loadPRs(repos) {
       newPRs: flattened,
     });
   })
+  .then(() => ProgressActions.endTask('Load PRs'))
   // signal completion
   .then(() => undefined);
 }
@@ -69,6 +75,7 @@ export function loadPRs(repos) {
  * @promise {undefined} Signals copmletion with no data.
  */
 export function loadTeams() {
+  ProgressActions.startTask('Load teams');
   return edwinAPI.getTeams()
   .then(newTeams => {
     Dispatcher.dispatch({
@@ -76,6 +83,7 @@ export function loadTeams() {
       newTeams,
     });
   })
+  .then(() => ProgressActions.endTask('Load teams'))
   // signal completion
   .then(() => undefined);
 }

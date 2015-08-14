@@ -6,7 +6,7 @@ import cx from 'classnames';
 import ControllerComponent from '../utils/ControllerComponent';
 import Data from './Data';
 import BugStore from '../stores/BugStore';
-import IndicatorStore from '../stores/IndicatorStore';
+import ProgressStore from '../stores/ProgressStore';
 import PRStore from '../stores/PRStore';
 import TeamStore from '../stores/TeamStore';
 import UserActions from '../actions/UserActions.js';
@@ -14,8 +14,8 @@ import UserStore from '../stores/UserStore.js';
 import {BugStates} from '../constants/TimelineConstants';
 import TimelineActions from '../actions/TimelineActions.js';
 import TimelineConstants from '../constants/TimelineConstants.js';
-import IndicatorActions from '../actions/IndicatorActions.js';
-import {LoadingStates} from '../constants/IndicatorConstants';
+import ProgressActions from '../actions/ProgressActions.js';
+import {LoadingStates} from '../constants/ProgressConstants';
 import Cacher from '../utils/Cacher.js';
 import edwinAPI from '../utils/edwinAPI.js';
 import Icon from './Icon.js';
@@ -27,34 +27,29 @@ import Icon from './Icon.js';
  */
 export default class Timeline extends ControllerComponent {
   get stores() {
-    return [BugStore, UserStore, IndicatorStore];
+    return [BugStore, UserStore, ProgressStore];
   }
 
   loadData() {
     let teamSlug = this.props.params.team;
     let bugQuery = {comment_tag: `edwin-${teamSlug}`};
 
-    IndicatorActions.updateState(LoadingStates.USER_RESTORE);
+    ProgressActions.startTask('Loading data');
     return UserActions.restore()
     .then(() => {
-      IndicatorActions.updateState(LoadingStates.LOAD_TEAMS);
       TimelineActions.loadTeams()
     })
     .then(() => {
       let team = TeamStore.get(teamSlug);
       let promise = TimelineActions.loadBugs(bugQuery);
 
-      IndicatorActions.updateState(LoadingStates.LOAD_BUGS);
       if (team && team.get('github_repo')) {
-        promise = promise.then(() => {
-          IndicatorActions.updateState(LoadingStates.LOAD_PRS);
-          TimelineActions.loadPRs(team.get('github_repo').toJS())
-        });
+        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()))
       }
       return promise;
     })
     .then(() => {
-      IndicatorActions.updateState(LoadingStates.DONE);
+      ProgressActions.endTask('Loading data');
     });
   }
 
@@ -64,7 +59,7 @@ export default class Timeline extends ControllerComponent {
       unsortedBugs: BugStore.getUnsortedBugs(),
       notReadyBugs: BugStore.getNotReadyBugs(),
       user: UserStore.getAll(),
-      indicator: IndicatorStore.getAll(),
+      progress: ProgressStore.getRunning(),
     };
   }
 
@@ -82,7 +77,7 @@ export default class Timeline extends ControllerComponent {
             ? <button onClick={this.handleCommitSort.bind(this)}>Commit sort</button>
             : null}
           <button onClick={this.loadData.bind(this)}>Refresh</button>
-          <Indicator state={this.state.indicator}/>
+          <ProgressIndicator runningTasks={this.state.progress}/>
         </div>
         <BugTable title="Timeline" bugs={this.state.timelineBugs} user={this.state.user}/>
         <BugTable title="Unsorted" bugs={this.state.unsortedBugs} user={this.state.user}/>
@@ -99,20 +94,21 @@ Timeline.propTypes = {
   params: React.PropTypes.object.isRequired,
 };
 
-class Indicator extends React.Component {
+class ProgressIndicator extends React.Component {
   render() {
-    let state = this.props.state.toJS().state;
-    if (state !== LoadingStates.DONE.toString()) {
+    let state = Array.from(this.props.runningTasks).join(', ');
+
+    if (state !== '') {
       return (
-        <span className="Indicator">{state} ...</span>
+        <span className="ProgressIndicator">{state} ...</span>
       );
     } else {
-      return (<span></span>);
+      return null;
     };
   };
 }
-Indicator.propTypes = {
-  state: React.PropTypes.object.isRequired,
+ProgressIndicator.propTypes = {
+  runningTasks: React.PropTypes.object.isRequired,
 };
 
 class BugTable extends React.Component {
