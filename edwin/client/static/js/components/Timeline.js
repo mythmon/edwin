@@ -41,7 +41,7 @@ export default class Timeline extends ControllerComponent {
     })
     .then(() => {
       let team = TeamStore.get(teamSlug);
-      let promise = TimelineActions.loadBugs(bugQuery);
+      let promise = TimelineActions.loadBugs(teamSlug, bugQuery);
 
       if (team && team.get('github_repo')) {
         promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()))
@@ -54,10 +54,11 @@ export default class Timeline extends ControllerComponent {
   }
 
   getNewState() {
+    let teamSlug = this.props.params.team;
     return {
-      timelineBugs: BugStore.getTimelineBugs(),
-      unsortedBugs: BugStore.getUnsortedBugs(),
-      notReadyBugs: BugStore.getNotReadyBugs(),
+      timelineBugs: BugStore.getTimelineBugs(teamSlug),
+      unsortedBugs: BugStore.getUnsortedBugs(teamSlug),
+      notReadyBugs: BugStore.getNotReadyBugs(teamSlug),
       user: UserStore.getAll(),
       progress: ProgressStore.getRunning(),
     };
@@ -242,6 +243,7 @@ class BugRow extends React.Component {
           {bug.get('summary')}
           <WhiteboardGroup data={bug.get('whiteboardParsed').filter((_, key) => key !== 'p')}/>
           <NeedinfoGroup data={bug.get('needinfo', [])}/>
+          <BlockedGroup data={bug.get('blocked', [])}/>
         </td>
         <td className="BugTable__data--center">
           <AssignedTo user={bug.get('assigned_to_detail')}/>
@@ -384,6 +386,26 @@ class NeedinfoGroup extends React.Component {
   }
 }
 NeedinfoGroup.propTypes = {
+  data: React.PropTypes.object.isRequired,
+};
+
+class BlockedGroup extends React.Component {
+  render() {
+    let bugUrl = 'https://bugzilla.mozilla.org/show_bug.cgi?id=';
+    return (
+      <span className="BlockedGroup">
+        {this.props.data.toList().toJS()
+          .map((bug, i) => (
+            <span key={`bug-${i}`} className="BlockedGroup__Data">
+              <a href={"https://bugzilla.mozilla.org/show_bug.cgi?id=" + bug.id}>{bug.id}</a>
+            </span>
+          ))
+        }
+      </span>
+    );
+  }
+}
+BlockedGroup.propTypes = {
   data: React.PropTypes.object.isRequired,
 };
 

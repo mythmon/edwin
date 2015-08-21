@@ -17,7 +17,7 @@ import ProgressActions from '../actions/ProgressActions.js';
  * @param {Object} query Bugzilla API query.
  * @promises {undefined} Signals completion with no data.
  */
-export function loadBugs(query) {
+export function loadBugs(teamSlug, query) {
   const user = UserStore.getAll();
 
   ProgressActions.startTask('Load bugs');
@@ -30,14 +30,19 @@ export function loadBugs(query) {
   .then(newBugs => {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
+      team: teamSlug,
       newBugs,
     });
 
-    let idsForCommentTags = BugStore.getAll()
+    let idsForCommentTags = BugStore.getAll(teamSlug)
       .filter(bug => bug.get('state') !== TimelineConstants.BugStates.NOT_READY)
       .map(bug => bug.get('id'));
 
     return loadCommentTags(idsForCommentTags);
+  })
+  .then(() => {
+    // Pull all the bug ids we need for blocker bugs
+    return loadBlockerBugs(BugStore.getBlockerBugIds(teamSlug));
   })
   .then(() => ProgressActions.endTask('Load bugs'))
   // signal completion
@@ -98,6 +103,8 @@ export function loadCommentTags(bugIds) {
   let params = {};
 
   const user = UserStore.getAll();
+
+  ProgressActions.startTask('Load comments');
   if (user.get('loggedIn')) {
     params.api_key = user.get('apiKey');
   }
@@ -115,9 +122,36 @@ export function loadCommentTags(bugIds) {
       type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
       commentSpecs,
     });
-  });
+  })
+  .then(() => ProgressActions.endTask('Load comments'));
 }
 
+/**
+ * Fetch data for blocker bugs.
+ * @param {Array<Immutable.List>} List of bug ids
+ */
+export function loadBlockerBugs(bugIds) {
+  if (bugIds.size > 0) {
+    let bugQuery = {id: Array.from(bugIds).join(',')};
+    const user = UserStore.getAll();
+    ProgressActions.startTask('Load blockers');
+
+    if (user.get('loggedIn')) {
+      query.api_key = user.get('apiKey');
+    }
+
+    return bzAPI.getBugs(bugQuery)
+    .then(newBugs => {
+      Dispatcher.dispatch({
+        type: TimelineConstants.ActionTypes.SET_BLOCKER_BUGS,
+        newBugs,
+      });
+    })
+    .then(() => ProgressActions.endTask('Load blockers'));
+  } else {
+    return Promise.resolve();
+  }
+}
 
 export function grabBug(bugId) {
   const user = UserStore.getAll();
