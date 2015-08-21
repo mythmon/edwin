@@ -137,7 +137,7 @@ export function loadBlockerBugs(bugIds) {
     ProgressActions.startTask('Load blockers');
 
     if (user.get('loggedIn')) {
-      query.api_key = user.get('apiKey');
+      bugQuery.api_key = user.get('apiKey');
     }
 
     return bzAPI.getBugs(bugQuery)
