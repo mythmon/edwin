@@ -20,31 +20,41 @@ let bugMap = Immutable.OrderedMap();
 
 class _BugStore extends BaseStore {
   /**
-   * Get the current state of all bugs.
+   * Get the current state of all bugs or bugs for a specified team.
    *
-   * @returns {Immutable.List} A list of all bugs.
+   * @param {String} teamSlug (Optional) Specified team.
+   *
+   * @returns {Immutable.List} A list of bugs.
    */
-  getAll() {
+  getAll(teamSlug) {
     // discard keys
-    return bugMap.toList();
+    let bugs = bugMap.toList();
+    if (teamSlug !== undefined) {
+      bugs = bugs.filter(bug => bug.get('team') === teamSlug);
+    }
+    return bugs
   }
 
-  getTimelineBugs() {
+  getTimelineBugs(teamSlug) {
     return bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
       bug.get('sortOrder', null) !== null &&
       bug.get('state') !== BugStates.NOT_READY &&
       bug.get('state') !== BugStates.DONE));
   }
 
-  getUnsortedBugs() {
+  getUnsortedBugs(teamSlug) {
     return bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
       bug.get('sortOrder', null) === null &&
       bug.get('state') !== BugStates.NOT_READY &&
       bug.get('state') !== BugStates.DONE));
   }
 
-  getNotReadyBugs() {
-    return bugMap.toList().filter(bug => bug.get('state') === BugStates.NOT_READY);
+  getNotReadyBugs(teamSlug) {
+    return bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
+      bug.get('state') === BugStates.NOT_READY));
   }
 
   /**
@@ -52,11 +62,15 @@ class _BugStore extends BaseStore {
    *
    * @returns {Immutable.Set} A set of bug ids.
    */
-  getBlockerBugIds() {
+  getBlockerBugIds(teamSlug) {
     let bugIds = Immutable.Set();
+    let openBugs = bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
+      bug.get('state', '') === BugStates.DONE));
+
     // Build a set of ids of all bugs in the depends_on field for bugs
     // that aren't completed.
-    for (let bug of bugMap.toList().filter(bug => bug.get('state') !== BugStates.DONE)) {
+    for (let bug of openBugs) {
       bugIds = bugIds.union(bug.get('depends_on'));
     }
 
@@ -211,6 +225,9 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       for (let bug of action.newBugs) {
         bugMap = bugMap.update(bug.id, new Immutable.Map(), oldBug => {
           let newBug = Immutable.fromJS(bug);
+          // FIXME: This doesn't allow for bugs to belong to multiple
+          // teams.
+          newBug = newBug.set('team', action.team);
           return augmentBug(oldBug.merge(newBug));
         });
       }

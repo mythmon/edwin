@@ -17,7 +17,7 @@ import ProgressActions from '../actions/ProgressActions.js';
  * @param {Object} query Bugzilla API query.
  * @promises {undefined} Signals completion with no data.
  */
-export function loadBugs(query) {
+export function loadBugs(teamSlug, query) {
   const user = UserStore.getAll();
 
   ProgressActions.startTask('Load bugs');
@@ -30,10 +30,11 @@ export function loadBugs(query) {
   .then(newBugs => {
     Dispatcher.dispatch({
       type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
+      team: teamSlug,
       newBugs,
     });
 
-    let idsForCommentTags = BugStore.getAll()
+    let idsForCommentTags = BugStore.getAll(teamSlug)
       .filter(bug => bug.get('state') !== TimelineConstants.BugStates.NOT_READY)
       .map(bug => bug.get('id'));
 
@@ -41,7 +42,7 @@ export function loadBugs(query) {
   })
   .then(() => {
     // Pull all the bug ids we need for blocker bugs
-    return loadBlockerBugs(BugStore.getBlockerBugIds());
+    return loadBlockerBugs(BugStore.getBlockerBugIds(teamSlug));
   })
   .then(() => ProgressActions.endTask('Load bugs'))
   // signal completion

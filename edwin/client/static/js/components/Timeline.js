@@ -41,7 +41,7 @@ export default class Timeline extends ControllerComponent {
     })
     .then(() => {
       let team = TeamStore.get(teamSlug);
-      let promise = TimelineActions.loadBugs(bugQuery);
+      let promise = TimelineActions.loadBugs(teamSlug, bugQuery);
 
       if (team && team.get('github_repo')) {
         promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()))
@@ -54,10 +54,11 @@ export default class Timeline extends ControllerComponent {
   }
 
   getNewState() {
+    let teamSlug = this.props.params.team;
     return {
-      timelineBugs: BugStore.getTimelineBugs(),
-      unsortedBugs: BugStore.getUnsortedBugs(),
-      notReadyBugs: BugStore.getNotReadyBugs(),
+      timelineBugs: BugStore.getTimelineBugs(teamSlug),
+      unsortedBugs: BugStore.getUnsortedBugs(teamSlug),
+      notReadyBugs: BugStore.getNotReadyBugs(teamSlug),
       user: UserStore.getAll(),
       progress: ProgressStore.getRunning(),
     };
