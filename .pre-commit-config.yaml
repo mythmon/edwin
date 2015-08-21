@@ -1,0 +1,16 @@
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    sha: cf550fcab3f12015f8676b8278b30e1a5bc10e70
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-case-conflict
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: trailing-whitespace
+    -   id: flake8
+        args: [--max-line-length=99]
+-   repo: git://github.com/mythmon/mirrors-eslint
+    sha: '775d6ce581be5c270f668aa69e25907579377bd0'
+    hooks:
+    -   id: eslint

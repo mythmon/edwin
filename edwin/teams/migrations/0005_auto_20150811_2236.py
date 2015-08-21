@@ -14,6 +14,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='team',
             name='github_repo',
-            field=models.CharField(blank=True, help_text='Comma-separated list of repos, like "mozilla/edwin,mozilla/edwin2"', max_length=1024),
+            field=models.CharField(
+                blank=True,
+                help_text='Comma-separated list of repos, like "mozilla/edwin,mozilla/edwin2"',
+                max_length=1024),
         ),
     ]
