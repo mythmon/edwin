@@ -39,6 +39,10 @@ export function loadBugs(query) {
 
     return loadCommentTags(idsForCommentTags);
   })
+  .then(() => {
+    // Pull all the bug ids we need for blocker bugs
+    return loadBlockerBugs(BugStore.getBlockerBugIds());
+  })
   .then(() => ProgressActions.endTask('Load bugs'))
   // signal completion
   .then(() => undefined);
@@ -98,6 +102,8 @@ export function loadCommentTags(bugIds) {
   let params = {};
 
   const user = UserStore.getAll();
+
+  ProgressActions.startTask('Load comments');
   if (user.get('loggedIn')) {
     params.api_key = user.get('apiKey');
   }
@@ -115,9 +121,36 @@ export function loadCommentTags(bugIds) {
       type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
       commentSpecs,
     });
-  });
+  })
+  .then(() => ProgressActions.endTask('Load comments'));
 }
 
+/**
+ * Fetch data for blocker bugs.
+ * @param {Array<Immutable.List>} List of bug ids
+ */
+export function loadBlockerBugs(bugIds) {
+  if (bugIds.size > 0) {
+    let bugQuery = {id: Array.from(bugIds).join(',')};
+    const user = UserStore.getAll();
+    ProgressActions.startTask('Load blockers');
+
+    if (user.get('loggedIn')) {
+      query.api_key = user.get('apiKey');
+    }
+
+    return bzAPI.getBugs(bugQuery)
+    .then(newBugs => {
+      Dispatcher.dispatch({
+        type: TimelineConstants.ActionTypes.SET_BLOCKER_BUGS,
+        newBugs,
+      });
+    })
+    .then(() => ProgressActions.endTask('Load blockers'));
+  } else {
+    return undefined;
+  }
+}
 
 export function grabBug(bugId) {
   const user = UserStore.getAll();
