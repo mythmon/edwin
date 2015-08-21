@@ -26,7 +26,7 @@ const ProgressStore = new _ProgressStore();
 ProgressStore.dispatchToken = Dispatcher.register((action) => {
   let taskName = action.name;
 
-  switch(action.type) {
+  switch (action.type) {
     // Note: START_TASK and END_TASK are not atomic operations so they
     // allow for race conditions. Theoretically a single process
     // should be starting and ending its own task and its task should

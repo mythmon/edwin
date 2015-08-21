@@ -33,7 +33,6 @@ rules:
   react/jsx-no-duplicate-props: [2]
   react/jsx-no-undef: [2]
   react/jsx-quotes: [2]
-  react/jsx-sort-prop-types: [2]
   react/jsx-uses-react: [2]
   react/jsx-uses-vars: [2]
   react/no-danger: [2]
@@ -69,6 +68,7 @@ ecmaFeatures:
   templateStrings: true
   unicodeCodePointEscapes: true
   jsx: true
+  restParams: true
 
 env:
   browser: true

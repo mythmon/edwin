@@ -52,7 +52,7 @@ function update() {
 }
 
 PRStore.dispatchToken = Dispatcher.register((action) => {
-  switch(action.type) {
+  switch (action.type) {
     case TimelineConstants.ActionTypes.SET_RAW_PRS:
       prs = Immutable.fromJS(action.newPRs).map(augmentPR);
       update();

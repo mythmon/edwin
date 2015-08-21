@@ -29,7 +29,7 @@ class _UserStore extends BaseStore {
 const UserStore = new _UserStore();
 
 UserStore.dispatchToken = Dispatcher.register((action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.USER_LOGIN:
       storeData = storeData
         .set('username', action.username)

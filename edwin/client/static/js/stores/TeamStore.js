@@ -30,7 +30,7 @@ class _TeamStore extends BaseStore {
 const TeamStore = new _TeamStore();
 
 TeamStore.dispatchToken = Dispatcher.register((action) => {
-  switch(action.type) {
+  switch (action.type) {
     case TimelineConstants.ActionTypes.SET_RAW_TEAMS:
       teams = Immutable.fromJS(action.newTeams);
       TeamStore.emitChange();

@@ -32,7 +32,7 @@ class _BugStore extends BaseStore {
     if (teamSlug !== undefined) {
       bugs = bugs.filter(bug => bug.get('team') === teamSlug);
     }
-    return bugs
+    return bugs;
   }
 
   getTimelineBugs(teamSlug) {

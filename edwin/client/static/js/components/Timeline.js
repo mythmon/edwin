@@ -37,14 +37,14 @@ export default class Timeline extends ControllerComponent {
     ProgressActions.startTask('Loading data');
     return UserActions.restore()
     .then(() => {
-      TimelineActions.loadTeams()
+      TimelineActions.loadTeams();
     })
     .then(() => {
       let team = TeamStore.get(teamSlug);
       let promise = TimelineActions.loadBugs(teamSlug, bugQuery);
 
       if (team && team.get('github_repo')) {
-        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()))
+        promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()));
       }
       return promise;
     })
@@ -105,8 +105,8 @@ class ProgressIndicator extends React.Component {
       );
     } else {
       return null;
-    };
-  };
+    }
+  }
 }
 ProgressIndicator.propTypes = {
   runningTasks: React.PropTypes.object.isRequired,
@@ -397,7 +397,7 @@ class BlockedGroup extends React.Component {
         {this.props.data.toList().toJS()
           .map((bug, i) => (
             <span key={`bug-${i}`} className="BlockedGroup__Data">
-              <a href={"https://bugzilla.mozilla.org/show_bug.cgi?id=" + bug.id}>{bug.id}</a>
+              <a href={`https://bugzilla.mozilla.org/show_bug.cgi?id=${bug.id}`}>{bug.id}</a>
             </span>
           ))
         }

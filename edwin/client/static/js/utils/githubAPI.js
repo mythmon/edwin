@@ -22,7 +22,7 @@ function apiCall(endpoint, params={}) {
     },
   })
   .then((response) => {
-    if(!response.ok) {
+    if (!response.ok) {
       return new Promise((resolve, reject) => {
         response.json().then(reject);
       });
