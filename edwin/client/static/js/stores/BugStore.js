@@ -238,10 +238,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
     case ActionTypes.SET_BLOCKER_BUGS:
       // Merge newBugs into bugMap
       for (let bug of action.newBugs) {
-        bugMap = bugMap.update(bug.id, new Immutable.Map(), oldBug => {
-          let newBug = Immutable.fromJS(bug);
-          return oldBug.merge(newBug);
-        });
+        bugMap = bugMap.mergeIn([bug.id], Immutable.fromJS(bug));
       }
 
       // Need to update all the bugs

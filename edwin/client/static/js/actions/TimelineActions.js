@@ -148,7 +148,7 @@ export function loadBlockerBugs(bugIds) {
     })
     .then(() => ProgressActions.endTask('Load blockers'));
   } else {
-    return undefined;
+    return Promise.resolve();
   }
 }
 
