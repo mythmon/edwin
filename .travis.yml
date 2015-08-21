@@ -5,7 +5,7 @@ install:
   - npm --python=$(which python2.7) install
   - DJANGO_SETTINGS_MODULE=edwin.settings DJANGO_CONFIGURATION=Test ./manage.py collectstatic --noinput
 script:
-  - eslint edwin
+  - pre-commit run --all-files
   - DJANGO_SETTINGS_MODULE=edwin.settings DJANGO_CONFIGURATION=Test ./manage.py test
   - npm test
 branches:
