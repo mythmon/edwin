@@ -6,7 +6,7 @@ import React from 'react';
  */
 export default class Welcome extends React.Component {
   render() {
-    document.title = 'Edwin - Welcome';
+    document.title = 'Welcome (Edwin)';
 
     return (
       <div className="Welcome">
