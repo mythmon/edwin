@@ -29,6 +29,8 @@ export default class TeamList extends ControllerComponent {
   }
 
   render() {
+    document.title = 'Edwin - Team list';
+
     return (
       <div className="Welcome">
         <h1>Teams</h1>

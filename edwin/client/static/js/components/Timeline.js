@@ -71,6 +71,8 @@ export default class Timeline extends ControllerComponent {
   render() {
     let teamTag = `edwin-${this.props.params.team}`;
 
+    document.title = `Edwin - ${this.props.params.team}`;
+
     return (
       <div className="Timeline">
         <div className="Timeline__Actions">
