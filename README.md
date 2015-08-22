@@ -28,6 +28,10 @@ Edwin is a bug management system.
 > You'll be using the `Dev` configuration by default. Make sure to change this
 > for deployments by setting the DJANGO_CONFIGURATION environment variable.
 
+## pre-commit
+
+You can run `pre-commit install` to set up the pre-commit machinery which will
+lint changes before you commit. Linting saves lives.
 
 # Run tests
 
