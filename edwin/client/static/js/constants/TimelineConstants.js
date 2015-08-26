@@ -17,6 +17,8 @@ export const ActionTypes = constantMap([
   'BUG_SET_INTERNAL_SORT',
   // Walk through the bugs accordint to sortOrder and update comment tags to match.
   'BUGS_COMMIT_SORT_ORDER',
+  // Set the currenty active team
+  'SET_CURRENT_TEAM',
 ]);
 
 export const BugStates = constantMap([

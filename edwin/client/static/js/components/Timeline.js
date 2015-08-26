@@ -27,21 +27,20 @@ import Icon from './Icon.js';
  */
 export default class Timeline extends ControllerComponent {
   get stores() {
-    return [BugStore, UserStore, ProgressStore];
+    return [BugStore, UserStore, ProgressStore, TeamStore];
   }
 
   loadData() {
     let teamSlug = this.props.params.team;
+    TimelineActions.setCurrentTeam(teamSlug);
     let bugQuery = {comment_tag: `edwin-${teamSlug}`};
 
     ProgressActions.startTask('Loading data');
     return UserActions.restore()
-    .then(() => {
-      TimelineActions.loadTeams();
-    })
+    .then(() => TimelineActions.loadTeams())
     .then(() => {
       let team = TeamStore.get(teamSlug);
-      let promise = TimelineActions.loadBugs(teamSlug, bugQuery);
+      let promise = TimelineActions.loadBugs(bugQuery);
 
       if (team && team.get('github_repo')) {
         promise = promise.then(() => TimelineActions.loadPRs(team.get('github_repo').toJS()));
@@ -54,13 +53,13 @@ export default class Timeline extends ControllerComponent {
   }
 
   getNewState() {
-    let teamSlug = this.props.params.team;
     return {
-      timelineBugs: BugStore.getTimelineBugs(teamSlug),
-      unsortedBugs: BugStore.getUnsortedBugs(teamSlug),
-      notReadyBugs: BugStore.getNotReadyBugs(teamSlug),
+      timelineBugs: BugStore.getTimelineBugs(),
+      unsortedBugs: BugStore.getUnsortedBugs(),
+      notReadyBugs: BugStore.getNotReadyBugs(),
       user: UserStore.getAll(),
       progress: ProgressStore.getRunning(),
+      currentTeam: TeamStore.getCurrentTeam(),
     };
   }
 
