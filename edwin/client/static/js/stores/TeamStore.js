@@ -11,8 +11,7 @@ import Dispatcher from '../dispatcher';
 import BaseStore from '../utils/BaseStore';
 import * as TimelineConstants from '../constants/TimelineConstants';
 
-let teams = Immutable.Map();
-let currentSlug = null;
+let teams = Immutable.List();
 
 class _TeamStore extends BaseStore {
   /**
@@ -20,19 +19,11 @@ class _TeamStore extends BaseStore {
    * @returns {Immutable.List} A list of all PRs.
    */
   getAll() {
-    return teams.toList();
+    return teams;
   }
 
   get(slug) {
-    return teams.get(slug);
-  }
-
-  getCurrentTeam() {
-    return teams.get(currentSlug);
-  }
-
-  getCurrentSlug() {
-    return currentSlug;
+    return teams.find((t) => t.get('slug') === slug);
   }
 }
 
@@ -41,15 +32,7 @@ const TeamStore = new _TeamStore();
 TeamStore.dispatchToken = Dispatcher.register((action) => {
   switch (action.type) {
     case TimelineConstants.ActionTypes.SET_RAW_TEAMS:
-      let newTeams = Immutable.fromJS(action.newTeams);
-      for (let team of newTeams) {
-        teams = teams.set(team.get('slug'), team);
-      }
-      TeamStore.emitChange();
-      break;
-
-    case TimelineConstants.ActionTypes.SET_CURRENT_TEAM:
-      currentSlug = action.slug;
+      teams = Immutable.fromJS(action.newTeams);
       TeamStore.emitChange();
       break;
 

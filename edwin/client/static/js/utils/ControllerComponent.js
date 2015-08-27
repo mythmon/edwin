@@ -8,7 +8,8 @@ import Immutable from 'immutable';
 export default class ControllerComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = this.getNewState();
+
     for (let name of this.autoBind) {
       this[name] = this[name].bind(this);
     }
@@ -60,7 +61,6 @@ export default class ControllerComponent extends React.Component {
    * Call {@link fetchData} when the component is being mounted.
    */
   componentWillMount() {
-    this.setState(this.getNewState());
     this.loadData()
     .catch(err => {
       console.error('Error loading data:', err);

@@ -10,12 +10,11 @@
 import Immutable from 'immutable';
 import toposort from 'toposort';
 
-import Dispatcher from '../dispatcher.js';
-import BaseStore from '../utils/BaseStore.js';
-import PRStore from './PRStore.js';
-import TeamStore from './TeamStore.js';
-import {ActionTypes, BugStates} from '../constants/TimelineConstants.js';
-import {whiteboardData} from '../utils/parsers.js';
+import Dispatcher from '../dispatcher';
+import BaseStore from '../utils/BaseStore';
+import PRStore from './PRStore';
+import {ActionTypes, BugStates} from '../constants/TimelineConstants';
+import {whiteboardData} from '../utils/parsers';
 
 let bugMap = Immutable.OrderedMap();
 
@@ -27,30 +26,35 @@ class _BugStore extends BaseStore {
    *
    * @returns {Immutable.List} A list of bugs.
    */
-  getAll() {
-    const teamSlug = TeamStore.getCurrentSlug();
+  getAll(teamSlug) {
     // discard keys
-    return bugMap.toList()
-      .filter(bug => bug.get('team') === teamSlug);
+    let bugs = bugMap.toList();
+    if (teamSlug !== undefined) {
+      bugs = bugs.filter(bug => bug.get('team') === teamSlug);
+    }
+    return bugs;
   }
 
-  getTimelineBugs() {
-    return this.getAll()
-      .filter(bug => bug.get('sortOrder', null) !== null)
-      .filter(bug => bug.get('state') !== BugStates.NOT_READY)
-      .filter(bug => bug.get('state') !== BugStates.DONE);
+  getTimelineBugs(teamSlug) {
+    return bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
+      bug.get('sortOrder', null) !== null &&
+      bug.get('state') !== BugStates.NOT_READY &&
+      bug.get('state') !== BugStates.DONE));
   }
 
-  getUnsortedBugs() {
-    return this.getAll()
-      .filter(bug => bug.get('sortOrder', null) !== null)
-      .filter(bug => bug.get('state') !== BugStates.NOT_READY)
-      .filter(bug => bug.get('state') !== BugStates.DONE);
+  getUnsortedBugs(teamSlug) {
+    return bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
+      bug.get('sortOrder', null) === null &&
+      bug.get('state') !== BugStates.NOT_READY &&
+      bug.get('state') !== BugStates.DONE));
   }
 
-  getNotReadyBugs() {
-    return this.getAll()
-      .filter(bug => bug.get('state') !== BugStates.NOT_READY);
+  getNotReadyBugs(teamSlug) {
+    return bugMap.toList().filter(bug => (
+      bug.get('team', '') === teamSlug &&
+      bug.get('state') === BugStates.NOT_READY));
   }
 
   /**
@@ -58,8 +62,7 @@ class _BugStore extends BaseStore {
    *
    * @returns {Immutable.Set} A set of bug ids.
    */
-  getBlockerBugIds() {
-    const teamSlug = TeamStore.getCurrentSlug();
+  getBlockerBugIds(teamSlug) {
     let bugIds = Immutable.Set();
     let openBugs = bugMap.toList().filter(bug => (
       bug.get('team', '') === teamSlug &&
