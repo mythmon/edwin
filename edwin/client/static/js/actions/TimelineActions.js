@@ -6,10 +6,10 @@ import bzAPI from '../utils/bzAPI';
 import githubAPI from '../utils/githubAPI.js';
 import edwinAPI from '../utils/edwinAPI.js';
 import BugStore from '../stores/BugStore.js';
+import TeamStore from '../stores/TeamStore.js';
 import UserStore from '../stores/UserStore.js';
 import PromiseExt from '../utils/PromiseExt.js';
 import ProgressActions from '../actions/ProgressActions.js';
-
 
 /**
  * Fetch bugs from the API, and dispatch an event to replace the bugs
@@ -17,8 +17,9 @@ import ProgressActions from '../actions/ProgressActions.js';
  * @param {Object} query Bugzilla API query.
  * @promises {undefined} Signals completion with no data.
  */
-export function loadBugs(teamSlug, query) {
+export function loadBugs(query) {
   const user = UserStore.getAll();
+  const teamSlug = TeamStore.getCurrentSlug();
 
   ProgressActions.startTask('Load bugs');
 
@@ -34,7 +35,7 @@ export function loadBugs(teamSlug, query) {
       newBugs,
     });
 
-    let idsForCommentTags = BugStore.getAll(teamSlug)
+    let idsForCommentTags = BugStore.getAll()
       .filter(bug => bug.get('state') !== TimelineConstants.BugStates.NOT_READY)
       .map(bug => bug.get('id'));
 
@@ -42,7 +43,7 @@ export function loadBugs(teamSlug, query) {
   })
   .then(() => {
     // Pull all the bug ids we need for blocker bugs
-    return loadBlockerBugs(BugStore.getBlockerBugIds(teamSlug));
+    return loadBlockerBugs(BugStore.getBlockerBugIds());
   })
   .then(() => ProgressActions.endTask('Load bugs'))
   // signal completion
@@ -94,6 +95,14 @@ export function loadTeams() {
 }
 
 
+export function setCurrentTeam(slug) {
+  Dispatcher.dispatch({
+    type: TimelineConstants.ActionTypes.SET_CURRENT_TEAM,
+    slug,
+  });
+}
+
+
 /**
  * Get all comment tags for all `bugs`, and fire events for each.
  * @param {Array<Immutable.Map>} An array of immutable.js objects representing
@@ -111,9 +120,9 @@ export function loadCommentTags(bugIds) {
 
   let commentPromises = bugIds.map(bugId => (
     bzAPI.getBugComments(bugId, params)
-    .then(comments => {
-      return {bugId, commentId: comments[0].id, tags: comments[0].tags};
-    })
+    .then(comments => (
+      {bugId, commentId: comments[0].id, tags: comments[0].tags}
+    ))
   )).toJS();
 
   return PromiseExt.allResolves(commentPromises)
@@ -123,7 +132,8 @@ export function loadCommentTags(bugIds) {
       commentSpecs,
     });
   })
-  .then(() => ProgressActions.endTask('Load comments'));
+  .then(() => ProgressActions.endTask('Load comments'))
+  .catch(err => console.error('uh oh', err));
 }
 
 /**
@@ -231,6 +241,7 @@ export default {
   loadBugs,
   loadPRs,
   loadTeams,
+  setCurrentTeam,
   loadCommentTags,
   grabBug,
   setInternalSort,

@@ -25,6 +25,7 @@ export default class TeamList extends ControllerComponent {
   }
 
   loadData() {
+    TimelineActions.setCurrentTeam(null);
     return TimelineActions.loadTeams();
   }
 
