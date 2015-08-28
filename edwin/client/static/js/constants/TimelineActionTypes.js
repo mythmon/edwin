@@ -1,6 +1,6 @@
 import {constantMap} from '../utils/constants';
 
-export const ActionTypes = constantMap([
+const TimelineActionTypes = constantMap([
   // Reset all the bugs in the store to the provided raw bugs.
   'SET_RAW_BUGS',
   // Reset "blocked" bugs for all bugs in the store.
@@ -21,18 +21,4 @@ export const ActionTypes = constantMap([
   'SET_CURRENT_TEAM',
 ]);
 
-export const BugStates = constantMap([
-  'UNKNOWN',
-  'NOT_READY',
-  'READY',
-  'STARTED',
-  'IN_REVIEW',
-  'MERGED',
-  'DONE',
-]);
-
-
-export default {
-  ActionTypes,
-  BugStates,
-};
+export default TimelineActionTypes;

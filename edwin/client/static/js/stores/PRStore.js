@@ -12,7 +12,7 @@ import Immutable from 'immutable';
 import Dispatcher from '../dispatcher';
 import BaseStore from '../utils/BaseStore';
 import BugStore from './BugStore';
-import * as TimelineConstants from '../constants/TimelineConstants';
+import TimelineActionTypes from '../constants/TimelineActionTypes.js';
 import {bugReferences} from '../utils/parsers';
 
 let prs = Immutable.List();
@@ -53,12 +53,12 @@ function update() {
 
 PRStore.dispatchToken = Dispatcher.register((action) => {
   switch (action.type) {
-    case TimelineConstants.ActionTypes.SET_RAW_PRS:
+    case TimelineActionTypes.SET_RAW_PRS:
       prs = Immutable.fromJS(action.newPRs).map(augmentPR);
       update();
       break;
 
-    case TimelineConstants.ActionTypes.SET_RAW_BUGS:
+    case TimelineActionTypes.SET_RAW_BUGS:
       Dispatcher.waitFor([BugStore.dispatchToken]);
       update();
       break;
