@@ -1,12 +1,10 @@
 import React from 'react';
 import Immutable from 'immutable';
 
-import ControllerComponent from '../utils/ControllerComponent';
-import UserStore from '../stores/UserStore';
-import UserActions from '../actions/UserActions.js';
-import Icon from './Icon.js';
-import Cacher from '../utils/Cacher.js';
-
+import {Icon} from './';
+import {UserActions} from '../actions/';
+import {UserStore} from '../stores/';
+import {Cacher, ControllerComponent} from '../utils/';
 
 export default class UserManager extends ControllerComponent {
   get stores() {

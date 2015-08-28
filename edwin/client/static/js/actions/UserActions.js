@@ -1,12 +1,10 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import UserActionTypes from '../constants/UserActionTypes.js';
-import UserStore from '../stores/UserStore.js';
-import bzAPI from '../utils/bzAPI';
-import Cacher from '../utils/Cacher.js';
-import ProgressActions from '../actions/ProgressActions.js';
-
+import {ProgressActions} from '../actions/';
+import {UserActionTypes} from '../constants/';
+import {UserStore} from '../stores/';
+import {bzAPI, Cacher} from '../utils/';
 
 export function login(username, apiKey) {
   Dispatcher.dispatch({

@@ -1,16 +1,10 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import TimelineActionTypes from '../constants/TimelineActionTypes.js';
-import bzAPI from '../utils/bzAPI';
-import githubAPI from '../utils/githubAPI.js';
-import edwinAPI from '../utils/edwinAPI.js';
-import BugStore from '../stores/BugStore.js';
-import TeamStore from '../stores/TeamStore.js';
-import UserStore from '../stores/UserStore.js';
-import PromiseExt from '../utils/PromiseExt.js';
-import ProgressActions from '../actions/ProgressActions.js';
-import BugStates from '../constants/BugStates.js';
+import {ProgressActions} from '../actions/';
+import {BugStates, TimelineActionTypes} from '../constants/';
+import {BugStore, TeamStore, UserStore} from '../stores/';
+import {bzAPI, githubAPI, edwinAPI, PromiseExt} from '../utils/';
 
 /**
  * Fetch bugs from the API, and dispatch an event to replace the bugs

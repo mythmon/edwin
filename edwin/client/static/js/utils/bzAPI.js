@@ -1,11 +1,12 @@
 import 'whatwg-fetch';
 import Immutable from 'immutable';
-import * as TimelineActions from '../actions/TimelineActions';
-import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
-const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
 
+import {TimelineActions} from '../actions/';
+import {buildUrl} from '../utils/urls';
+
+const BUGZILLA_API = 'https://bugzilla.mozilla.org/rest';
 const fields = [
   'assigned_to',
   'blocks',

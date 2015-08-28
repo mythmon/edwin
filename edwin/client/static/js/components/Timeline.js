@@ -3,20 +3,11 @@ import Gravatar from 'react-gravatar';
 import Immutable from 'immutable';
 import cx from 'classnames';
 
-import ControllerComponent from '../utils/ControllerComponent';
-import Data from './Data';
-import BugStore from '../stores/BugStore';
-import ProgressStore from '../stores/ProgressStore';
-import PRStore from '../stores/PRStore';
-import TeamStore from '../stores/TeamStore';
-import UserActions from '../actions/UserActions.js';
-import UserStore from '../stores/UserStore.js';
-import BugStates from '../constants/BugStates.js';
-import TimelineActions from '../actions/TimelineActions.js';
-import ProgressActions from '../actions/ProgressActions.js';
-import Cacher from '../utils/Cacher.js';
-import edwinAPI from '../utils/edwinAPI.js';
-import Icon from './Icon.js';
+import {Data, Icon} from './';
+import {ProgressActions, TimelineActions, UserActions} from '../actions/';
+import {BugStates} from '../constants/';
+import {BugStore, ProgressStore, PRStore, TeamStore, UserStore} from '../stores/';
+import {ControllerComponent, Cacher, edwinAPI} from '../utils/';
 
 /**
  * Renders most of the bug UI. Should contain the Queue, Ready, and Not Ready

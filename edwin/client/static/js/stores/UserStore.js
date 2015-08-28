@@ -10,8 +10,10 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import BaseStore from '../utils/BaseStore';
-import UserActionTypes from '../constants/UserActionTypes.js';
+import {UserActionTypes} from '../constants/';
+
+// For some reason, this can't use the normal import pattern.
+import BaseStore from '../utils/BaseStore.js';
 
 let storeData = Immutable.fromJS({
   initialized: false,

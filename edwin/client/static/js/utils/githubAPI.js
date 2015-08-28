@@ -1,10 +1,11 @@
 import 'whatwg-fetch';
 import Immutable from 'immutable';
-import * as TimelineActions from '../actions/TimelineActions';
-import BugStore from '../stores/BugStore';
-import {buildUrl} from '../utils/urls';
 
 const fetch = window.fetch;
+
+import {TimelineActions} from '../actions/';
+import {buildUrl} from '../utils/urls';
+
 const GITHUB_API = 'https://api.github.com';
 
 /**
