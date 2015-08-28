@@ -9,11 +9,11 @@
 
 import Immutable from 'immutable';
 
-import Dispatcher from '../dispatcher';
-import BaseStore from '../utils/BaseStore';
-import BugStore from './BugStore';
-import * as TimelineConstants from '../constants/TimelineConstants';
-import {bugReferences} from '../utils/parsers';
+import Dispatcher from '../dispatcher.js';
+import {BaseStore} from '../utils/';
+import {BugStore} from './';
+import {TimelineActionTypes} from '../constants/';
+import {parsers} from '../utils/';
 
 let prs = Immutable.List();
 
@@ -39,7 +39,8 @@ const PRStore = new _PRStore();
  * @param {Object} pr The pr to augment. Will be modified and returned.
  */
 function augmentPR(pr) {
-  pr = pr.set('bugsReferenced', Immutable.fromJS(bugReferences.parse(pr.get('title'))));
+  let title = pr.get('title');
+  pr = pr.set('bugsReferenced', Immutable.fromJS(parsers.bugReferences.parse(title)));
   return pr;
 }
 
@@ -53,12 +54,12 @@ function update() {
 
 PRStore.dispatchToken = Dispatcher.register((action) => {
   switch (action.type) {
-    case TimelineConstants.ActionTypes.SET_RAW_PRS:
+    case TimelineActionTypes.SET_RAW_PRS:
       prs = Immutable.fromJS(action.newPRs).map(augmentPR);
       update();
       break;
 
-    case TimelineConstants.ActionTypes.SET_RAW_BUGS:
+    case TimelineActionTypes.SET_RAW_BUGS:
       Dispatcher.waitFor([BugStore.dispatchToken]);
       update();
       break;

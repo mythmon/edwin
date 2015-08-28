@@ -11,6 +11,6 @@
     -   id: flake8
         args: [--max-line-length=99]
 -   repo: git://github.com/mythmon/mirrors-eslint
-    sha: '775d6ce581be5c270f668aa69e25907579377bd0'
+    sha: 338f89d9261689d1aed270e8783c1f4ae8005292
     hooks:
     -   id: eslint

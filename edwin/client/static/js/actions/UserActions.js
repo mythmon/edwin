@@ -1,16 +1,14 @@
 import Immutable from 'immutable';
 
-import Dispatcher from '../dispatcher';
-import UserConstants from '../constants/UserConstants.js';
-import UserStore from '../stores/UserStore.js';
-import bzAPI from '../utils/bzAPI';
-import Cacher from '../utils/Cacher.js';
-import ProgressActions from '../actions/ProgressActions.js';
-
+import Dispatcher from '../dispatcher.js';
+import {UserActionTypes} from '../constants/';
+import {UserStore} from '../stores/';
+import {bzAPI, Cacher} from '../utils/';
+import {ProgressActions} from '../actions/';
 
 export function login(username, apiKey) {
   Dispatcher.dispatch({
-    type: UserConstants.ActionTypes.USER_LOGIN,
+    type: UserActionTypes.USER_LOGIN,
     username,
     apiKey,
     cache: {
@@ -21,9 +19,9 @@ export function login(username, apiKey) {
 
 export function logout() {
   Dispatcher.dispatch({
-    type: UserConstants.ActionTypes.USER_LOGOUT,
+    type: UserActionTypes.USER_LOGOUT,
     cache: {
-      invalidate: [UserConstants.ActionTypes.USER_LOGIN],
+      invalidate: [UserActionTypes.USER_LOGIN],
     },
   });
 }
@@ -35,7 +33,7 @@ export function restore() {
     return Promise.resolve();
   } else {
     ProgressActions.endTask('Restore user');
-    return Cacher.recallAction(UserConstants.ActionTypes.USER_LOGIN)
+    return Cacher.recallAction(UserActionTypes.USER_LOGIN)
     .then(() => {
       if (!UserStore.getAll().get('initialized')) {
         logout();
@@ -43,7 +41,6 @@ export function restore() {
     });
   }
 }
-
 
 export default {
   login,

@@ -9,9 +9,9 @@
 
 import Immutable from 'immutable';
 
-import Dispatcher from '../dispatcher';
-import BaseStore from '../utils/BaseStore';
-import {ActionTypes} from '../constants/UserConstants';
+import Dispatcher from '../dispatcher.js';
+import {BaseStore} from '../utils/';
+import {UserActionTypes} from '../constants/';
 
 let storeData = Immutable.fromJS({
   initialized: false,
@@ -30,7 +30,7 @@ const UserStore = new _UserStore();
 
 UserStore.dispatchToken = Dispatcher.register((action) => {
   switch (action.type) {
-    case ActionTypes.USER_LOGIN:
+    case UserActionTypes.USER_LOGIN:
       storeData = storeData
         .set('username', action.username)
         .set('apiKey', action.apiKey)
@@ -39,7 +39,7 @@ UserStore.dispatchToken = Dispatcher.register((action) => {
       UserStore.emitChange();
       break;
 
-    case ActionTypes.USER_LOGOUT:
+    case UserActionTypes.USER_LOGOUT:
       storeData = storeData
         .set('username', null)
         .set('apiKey', null)

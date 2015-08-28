@@ -16,3 +16,7 @@ export function constantMap(names) {
   });
   return constants;
 }
+
+export default {
+  constantMap,
+};

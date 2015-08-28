@@ -7,9 +7,9 @@
 
 import Immutable from 'immutable';
 
-import Dispatcher from '../dispatcher';
-import BaseStore from '../utils/BaseStore';
-import * as TimelineConstants from '../constants/TimelineConstants';
+import Dispatcher from '../dispatcher.js';
+import {BaseStore} from '../utils/';
+import {TimelineActionTypes} from '../constants/';
 
 let teams = Immutable.Map();
 let currentSlug = null;
@@ -40,7 +40,7 @@ const TeamStore = new _TeamStore();
 
 TeamStore.dispatchToken = Dispatcher.register((action) => {
   switch (action.type) {
-    case TimelineConstants.ActionTypes.SET_RAW_TEAMS:
+    case TimelineActionTypes.SET_RAW_TEAMS:
       let newTeams = Immutable.fromJS(action.newTeams);
       for (let team of newTeams) {
         teams = teams.set(team.get('slug'), team);
@@ -48,7 +48,7 @@ TeamStore.dispatchToken = Dispatcher.register((action) => {
       TeamStore.emitChange();
       break;
 
-    case TimelineConstants.ActionTypes.SET_CURRENT_TEAM:
+    case TimelineActionTypes.SET_CURRENT_TEAM:
       currentSlug = action.slug;
       TeamStore.emitChange();
       break;

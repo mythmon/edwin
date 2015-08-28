@@ -75,3 +75,8 @@ export const bugReferences = PEG.buildParser(`
   int
     = digits:[0-9]+ { return parseInt(digits.join('')); }
 `);
+
+export default {
+  whiteboardData,
+  bugReferences,
+};

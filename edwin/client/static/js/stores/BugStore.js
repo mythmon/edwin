@@ -11,11 +11,9 @@ import Immutable from 'immutable';
 import toposort from 'toposort';
 
 import Dispatcher from '../dispatcher.js';
-import BaseStore from '../utils/BaseStore.js';
-import PRStore from './PRStore.js';
-import TeamStore from './TeamStore.js';
-import {ActionTypes, BugStates} from '../constants/TimelineConstants.js';
-import {whiteboardData} from '../utils/parsers.js';
+import {BaseStore, parsers} from '../utils/';
+import {PRStore, TeamStore} from './';
+import {TimelineActionTypes, BugStates} from '../constants/';
 
 let bugMap = Immutable.OrderedMap();
 
@@ -149,7 +147,8 @@ function getSecure(bug) {
  */
 function augmentBug(bug) {
   // Parse the whiteboard field
-  bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard', ''))));
+  let whiteboard = bug.get('whiteboard', '');
+  bug = bug.set('whiteboardParsed', Immutable.fromJS(parsers.whiteboardData.parse(whiteboard)));
 
   bug = bug.set('needinfo', getNeedinfo(bug));
   bug = bug.set('secure', getSecure(bug));
@@ -218,7 +217,7 @@ function sortBugs() {
 
 BugStore.dispatchToken = Dispatcher.register((action) => {
   switch (action.type) {
-    case ActionTypes.SET_RAW_BUGS:
+    case TimelineActionTypes.SET_RAW_BUGS:
       for (let bug of action.newBugs) {
         bugMap = bugMap.update(bug.id, new Immutable.Map(), oldBug => {
           let newBug = Immutable.fromJS(bug);
@@ -232,13 +231,13 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       BugStore.emitChange();
       break;
 
-    case ActionTypes.SET_RAW_PRS:
+    case TimelineActionTypes.SET_RAW_PRS:
       Dispatcher.waitFor([PRStore.dispatchToken]);
       bugMap = bugMap.map(augmentBug);
       BugStore.emitChange();
       break;
 
-    case ActionTypes.SET_COMMENT_TAGS:
+    case TimelineActionTypes.SET_COMMENT_TAGS:
       for (let {bugId, commentId, tags} of action.commentSpecs) {
         bugMap = bugMap
           .setIn([bugId, 'comment_tags'], Immutable.fromJS(tags).toSet())
@@ -249,7 +248,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       BugStore.emitChange();
       break;
 
-    case ActionTypes.SET_BLOCKER_BUGS:
+    case TimelineActionTypes.SET_BLOCKER_BUGS:
       // Merge newBugs into bugMap
       for (let bug of action.newBugs) {
         bugMap = bugMap.mergeIn([bug.id], Immutable.fromJS(bug));
@@ -260,7 +259,7 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       BugStore.emitChange();
       break;
 
-    case ActionTypes.ASSIGN_BUG:
+    case TimelineActionTypes.ASSIGN_BUG:
       bugMap = bugMap
         .setIn([action.bugId, 'assigned_to'], action.assigned_to)
         .setIn([action.bugId, 'assigned_to_detail', 'email'], action.assigned_to)
@@ -270,13 +269,13 @@ BugStore.dispatchToken = Dispatcher.register((action) => {
       BugStore.emitChange();
       break;
 
-    case ActionTypes.BUG_SET_INTERNAL_SORT:
+    case TimelineActionTypes.BUG_SET_INTERNAL_SORT:
       bugMap = bugMap
         .setIn([action.bugId, 'sortOrder'], action.sortOrder);
       BugStore.emitChange();
       break;
 
-    case ActionTypes.BUGS_COMMIT_SORT_ORDER:
+    case TimelineActionTypes.BUGS_COMMIT_SORT_ORDER:
       // Remove all the after tags from all the bugs.
       for (let bug of BugStore.getAll()) {
         bugMap = bugMap.updateIn(
