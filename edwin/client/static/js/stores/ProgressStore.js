@@ -1,3 +1,4 @@
+/* eslint import/no-require:0 */
 /**
  * Progress store holds the current data loading state.
  */
@@ -6,7 +7,7 @@ import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
 import BaseStore from '../utils/BaseStore';
-import {ActionTypes, LoadingStates} from '../constants/ProgressConstants';
+import {ActionTypes} from '../constants/ProgressConstants';
 
 let storeData = Immutable.fromJS({
 });

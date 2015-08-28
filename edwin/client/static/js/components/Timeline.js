@@ -15,7 +15,6 @@ import {BugStates} from '../constants/TimelineConstants';
 import TimelineActions from '../actions/TimelineActions.js';
 import TimelineConstants from '../constants/TimelineConstants.js';
 import ProgressActions from '../actions/ProgressActions.js';
-import {LoadingStates} from '../constants/ProgressConstants';
 import Cacher from '../utils/Cacher.js';
 import edwinAPI from '../utils/edwinAPI.js';
 import Icon from './Icon.js';
