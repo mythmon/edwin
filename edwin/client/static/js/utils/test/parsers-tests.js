@@ -1,3 +1,4 @@
+/* eslint import/no-require:0 */
 import {expect} from 'chai';
 
 describe('whiteboardData', () => {

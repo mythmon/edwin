@@ -1,3 +1,4 @@
+/* eslint import/no-require:0 */
 /**
  * Progress store holds the current data loading state.
  */
@@ -6,10 +7,9 @@ import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
 import BaseStore from '../utils/BaseStore';
-import {ActionTypes, LoadingStates} from '../constants/ProgressConstants';
+import ProgressActionTypes from '../constants/ProgressActionTypes.js';
 
-let storeData = Immutable.fromJS({
-});
+let storeData = new Immutable.Map();
 
 class _ProgressStore extends BaseStore {
   getAll() {
@@ -32,16 +32,18 @@ ProgressStore.dispatchToken = Dispatcher.register((action) => {
     // should be starting and ending its own task and its task should
     // have a unique name. Thereby we won't encounter two processes
     // fiddling with the same task.
-    case ActionTypes.START_TASK:
+    case ProgressActionTypes.START_TASK:
       storeData = storeData.set(taskName, true);
       ProgressStore.emitChange();
       break;
-    case ActionTypes.END_TASK:
+
+    case ProgressActionTypes.END_TASK:
       if (storeData.has(taskName)) {
         storeData = storeData.delete(taskName);
         ProgressStore.emitChange();
       }
       break;
+
     default:
       // do nothing
   }

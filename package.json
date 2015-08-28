@@ -5,6 +5,7 @@
     "type": "git",
     "url": "git://github.com/mythmon/edwin.git"
   },
+  "license": "MPLv2",
   "dependencies": {
     "classnames": "^2.1.2",
     "es6-symbol": "^2.0.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "babel": "^5.0.12",
+    "babel-eslint": "^4.1.0",
     "babelify": "^6.0.2",
     "browserify": "^9.0.7",
     "chai": "^2.2.0",
@@ -37,6 +39,7 @@
     "clean-css": "^3.1.9",
     "cssmin": "^0.4.3",
     "eslint": "^0.24.1",
+    "eslint-plugin-import": "^0.7.8",
     "eslint-plugin-react": "^3.1.0",
     "mocha": "^2.2.4",
     "uglifyjs": "^2.4.10"

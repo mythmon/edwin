@@ -4,7 +4,6 @@ import Immutable from 'immutable';
 import ControllerComponent from '../utils/ControllerComponent';
 import UserStore from '../stores/UserStore';
 import UserActions from '../actions/UserActions.js';
-import UserConstants from '../constants/UserConstants.js';
 import Icon from './Icon.js';
 import Cacher from '../utils/Cacher.js';
 
