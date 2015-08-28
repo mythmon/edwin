@@ -1,3 +1,4 @@
+/* eslint import/no-require:0 */
 import chai, {expect} from 'chai';
 import chaiImmutable from 'chai-immutable';
 import Immutable from 'immutable';

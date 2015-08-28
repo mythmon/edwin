@@ -8,7 +8,7 @@ import React from 'react';
 import * as Router from 'react-router';
 const {Route, DefaultRoute} = Router;
 
-import Dispatcher from './dispatcher';
+import Dispatcher from './dispatcher.js';
 import * as TimelineActions from './actions/TimelineActions';
 
 import App from './components/App';

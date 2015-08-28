@@ -24,3 +24,7 @@ export function buildUrl(base, endpoint, query={}) {
 
   return base + endpoint + qs;
 }
+
+export default {
+  buildUrl,
+};

@@ -1,15 +1,10 @@
 import Immutable from 'immutable';
 
-import Dispatcher from '../dispatcher';
-import TimelineConstants from '../constants/TimelineConstants';
-import bzAPI from '../utils/bzAPI';
-import githubAPI from '../utils/githubAPI.js';
-import edwinAPI from '../utils/edwinAPI.js';
-import BugStore from '../stores/BugStore.js';
-import TeamStore from '../stores/TeamStore.js';
-import UserStore from '../stores/UserStore.js';
-import PromiseExt from '../utils/PromiseExt.js';
-import ProgressActions from '../actions/ProgressActions.js';
+import Dispatcher from '../dispatcher.js';
+import {TimelineActionTypes, BugStates} from '../constants/';
+import {bzAPI, githubAPI, edwinAPI, PromiseExt} from '../utils/';
+import {BugStore, TeamStore, UserStore} from '../stores/';
+import {ProgressActions} from '../actions/';
 
 /**
  * Fetch bugs from the API, and dispatch an event to replace the bugs
@@ -30,13 +25,13 @@ export function loadBugs(query) {
   return bzAPI.getBugs(query)
   .then(newBugs => {
     Dispatcher.dispatch({
-      type: TimelineConstants.ActionTypes.SET_RAW_BUGS,
+      type: TimelineActionTypes.SET_RAW_BUGS,
       team: teamSlug,
       newBugs,
     });
 
     let idsForCommentTags = BugStore.getAll()
-      .filter(bug => bug.get('state') !== TimelineConstants.BugStates.NOT_READY)
+      .filter(bug => bug.get('state') !== BugStates.NOT_READY)
       .map(bug => bug.get('id'));
 
     return loadCommentTags(idsForCommentTags);
@@ -65,7 +60,7 @@ export function loadPRs(repos) {
       flattened = flattened.concat(prList);
     }
     Dispatcher.dispatch({
-      type: TimelineConstants.ActionTypes.SET_RAW_PRS,
+      type: TimelineActionTypes.SET_RAW_PRS,
       newPRs: flattened,
     });
   })
@@ -85,7 +80,7 @@ export function loadTeams() {
   return edwinAPI.getTeams()
   .then(newTeams => {
     Dispatcher.dispatch({
-      type: TimelineConstants.ActionTypes.SET_RAW_TEAMS,
+      type: TimelineActionTypes.SET_RAW_TEAMS,
       newTeams,
     });
   })
@@ -97,7 +92,7 @@ export function loadTeams() {
 
 export function setCurrentTeam(slug) {
   Dispatcher.dispatch({
-    type: TimelineConstants.ActionTypes.SET_CURRENT_TEAM,
+    type: TimelineActionTypes.SET_CURRENT_TEAM,
     slug,
   });
 }
@@ -128,7 +123,7 @@ export function loadCommentTags(bugIds) {
   return PromiseExt.allResolves(commentPromises)
   .then(commentSpecs => {
     Dispatcher.dispatch({
-      type: TimelineConstants.ActionTypes.SET_COMMENT_TAGS,
+      type: TimelineActionTypes.SET_COMMENT_TAGS,
       commentSpecs,
     });
   })
@@ -153,7 +148,7 @@ export function loadBlockerBugs(bugIds) {
     return bzAPI.getBugs(bugQuery)
     .then(newBugs => {
       Dispatcher.dispatch({
-        type: TimelineConstants.ActionTypes.SET_BLOCKER_BUGS,
+        type: TimelineActionTypes.SET_BLOCKER_BUGS,
         newBugs,
       });
     })
@@ -180,7 +175,7 @@ export function grabBug(bugId) {
   })
   .then(() => {
     Dispatcher.dispatch({
-      type: TimelineConstants.ActionTypes.ASSIGN_BUG,
+      type: TimelineActionTypes.ASSIGN_BUG,
       assigned_to,
       bugId,
     });
@@ -189,7 +184,7 @@ export function grabBug(bugId) {
 
 export function setInternalSort(bugId, sortOrder) {
   Dispatcher.dispatch({
-    type: TimelineConstants.ActionTypes.BUG_SET_INTERNAL_SORT,
+    type: TimelineActionTypes.BUG_SET_INTERNAL_SORT,
     bugId,
     sortOrder,
   });
@@ -204,7 +199,7 @@ export function commitSortOrder() {
 
   const oldBugMap = BugStore.getMap();
   Dispatcher.dispatch({
-    type: TimelineConstants.ActionTypes.BUGS_COMMIT_SORT_ORDER,
+    type: TimelineActionTypes.BUGS_COMMIT_SORT_ORDER,
   });
 
   /* `dispatch` is syncronous, so all the bugs have correct comment tags

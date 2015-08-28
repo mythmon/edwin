@@ -16,6 +16,15 @@ rules:
   no-this-before-super: [2]
   constructor-super: [2]
 
+  import/no-unresolved: [2]
+  import/named: [2]
+  import/default: [2]
+  import/namespace: [2]
+  import/no-require: [2]
+  import/no-named-as-default: [2]
+  import/export: [2]
+  import/no-errors: [2, include-messages]
+
   # Turning off default rules. Should some of these be warnings?
   no-console: [0]
   no-unused-vars: [0]
@@ -80,3 +89,4 @@ settings:
 
 plugins:
   - react
+  - import
