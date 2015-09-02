@@ -1,0 +1,28 @@
+{
+  "name":"edwin",
+  "scripts":{},
+  "env":{
+    "BUILDPACK_URL":{
+      "required":true
+    },
+    "DISABLE_COLLECTSTATIC":{
+      "required":true
+    },
+    "DJANGO_ALLOWED_HOSTS":"*",
+    "DJANGO_CONFIGURATION":{
+      "required":true
+    },
+    "DJANGO_SECRET_KEY":{
+      "generator":"secret"
+    },
+    "DJANGO_SETTINGS_MODULE":{
+      "required":true
+    },
+    "PATH":{
+      "required":true
+    }
+  },
+  "addons":[
+    "heroku-postgresql"
+  ]
+}
