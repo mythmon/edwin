@@ -11,12 +11,13 @@ import Immutable from 'immutable';
 import toposort from 'toposort';
 
 import Dispatcher from '../dispatcher.js';
-import BaseStore from '../utils/BaseStore.js';
-import PRStore from './PRStore.js';
-import TeamStore from './TeamStore.js';
-import TimelineActionTypes from '../constants/TimelineActionTypes.js';
-import BugStates from '../constants/BugStates.js';
+import {TeamStore} from './';
+import {BugStates, TimelineActionTypes} from '../constants/';
 import {whiteboardData} from '../utils/parsers.js';
+
+// For some reason, these can't use the normal import pattern.
+import BaseStore from '../utils/BaseStore';
+import PRStore from './PRStore.js';
 
 let bugMap = Immutable.OrderedMap();
 

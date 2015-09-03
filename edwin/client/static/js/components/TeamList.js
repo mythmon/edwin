@@ -1,13 +1,12 @@
 import React from 'react';
 import Router from 'react-router';
 
-import ControllerComponent from '../utils/ControllerComponent';
-import Data from './Data';
-import * as edwinAPI from '../utils/edwinAPI';
-import TeamStore from '../stores/TeamStore';
-import TimelineActions from '../actions/TimelineActions.js';
-
 const {Link} = Router;
+
+import {Data} from './';
+import {ControllerComponent, edwinAPI} from '../utils/';
+import {TeamStore} from '../stores/';
+import {TimelineActions} from '../actions/';
 
 /**
  * Shows a list of teams.

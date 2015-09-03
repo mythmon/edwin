@@ -10,10 +10,12 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import BaseStore from '../utils/BaseStore';
-import BugStore from './BugStore';
-import TimelineActionTypes from '../constants/TimelineActionTypes.js';
+import {BugStore} from './';
+import {TimelineActionTypes} from '../constants/';
 import {bugReferences} from '../utils/parsers';
+
+// For some reason, this can't use the normal import pattern.
+import BaseStore from '../utils/BaseStore';
 
 let prs = Immutable.List();
 

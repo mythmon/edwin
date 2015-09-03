@@ -9,12 +9,8 @@ import * as Router from 'react-router';
 const {Route, DefaultRoute} = Router;
 
 import Dispatcher from './dispatcher';
-import * as TimelineActions from './actions/TimelineActions';
-
-import App from './components/App';
-import Welcome from './components/Welcome';
-import TeamList from './components/TeamList';
-import Timeline from './components/Timeline';
+import {TimelineActions} from './actions/';
+import {App, Welcome, TeamList, Timeline} from './components/';
 
 let routes = (
   <Route handler={App}>

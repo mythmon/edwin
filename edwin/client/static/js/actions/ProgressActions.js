@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import ProgressActionTypes from '../constants/ProgressActionTypes.js';
-import ProgressStore from '../stores/ProgressStore.js';
+import {ProgressActionTypes} from '../constants/';
+import {ProgressStore} from '../stores/';
 
 export function startTask(taskName) {
   Dispatcher.dispatch({

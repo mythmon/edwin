@@ -6,8 +6,10 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
+import {ProgressActionTypes} from '../constants/';
+
+// For some reason, this can't use the normal import pattern.
 import BaseStore from '../utils/BaseStore';
-import ProgressActionTypes from '../constants/ProgressActionTypes.js';
 
 let storeData = new Immutable.Map();
 

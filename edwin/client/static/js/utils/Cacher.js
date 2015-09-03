@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import localForage from 'localforage';
 import _ from 'lodash';
+
 import Dispatcher from '../dispatcher.js';
 
 const CACHE_VERSION = 1;

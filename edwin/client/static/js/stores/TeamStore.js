@@ -8,8 +8,10 @@
 import Immutable from 'immutable';
 
 import Dispatcher from '../dispatcher';
-import BaseStore from '../utils/BaseStore';
-import TimelineActionTypes from '../constants/TimelineActionTypes.js';
+import {TimelineActionTypes} from '../constants/';
+
+// For some reason, this can't use the normal import pattern.
+import BaseStore from '../utils/BaseStore.js';
 
 let teams = Immutable.Map();
 let currentSlug = null;
