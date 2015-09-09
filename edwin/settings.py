@@ -111,7 +111,7 @@ class Base(ConstantSettings):
     """
     These settings will likely need to be customized to an environment.
     """
-    ALLOWED_HOSTS = values.ListValue([])
+    ALLOWED_HOSTS = values.ListValue(['*'])
     DEBUG = values.BooleanValue(False)
     DATABASES = values.DatabaseURLValue('sqlite:///db.sqlite')
     SECRET_KEY = values.SecretValue()
