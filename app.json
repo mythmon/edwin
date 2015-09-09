@@ -8,7 +8,6 @@
     "DISABLE_COLLECTSTATIC":{
       "required":true
     },
-    "DJANGO_ALLOWED_HOSTS":"*",
     "DJANGO_CONFIGURATION":{
       "required":true
     },
