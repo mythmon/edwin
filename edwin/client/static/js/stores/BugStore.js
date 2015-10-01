@@ -39,20 +39,13 @@ class _BugStore extends BaseStore {
   getTimelineBugs() {
     return this.getAll()
       .filter(bug => bug.get('sortOrder', null) !== null)
-      .filter(bug => bug.get('state') !== BugStates.NOT_READY)
       .filter(bug => bug.get('state') !== BugStates.DONE);
   }
 
   getUnsortedBugs() {
     return this.getAll()
       .filter(bug => bug.get('sortOrder', null) === null)
-      .filter(bug => bug.get('state') !== BugStates.NOT_READY)
       .filter(bug => bug.get('state') !== BugStates.DONE);
-  }
-
-  getNotReadyBugs() {
-    return this.getAll()
-      .filter(bug => bug.get('state') === BugStates.NOT_READY);
   }
 
   /**

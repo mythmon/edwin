@@ -45,7 +45,6 @@ export default class Timeline extends ControllerComponent {
     return {
       timelineBugs: BugStore.getTimelineBugs(),
       unsortedBugs: BugStore.getUnsortedBugs(),
-      notReadyBugs: BugStore.getNotReadyBugs(),
       user: UserStore.getAll(),
       progress: ProgressStore.getRunning(),
       currentTeam: TeamStore.getCurrentTeam(),
@@ -72,7 +71,6 @@ export default class Timeline extends ControllerComponent {
         </div>
         <BugTable title="Timeline" bugs={this.state.timelineBugs} user={this.state.user}/>
         <BugTable title="Unsorted" bugs={this.state.unsortedBugs} user={this.state.user}/>
-        <BugTable title="Not Ready" bugs={this.state.notReadyBugs} user={this.state.user}/>
 
         <div className="Footer">
           Help: To add bugs to the queue, add a tag to the bug description with <code>{teamTag}</code>.
