@@ -17,11 +17,11 @@ describe('whiteboardData', () => {
       expect(whiteboardData.parse('p=2 u=dev')).to.deep.equal({p: 2, u: 'dev'});
     });
 
-    it('parses a tokenized item.', () => {
+    it('parses a bracketed keyword.', () => {
       expect(whiteboardData.parse('[good first bug]')).to.deep.equal({'good first bug': true});
     });
 
-    it('parses multiple tokenized items.', () => {
+    it('parses multiple bracketed keyword.', () => {
       expect(whiteboardData.parse('[foo bar] [baz]')).to.deep.equal({'foo bar': true, baz: true});
     });
 
@@ -39,6 +39,10 @@ describe('whiteboardData', () => {
           'good first bug': true,
           'need-verify': true,
         });
+    });
+
+    it('parses un-bracketed keywords', () => {
+      expect(whiteboardData.parse('foo-bar baz')).to.deep.equal({'foo-bar': true, baz: true});
     });
   });
 });

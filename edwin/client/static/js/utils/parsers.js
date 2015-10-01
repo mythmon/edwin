@@ -26,7 +26,7 @@ export const whiteboardData = PEG.buildParser(`
     = tokens
 
   tokens
-    = token:token " "* tokens:tokens { return merge(token, tokens) }
+    = token:token ws tokens:tokens { return merge(token, tokens) }
     / token:token { return token }
     / "" { return {} }
 
@@ -41,6 +41,11 @@ export const whiteboardData = PEG.buildParser(`
       ret[name.join('')] = true;
       return ret;
     }
+    / name:ident {
+      var ret = {};
+      ret[name] = true;
+      return ret;
+    }
 
   ident
     = chars:[a-zA-Z0-9._-]+ { return chars.join('') }
@@ -49,6 +54,9 @@ export const whiteboardData = PEG.buildParser(`
     = int:[0-9]+ "." frac:[0-9]+ { return parseFloat(int.join('') + '.' + frac.join('')) }
     / digits:[0-9]+ { return parseInt(digits.join(''), 10); }
     / chars:[a-zA-Z0-9._?-]+ { return chars.join('') }
+
+  ws
+    = " "*
 `);
 
 

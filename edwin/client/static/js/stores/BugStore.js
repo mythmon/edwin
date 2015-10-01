@@ -151,7 +151,14 @@ function getSecure(bug) {
  */
 function augmentBug(bug) {
   // Parse the whiteboard field
-  bug = bug.set('whiteboardParsed', Immutable.fromJS(whiteboardData.parse(bug.get('whiteboard', ''))));
+  let whiteboardParsed;
+  try {
+    let parsed = whiteboardData.parse(bug.get('whiteboard', ''));
+  } catch(e) {
+    console.warn(`Could not parse whiteboard data: "${bug.get('whiteboard', '')}"`);
+    whiteboardParsed = {};
+  }
+  bug.set('whiteboardParsed', whiteboardParsed);
 
   bug = bug.set('needinfo', getNeedinfo(bug));
   bug = bug.set('secure', getSecure(bug));
