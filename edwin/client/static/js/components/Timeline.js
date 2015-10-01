@@ -229,7 +229,7 @@ class BugRow extends React.Component {
         <td className="BugTable__data">
           {bug.get('secure') ? <SecureWarning/> : null}
           {bug.get('summary')}
-          <WhiteboardGroup data={bug.get('whiteboardParsed').filter((_, key) => key !== 'p')}/>
+          <WhiteboardGroup data={bug.get('whiteboardParsed', new Immutable.Map()).filter((_, key) => key !== 'p')}/>
           <NeedinfoGroup data={bug.get('needinfo', [])}/>
           <BlockedGroup data={bug.get('blocked', [])}/>
         </td>
